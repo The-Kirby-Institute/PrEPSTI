@@ -272,16 +272,16 @@ public class EncounterPresenter extends Presenter {
      */
     public void plotIncidenceYears(String[] siteNames, int backYears, int lastYear, String sortingProperty)
     {
-        HashMap<Comparable,String> incidenceRecordYears = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> incidenceRecordYears = new HashMap<Comparable<?>,String>() ;
         //reporter.prepareYearsIncidenceReport(siteNames, backYears, lastYear) ;
-        ArrayList<HashMap<Comparable,String>> reports = new ArrayList<HashMap<Comparable,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> reports = new ArrayList<HashMap<Comparable<?>,String>>() ;
         
         for (String simulation : simNames)
         {
             EncounterReporter encounterReporter = new EncounterReporter(simulation,reporter.getFolderPath()) ;
-            HashMap<Comparable,String> report = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, lastYear, sortingProperty) ;
+            HashMap<Comparable<?>,String> report = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, lastYear, sortingProperty) ;
             Reporter.CLEAR_REPORT_LIST() ; 
-            reports.add((HashMap<Comparable,String>) report.clone()) ;
+            reports.add((HashMap<Comparable<?>,String>) report.clone()) ;
             Reporter.DUMP_OUTPUT(EncounterReporter.INCIDENCE,simulation,reporter.getFolderPath(),report);
             //LOGGER.info(report.toString());
         }
@@ -409,20 +409,44 @@ public class EncounterPresenter extends Presenter {
      */
     private void plotYearsCondomUseReport(int backYears, int lastYear, String[] reportProperties) 
     {
-        ArrayList<HashMap<Comparable,String>> reports = new ArrayList<HashMap<Comparable,String>>() ;
-        HashMap<Comparable,String> hashMapReport = new HashMap<Comparable,String>() ;
+        ArrayList<HashMap<Comparable<?>,String>> reports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        HashMap<Comparable<?>,String> hashMapReport = new HashMap<Comparable<?>,String>() ;
         for (String simulation : simNames)
         {
             EncounterReporter encounterReporter = new EncounterReporter(simulation,reporter.getFolderPath()) ;
             ArrayList<String> report = encounterReporter.prepareYearsCondomUseRecord(backYears, lastYear) ;
             Reporter.CLEAR_REPORT_LIST() ; 
             hashMapReport = Reporter.ARRAY_TO_HASHMAP(report, lastYear) ;
-            reports.add((HashMap<Comparable,String>) hashMapReport.clone()) ;
+            reports.add((HashMap<Comparable<?>,String>) hashMapReport.clone()) ;
             Reporter.DUMP_OUTPUT("condomUse",simulation,reporter.getFolderPath(),report);
         }
         //Reporter.WRITE_CSV_DISTRIBUTION(reports, "at-risk incidence-rate", simNames[0], "output/prep/") ;
         
-        HashMap<Comparable,String> yearsCondomUseReport = Reporter.PREPARE_MEAN_HASHMAP_REPORT(reports,"year","condomUse",simNames[0]) ;
+        HashMap<Comparable<?>,String> yearsCondomUseReport = Reporter.PREPARE_MEAN_HASHMAP_REPORT(reports,"year","condomUse",simNames[0]) ;
+      // logger.log(level.info, "{0}", yearsCondomUseReport) ;
+        plotHashMapString(yearsCondomUseReport,"","year",reportProperties) ;
+    }
+    
+    /**
+     * Plots condom use on a year-by-year basis.
+     * @param backYears
+     * @param lastYear 
+     */
+    private void plotYearsDisclosureReport(int backYears, int lastYear, String[] reportProperties) 
+    {
+        ArrayList<HashMap<Comparable<?>,String>> reports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        HashMap<Comparable<?>,String> hashMapReport = new HashMap<Comparable<?>,String>() ;
+        for (String simulation : simNames)
+        {
+            EncounterReporter encounterReporter = new EncounterReporter(simulation,reporter.getFolderPath()) ;
+            HashMap<Comparable<?>,String> report = encounterReporter.prepareYearsDisclosureReport(backYears, lastYear) ;
+            Reporter.CLEAR_REPORT_LIST() ; 
+            reports.add((HashMap<Comparable<?>,String>) report.clone()) ;
+            Reporter.DUMP_OUTPUT("condomUse",simulation,reporter.getFolderPath(),report);
+        }
+        //Reporter.WRITE_CSV_DISTRIBUTION(reports, "at-risk incidence-rate", simNames[0], "output/prep/") ;
+        
+        HashMap<Comparable<?>,String> yearsCondomUseReport = Reporter.PREPARE_MEAN_HASHMAP_REPORT(reports,"year","condomUse",simNames[0]) ;
       // logger.log(level.info, "{0}", yearsCondomUseReport) ;
         plotHashMapString(yearsCondomUseReport,"","year",reportProperties) ;
     }
@@ -541,7 +565,7 @@ public class EncounterPresenter extends Presenter {
     
     public void plotPercentAgentCondomlessYears(String[] relationshipClassNames, int backYears, int lastYear, String concordanceName, boolean concordant, String sortingProperty)
     {
-        HashMap<Comparable,String> percentAgentCondomlessYears 
+        HashMap<Comparable<?>,String> percentAgentCondomlessYears 
                 = reporter.preparePercentAgentCondomlessYears(relationshipClassNames, backYears, lastYear, concordanceName, concordant, sortingProperty) ;
         
       // logger.log(level.info, "{0}", percentAgentCondomlessYears) ;

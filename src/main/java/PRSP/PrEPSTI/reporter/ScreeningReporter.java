@@ -62,11 +62,11 @@ public class ScreeningReporter extends Reporter {
      * @return Year-by-year report for backYears years on positivity on last day
      * of each year ending lastYear.
      */
-    public HashMap<Comparable,String> 
+    public HashMap<Comparable<?>,String> 
         prepareYearsPositivityRecord(String[] siteNames, boolean unique, int backYears, int lastYear) 
         {
             //HashMap<Object,Number[]> positivityRecordYears = new HashMap<Object,Number[]>() ;
-            HashMap<Comparable,String> positivityRecordYears = new HashMap<Comparable,String>() ;
+            HashMap<Comparable<?>,String> positivityRecordYears = new HashMap<Comparable<?>,String>() ;
             
             // Whether to save this Report to file
             boolean writeLocal = WRITE_REPORT ;
@@ -112,7 +112,7 @@ public class ScreeningReporter extends Reporter {
      * @param lastYear
      * @return 
      */
-    public HashMap<Comparable,String> 
+    public HashMap<Comparable<?>,String> 
         prepareYearsNotificationsRecord(String[] siteNames, int backYears, int lastYear) 
         {
             // Number[]
@@ -128,11 +128,11 @@ public class ScreeningReporter extends Reporter {
      * @return Year-by-year report for backYears years on notification on last day
      * of each year ending lastYear.
      */
-    public HashMap<Comparable,String> 
+    public HashMap<Comparable<?>,String> 
         prepareYearsNotificationsRecord(String[] siteNames, int backYears, int lastYear, ArrayList<String> sortedAgents ) 
         {
             //HashMap<Object,String> notificationRecordYears = new HashMap<Object,String>() ;
-            HashMap<Comparable,String> notificationsRecordYears = new HashMap<Comparable,String>() ;
+            HashMap<Comparable<?>,String> notificationsRecordYears = new HashMap<Comparable<?>,String>() ;
             
             // Whether to save this Report to file
             boolean writeLocal = WRITE_REPORT ;
@@ -177,24 +177,24 @@ public class ScreeningReporter extends Reporter {
      * @param sortingProperty
      * @return 
      */
-    public HashMap<Comparable,String> 
+    public HashMap<Comparable<?>,String> 
         prepareSortedYearsNotificationsRecord(String[] siteNames, int backYears, int lastYear, String sortingProperty)
         {
-            HashMap<Comparable,String> sortedYearsNotificationsReport = new HashMap<Comparable,String>() ;
-            HashMap<Object,HashMap<Comparable,String>> sortedYearsNotificationsRecord = new HashMap<Object,HashMap<Comparable,String>>() ;
+            HashMap<Comparable<?>,String> sortedYearsNotificationsReport = new HashMap<Comparable<?>,String>() ;
+            HashMap<Object,HashMap<Comparable<?>,String>> sortedYearsNotificationsRecord = new HashMap<Object,HashMap<Comparable<?>,String>>() ;
             //HashMap<Object,HashMap<Object,Number[]>> sortedYearsNotificationsRecord = new HashMap<Object,HashMap<Object,Number[]>>() ;
             
             // Get Report of sortingValue mapping to agentIds
             PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
-            HashMap<Object,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
+            HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
 
             for (Object sortingValue : sortedAgentReport.keySet())
             {
               // logger.log(level.info, "value:{0} population:{1}", new Object[] {sortingValue,sortedAgentReport.get(sortingValue).size()});
-                HashMap<Comparable,String> yearsNotificationsRecord = new HashMap<Comparable,String>() ; 
+                HashMap<Comparable<?>,String> yearsNotificationsRecord = new HashMap<Comparable<?>,String>() ; 
                 yearsNotificationsRecord = prepareYearsNotificationsRecord(siteNames, backYears, lastYear, sortedAgentReport.get(sortingValue)) ;
                 
-                sortedYearsNotificationsRecord.put(sortingValue, (HashMap<Comparable,String>) yearsNotificationsRecord) ;
+                sortedYearsNotificationsRecord.put(sortingValue, (HashMap<Comparable<?>,String>) yearsNotificationsRecord) ;
                 //sortedYearsNotificationsRecord.put(sortingValue, (HashMap<Object,Number[]>) yearsNotificationsRecord.clone()) ;
             }
             
@@ -288,7 +288,7 @@ public class ScreeningReporter extends Reporter {
         
         // Get Report of sortingValue mapping to agentIds
         PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
-        HashMap<Object,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
         
         for (Object sortingValue : sortedAgentReport.keySet())
         {
@@ -625,11 +625,11 @@ public class ScreeningReporter extends Reporter {
      * @return Year-by-year report for backYears years on prevalence on last day
      * of each year ending lastYear.
      */
-    public HashMap<Comparable,String> 
+    public HashMap<Comparable<?>,String> 
         prepareYearsPrevalenceRecord(String[] siteNames, int backYears, int lastYear, String sortingProperty) 
         {
             //HashMap<Object,Number[]> prevalenceRecordYears = new HashMap<Object,Number[]>() ;
-            HashMap<Comparable,String> prevalenceRecordYears = new HashMap<Comparable,String>() ;
+            HashMap<Comparable<?>,String> prevalenceRecordYears = new HashMap<Comparable<?>,String>() ;
             
             int maxCycles = getMaxCycles() ;
             
@@ -744,7 +744,7 @@ public class ScreeningReporter extends Reporter {
         //String finalPrevalencesSortedRecord = new HashMap<Object,String>() ;
         
         PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
-        HashMap<Object,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
         
         ArrayList<String> agentsAliveReport = populationReporter.prepareAgentsAliveRecord(endCycle) ;
             
@@ -991,7 +991,7 @@ public class ScreeningReporter extends Reporter {
         
         ArrayList<String> sortedAgentIds ;
         ArrayList<Object> sortingValues = new ArrayList<Object>() ;
-        HashMap<Object,ArrayList<String>> sortedAgentReport = new HashMap<Object,ArrayList<String>>() ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = new HashMap<Comparable<?>,ArrayList<String>>() ;
         if (sortingProperty.isEmpty())
             sortingValues.add("") ;
         else
@@ -1145,7 +1145,7 @@ public class ScreeningReporter extends Reporter {
             
             // Sorted AgentId
             ArrayList<Object> sortingValues = new ArrayList<Object>() ;
-            HashMap<Object,ArrayList<String>> sortedAgentIds = new HashMap<Object,ArrayList<String>>() ;
+            HashMap<Comparable<?>,ArrayList<String>> sortedAgentIds = new HashMap<Comparable<?>,ArrayList<String>>() ;
             PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
             if (sortingProperty.isEmpty())
                 sortingValues.add("") ;
@@ -1239,7 +1239,7 @@ public class ScreeningReporter extends Reporter {
         ArrayList<Object> sortingValues = new ArrayList<Object>() ;
         sortingValues.add(EMPTY) ;
         
-        HashMap<Object,ArrayList<String>> sortedAgentIds = new HashMap<Object,ArrayList<String>>() ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentIds = new HashMap<Comparable<?>,ArrayList<String>>() ;
         
         // Extract yearly values for one or more tests
         for (int year = 0 ; year < backYears ; year++ )
@@ -1613,12 +1613,12 @@ public class ScreeningReporter extends Reporter {
         // String incidentRateReport = "" ;
         
         HashSet<Object> sortingProperties = new HashSet<Object>() ; //(Arrays.asList(new Object[] {""})) ;
-        HashMap<Object,ArrayList<String>> sortedAgentsReport = new HashMap<Object,ArrayList<String>>() ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentsReport = new HashMap<Comparable<?>,ArrayList<String>>() ;
         if (!sortingProperty.isEmpty())
         {
             PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
             sortedAgentsReport = populationReporter.agentIdSorted(sortingProperty,endCycle) ;
-            Collections.addAll(sortingProperties,sortedAgentsReport.keySet().toArray()) ;
+            Collections.addAll(sortingProperties, sortedAgentsReport.keySet().toArray()) ;
 //            LOGGER.info(sortedAgentsReport.toString());
 //            LOGGER.info(sortedAgentsReport.keySet().toString());
         }

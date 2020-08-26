@@ -540,7 +540,7 @@ public class RelationshipReporter extends Reporter {
      * 
      * @return (HashMap) relationshipId maps to [agentIds]
      */
-    public HashMap<Object,String[]> prepareRelationshipAgentReport()
+    public HashMap<Comparable<?>,String[]> prepareRelationshipAgentReport()
     {
         return prepareRelationshipAgentReport(false) ;
     }
@@ -550,10 +550,10 @@ public class RelationshipReporter extends Reporter {
      * @param ignoreBreakups (boolean) ignore Relationships which have broken up.
      * @return (HashMap) relationshipId maps to [agentIds]
      */
-    public HashMap<Object,String[]> prepareRelationshipAgentReport(boolean ignoreBreakups)
+    public HashMap<Comparable<?>,String[]> prepareRelationshipAgentReport(boolean ignoreBreakups)
     {
         // LOGGER.info("prepareRelationshipAgentReport()");
-        HashMap<Object,String[]> relationshipAgentReport = new HashMap<Object,String[]>() ;
+        HashMap<Comparable<?>,String[]> relationshipAgentReport = new HashMap<Comparable<?>,String[]>() ;
         
         Object getReportObject = getReport("commence", this);
 

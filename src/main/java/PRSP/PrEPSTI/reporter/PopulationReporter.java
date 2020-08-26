@@ -133,7 +133,7 @@ public class PopulationReporter extends Reporter {
      * @return HashMap of sortingProperty's values to ArrayList of agentIds with
      * the appropriate sortingProperty value. 
      */
-    protected HashMap<Object,ArrayList<String>> agentIdSorted(String sortingProperty)
+    protected HashMap<Comparable<?>,ArrayList<String>> agentIdSorted(String sortingProperty)
     {
         return agentIdSorted(sortingProperty,getMaxCycles()) ;
     }
@@ -145,9 +145,9 @@ public class PopulationReporter extends Reporter {
      * @return HashMap of sortingProperty's values to ArrayList of agentIds with
      * the appropriate sortingProperty value. 
      */
-    protected HashMap<Object,ArrayList<String>> agentIdSorted(String sortingProperty, int endCycle)
+    protected HashMap<Comparable<?>,ArrayList<String>> agentIdSorted(String sortingProperty, int endCycle)
     {
-        HashMap<Object,ArrayList<String>> sortedHashMap = new HashMap<Object,ArrayList<String>>() ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedHashMap = new HashMap<Comparable<?>,ArrayList<String>>() ;
         //LOGGER.info("birthReport");
         
         HashMap<String,String> propertyReport = prepareCensusPropertyReport(sortingProperty,endCycle) ;
@@ -628,7 +628,7 @@ public class PopulationReporter extends Reporter {
         int endPropertyIndex ;
         
         // riskinessCasual/Regular
-        String[] riskyArray = new String[] {"probabilityUseCondom","riskyStatus"} ;
+        String[] riskyArray = new String[] {"probabilityUseCondom","riskyStatus"} ;    // Perhaps redundant now probabilityUseCondom doesn't vary
         for (String property : riskyArray)
          	if (propertyName.startsWith(property))
            	{

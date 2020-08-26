@@ -1487,12 +1487,12 @@ public class Reporter {
      * @return (ArrayList) report with (ArrayList) subreports where the values 
      * in the subreports are averaged over the innermost ArrayList.
      */
-    static public HashMap<Comparable,String> 
-        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Comparable,String>> reportList)
+    static public HashMap<Comparable<?>,String> 
+        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Comparable<?>,String>> reportList)
         {
             boolean writeLocal = WRITE_REPORT ;
             WRITE_REPORT = false ;
-            HashMap<Comparable,String> meanReport = PREPARE_MEAN_HASHMAP_REPORT(reportList, "", "", "") ;
+            HashMap<Comparable<?>,String> meanReport = PREPARE_MEAN_HASHMAP_REPORT(reportList, "", "", "") ;
             WRITE_REPORT = writeLocal ;
             return meanReport ;
         }
@@ -1509,13 +1509,13 @@ public class Reporter {
      * @return (ArrayList) report with (ArrayList) subreports where the values 
      * in the subreports are averaged over the innermost ArrayList.
      */
-    static public HashMap<Comparable,String> 
-        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Comparable,String>> reportList, String categoryName, String reportName, String nameSimulation)
+    static public HashMap<Comparable<?>,String> 
+        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Comparable<?>,String>> reportList, String categoryName, String reportName, String nameSimulation)
     {
         // Find mean of reports
-        HashMap<Comparable,String> meanReport = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> meanReport = new HashMap<Comparable<?>,String>() ;
         
-        HashMap<Comparable,String> firstReport = reportList.get(0) ;
+        HashMap<Comparable<?>,String> firstReport = reportList.get(0) ;
         int nbReports = reportList.size() ;
         String firstReportString = (String) String.valueOf(firstReport.values().iterator().next()) ;
         String meanRecord = "" ;
@@ -1528,7 +1528,7 @@ public class Reporter {
             for (String propertyName : reportProperties)
             {
                 double itemValue = 0.0 ;
-                for (HashMap<Comparable,String> report : reportList)
+                for (HashMap<Comparable<?>,String> report : reportList)
                 {
                     String record = report.get(key) ;
                     try
@@ -1568,7 +1568,7 @@ public class Reporter {
      * in the subreports are averaged over the innermost ArrayList.
      */
     static public HashMap<Object,HashMap<Object,String>> 
-        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Object,HashMap<Comparable,String>>> reportList, String categoryName, String sortingProperty, String reportName, String nameSimulation)
+        PREPARE_MEAN_HASHMAP_REPORT(ArrayList<HashMap<Object,HashMap<Comparable<?>,String>>> reportList, String categoryName, String sortingProperty, String reportName, String nameSimulation)
     {
         // Find mean of reports
         HashMap<Object,HashMap<Object,String>> meanReport = new HashMap<Object,HashMap<Object,String>>() ;
@@ -1577,13 +1577,13 @@ public class Reporter {
         WRITE_REPORT = false ;
         
         // Cycle through sortingProperty values
-        HashMap<Object,HashMap<Comparable,String>> firstReport = reportList.get(0) ;
+        HashMap<Object,HashMap<Comparable<?>,String>> firstReport = reportList.get(0) ;
         Set<Object> sortingValues = (Set<Object>) firstReport.keySet() ;
         
         for (Object sortingValue : sortingValues)
         {
-            ArrayList<HashMap<Comparable,String>> sortedList = new ArrayList<HashMap<Comparable,String>>() ;
-            for (HashMap<Object,HashMap<Comparable,String>> report : reportList)
+            ArrayList<HashMap<Comparable<?>,String>> sortedList = new ArrayList<HashMap<Comparable<?>,String>>() ;
+            for (HashMap<Object,HashMap<Comparable<?>,String>> report : reportList)
                 sortedList.add(report.get(sortingValue)) ;
             meanReport.put(sortingValue, (HashMap<Object,String>) PREPARE_MEAN_HASHMAP_REPORT(sortedList, categoryName, reportName, nameSimulation).clone()) ;
         }
@@ -1607,7 +1607,7 @@ public class Reporter {
     static public HashMap<Comparable,Number[]> PREPARE_GRAY_REPORT(String[] simNames, String folderPath, int startYear, int endYear)
     {
         HashMap<Comparable,Number[]> grayReport = new HashMap<Comparable,Number[]>() ;
-        ArrayList<HashMap<Comparable,String>> hashMapReports = new ArrayList<HashMap<Comparable,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> hashMapReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
         //ArrayList<ArrayList<Object>> arrayListReports = new ArrayList<ArrayList<Object>>() ;
         ArrayList<String> reportNames = new ArrayList<String>() ;
 //        int nbColumns = 8 ; // 4+4+4+1+1 ;
@@ -1624,17 +1624,17 @@ public class Reporter {
         
         int backYears = 1 + endYear - startYear ;
         
-        ArrayList<HashMap<Comparable,String>> prevalenceReports = new ArrayList<HashMap<Comparable,String>>() ;  
-        ArrayList<HashMap<Comparable,String>> prevalenceHivReports = new ArrayList<HashMap<Comparable,String>>() ;  
-        ArrayList<HashMap<Comparable,String>> prevalenceRiskyReports = new ArrayList<HashMap<Comparable,String>>() ;  
-        ArrayList<HashMap<Comparable,String>> notificationReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> notificationHivReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> incidenceReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> incidenceHivReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> riskyIncidenceReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> riskyIncidenceHivReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> condomlessReports = new ArrayList<HashMap<Comparable,String>>() ;
-        ArrayList<HashMap<Comparable,String>> condomlessHivReports = new ArrayList<HashMap<Comparable,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> prevalenceReports = new ArrayList<HashMap<Comparable<?>,String>>() ;  
+        ArrayList<HashMap<Comparable<?>,String>> prevalenceHivReports = new ArrayList<HashMap<Comparable<?>,String>>() ;  
+        ArrayList<HashMap<Comparable<?>,String>> prevalenceRiskyReports = new ArrayList<HashMap<Comparable<?>,String>>() ;  
+        ArrayList<HashMap<Comparable<?>,String>> notificationReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> notificationHivReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> incidenceReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> incidenceHivReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> riskyIncidenceReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> riskyIncidenceHivReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> condomlessReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
+        ArrayList<HashMap<Comparable<?>,String>> condomlessHivReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
         
         
         ArrayList<HashMap<Comparable,Number>> beenTestedReports = new ArrayList<HashMap<Comparable,Number>>() ;
@@ -1655,38 +1655,38 @@ public class Reporter {
             beenTestedReports.add(screeningReporter.prepareYearsBeenTestedReport(backYears, 0, 0, endYear)) ;
             condomUseReports.add(encounterReporter.prepareYearsCondomUseRecord(backYears, endYear)) ;
         }
-        HashMap<Comparable,String> prevalenceRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) prevalenceRecordYears) ;
+        HashMap<Comparable<?>,String> prevalenceRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) prevalenceRecordYears) ;
         reportNames.add("prevalence") ;
-        HashMap<Comparable,String> prevalenceHivRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceHivReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) prevalenceHivRecordYears) ;
+        HashMap<Comparable<?>,String> prevalenceHivRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceHivReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) prevalenceHivRecordYears) ;
         reportNames.add("prevalence_HIV") ;
-        HashMap<Comparable,String> prevalenceRiskyRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceRiskyReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) prevalenceRiskyRecordYears) ;
+        HashMap<Comparable<?>,String> prevalenceRiskyRecordYears = PREPARE_MEAN_HASHMAP_REPORT(prevalenceRiskyReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) prevalenceRiskyRecordYears) ;
         reportNames.add("prevalence_risky") ;
-        HashMap<Comparable,String> notificationsRecordYears = PREPARE_MEAN_HASHMAP_REPORT(notificationReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) notificationsRecordYears) ;
+        HashMap<Comparable<?>,String> notificationsRecordYears = PREPARE_MEAN_HASHMAP_REPORT(notificationReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) notificationsRecordYears) ;
         reportNames.add("notifications") ;
-        HashMap<Comparable,String> notificationsHivRecordYears = PREPARE_MEAN_HASHMAP_REPORT(notificationHivReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) notificationsHivRecordYears) ;
+        HashMap<Comparable<?>,String> notificationsHivRecordYears = PREPARE_MEAN_HASHMAP_REPORT(notificationHivReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) notificationsHivRecordYears) ;
         reportNames.add("notifications_HIV") ;
-        HashMap<Comparable,String> incidenceReportYears = PREPARE_MEAN_HASHMAP_REPORT(incidenceReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) incidenceReportYears) ;
+        HashMap<Comparable<?>,String> incidenceReportYears = PREPARE_MEAN_HASHMAP_REPORT(incidenceReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) incidenceReportYears) ;
         reportNames.add("incidence") ;
-        HashMap<Comparable,String> incidenceHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(incidenceHivReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) incidenceHivReportYears) ;
+        HashMap<Comparable<?>,String> incidenceHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(incidenceHivReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) incidenceHivReportYears) ;
         reportNames.add("incidence_HIV") ;
-        HashMap<Comparable,String> riskyIncidenceReportYears = PREPARE_MEAN_HASHMAP_REPORT(riskyIncidenceReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) riskyIncidenceReportYears) ;
+        HashMap<Comparable<?>,String> riskyIncidenceReportYears = PREPARE_MEAN_HASHMAP_REPORT(riskyIncidenceReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) riskyIncidenceReportYears) ;
         reportNames.add("risky_incidence") ;
-        HashMap<Comparable,String> riskyIncidenceHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(riskyIncidenceHivReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) riskyIncidenceHivReportYears) ;
+        HashMap<Comparable<?>,String> riskyIncidenceHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(riskyIncidenceHivReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) riskyIncidenceHivReportYears) ;
         reportNames.add("risky_incidence_HIV") ;
-        HashMap<Comparable,String> condomlessReportYears = PREPARE_MEAN_HASHMAP_REPORT(condomlessReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) condomlessReportYears) ;
+        HashMap<Comparable<?>,String> condomlessReportYears = PREPARE_MEAN_HASHMAP_REPORT(condomlessReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) condomlessReportYears) ;
         reportNames.add("condomless") ;
-        HashMap<Comparable,String> condomlessHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(condomlessHivReports) ;
-        hashMapReports.add((HashMap<Comparable,String>) condomlessHivReportYears) ;
+        HashMap<Comparable<?>,String> condomlessHivReportYears = PREPARE_MEAN_HASHMAP_REPORT(condomlessHivReports) ;
+        hashMapReports.add((HashMap<Comparable<?>,String>) condomlessHivReportYears) ;
         reportNames.add("condomless_HIV") ;
         
         HashMap<Comparable,Number> beenTestedReportYears = MEAN_HASHMAP_REPORT(beenTestedReports) ;
@@ -1699,7 +1699,7 @@ public class Reporter {
             ArrayList<Number> valuesList = new ArrayList<Number>() ;
             for (int reportIndex = 0 ; reportIndex < hashMapReports.size() ; reportIndex++ )
             {
-                HashMap<Comparable,String> hashMapReport = hashMapReports.get(reportIndex) ;
+                HashMap<Comparable<?>,String> hashMapReport = hashMapReports.get(reportIndex) ;
                 properties = IDENTIFY_PROPERTIES(hashMapReport.get(year)) ;
                 // LOGGER.info(reportNames.get(reportIndex) + " " + properties.toString() + " " + hashMapReport.get(year));
                 //LOGGER.log(Level.INFO, "{0}", prevalenceRecordYears.get(year));
@@ -2946,7 +2946,7 @@ public class Reporter {
      * @param simName
      * @param folderPath 
      */
-    static public boolean WRITE_CSV_STRING(HashMap<Comparable,String> report, String categoryName, ArrayList<Object> categoryList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, ArrayList<Object> categoryList, String reportName, String simName, String folderPath)
     {
         HashMap<Comparable,Number[]> newReport = new HashMap<Comparable,Number[]>() ;
         
@@ -2988,7 +2988,7 @@ public class Reporter {
      * @param folderPath 
      * @return  true if file is written successfully and false otherwise.
      */
-    static public boolean WRITE_CSV_STRING(HashMap<Comparable,String> report, String categoryName, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, String reportName, String simName, String folderPath)
     {
         return WRITE_CSV_STRING(report, categoryName, new ArrayList<Object>(), reportName, simName, folderPath) ;
     }
@@ -3020,7 +3020,7 @@ public class Reporter {
      * @param folderPath
      * @return (boolean) true if save was successful and false otherwise.
      */
-    static public boolean WRITE_CSV_DISTRIBUTION(ArrayList<HashMap<Comparable,String>> reportList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV_DISTRIBUTION(ArrayList<HashMap<Comparable<?>,String>> reportList, String reportName, String simName, String folderPath)
     {
         HashMap<Comparable,ArrayList<String>> distribution = new HashMap<Comparable,ArrayList<String>>() ;
         
@@ -3031,7 +3031,7 @@ public class Reporter {
         // Put keys (years) in order. 
         //TODO: Upgrade to source 8 and more general Comparator keyComparator = Comparator.naturalOrder() ;
         ArrayList<String> reportKeys = new ArrayList<String>() ;
-        HashMap<Comparable,String> firstReport = reportList.get(0) ;
+        HashMap<Comparable<?>,String> firstReport = reportList.get(0) ;
         properties = IDENTIFY_PROPERTIES(firstReport.get(firstReport.keySet().iterator().next())) ;
         for (Comparable key : firstReport.keySet())
             reportKeys.add(String.valueOf(key)) ;
@@ -3049,7 +3049,7 @@ public class Reporter {
         // Construct output distribution with minimal calls to reportList
         for (int reportIndex = 0 ; reportIndex < reportList.size() ; reportIndex++ )
         {
-            HashMap<Comparable,String> report = reportList.get(reportIndex) ;
+            HashMap<Comparable<?>,String> report = reportList.get(reportIndex) ;
             //Collections<Comparable> yearKeys =  report.keySet()
             for (Comparable year : report.keySet())
             {
@@ -3320,9 +3320,9 @@ public class Reporter {
      * @param finalYear
      * @return 
      */
-    static public HashMap<Comparable,String> ARRAY_TO_HASHMAP(ArrayList<String> arrayReport, int finalYear)
+    static public HashMap<Comparable<?>,String> ARRAY_TO_HASHMAP(ArrayList<String> arrayReport, int finalYear)
     {
-        HashMap<Comparable,String> hashMapReport = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> hashMapReport = new HashMap<Comparable<?>,String>() ;
                 
         int nbYears = arrayReport.size() ;
         int yearKey = finalYear ;
@@ -3869,8 +3869,8 @@ public class Reporter {
     {
         ConfigLoader.load();
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
-        //String folderPath = "output/long_sims/" ;
-        String folderPath = "output/to2025/" ;
+        String folderPath = "output/long_sims/" ;
+        //String folderPath = "output/to2025/" ;
         //String folderPath = "data_files/" ;
         //String folderPath = "output/" ;
         //String folderPath = "output/prep/" ;
@@ -3881,33 +3881,32 @@ public class Reporter {
         //String prefix = "to2019noAdjustCondom" ;
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
-        //String prefix = "to2025screen216prepto2019noAdjustCondom" ;
-        //String prefix = "to2030prep154screen2plusfrom2015to2019early2Prepto2019noAdjustCondom" ;
-        //String prefix = "to2030prep123screen1plusto2019noAdjustCondom" ;
+        //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
+        String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
-        String prefix = "to2025prepNoScreen" ; // to2019noAdjustCondom" ;
+        //String prefix = "to2025prepNoScreen" ; // to2019noAdjustCondom" ;
         //String prefix = "from2015to2025screenNoPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ; 
         //String suffix = "" ;
         //String suffix = "Pop40000Cycles5110" ;
         //String suffix = "Pop40000Cycles1825" ;
-        //String suffix = "Pop40000Cycles4015" ;
-        String suffix = "Pop40000Cycles7300" ;
+        String suffix = "Pop40000Cycles4015" ;
+        //String suffix = "Pop40000Cycles7300" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
         String reportName = "condomUseReport" ;
         ArrayList<String> simNameList = new ArrayList<String>() ;
         String letter2 = "C" ;
         //for (String letter2 : new String[] {"A","B","C"}) // ,"D","E","F","G","H","I","J"})
-    	for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-        	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-        		simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
+    	//for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+        //	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+        //		simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
 
     	//for (String letter50 : new String[] {"Eje","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-        //for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-          //          simNameList.add(prefix + letter50 + suffix) ;
+        for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
+                             simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
         	
         String[] simNames = simNameList.toArray(new String[] {}) ;

@@ -211,7 +211,7 @@ public class Relationship {
         //RelationshipReporter relationshipReporter = new RelationshipReporter(simName,"/srv/scratch/z3524276/prepsti/output/test/") ;
         //RelationshipReporter relationshipReporter = new RelationshipReporter(simName,"/short/is14/mw7704/prepsti/output/year2007/") ;
         
-        HashMap<Object,String[]> relationshipAgentReport 
+        HashMap<Comparable<?>,String[]> relationshipAgentReport 
                 = relationshipReporter.prepareRelationshipAgentReport() ;
         
         String[] relationshipClassNames = new String[] {"Regular","Monogomous"} ; // "Casual",
@@ -226,7 +226,7 @@ public class Relationship {
         {
             for (String relationshipName : relationshipClassNames)
             {
-                Class relationshipClazz = Class.forName("PRSP.PrEPSTI.community.".concat(relationshipName)) ;
+                Class<?> relationshipClazz = Class.forName("PRSP.PrEPSTI.community.".concat(relationshipName)) ;
                 for (ArrayList<Comparable> relationshipIdList : relationshipsRecord.get(relationshipName).values())
                 {
                     for (Object relationshipId : relationshipIdList)
@@ -242,7 +242,7 @@ public class Relationship {
                             else if (agents.get(agentIndex).getAgentId() == Integer.valueOf(agentIds[1]))
                                 agentIndex1 = agentIndex ;
                         }
-                        Relationship relationship = (Relationship) relationshipClazz.newInstance();
+                        Relationship relationship = (Relationship) relationshipClazz.getDeclaredConstructor().newInstance();
                         relationship.addAgents(agents.get(agentIndex0), agents.get(agentIndex1)) ;
                         nbRelationships++ ;
                     }
