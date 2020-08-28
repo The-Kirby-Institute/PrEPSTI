@@ -1038,8 +1038,8 @@ public class EncounterReporter extends Reporter {
     }
     
     /**
-     * Filters records leaving only those encounters containing propertyName withCondom (String) value.
-     * @param propertyName
+     * Filters records leaving only those encounters containing propertyName (String) value.
+     * @param propertyName - eg. condom
      * @param value
      * @param fullReport
      * @return 

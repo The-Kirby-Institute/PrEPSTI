@@ -580,6 +580,7 @@ public class Community {
         //screeningReporter = new ScreeningReporter(SIM_NAME,FILE_PATH) ;
         //String prevalenceReports = "" ;
         ArrayList<String> prevalenceReport ;
+        
         for (String siteName : siteNames)
         {
             prevalenceReport = screeningReporter.preparePrevalenceReport(siteName) ;
@@ -591,12 +592,24 @@ public class Community {
         // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {"all", prevalenceReport.get(prevalenceReport.size() - 1)}) ;
 
         int backYears = END_YEAR + 1 - START_YEAR ;
+        boolean atRisk = false ;
+        
         HashMap<Comparable,String> incidenceReport = new HashMap<Comparable,String>() ;
         HashMap<Comparable,String> incidenceReportPrep = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> trueIncidenceReport = new HashMap<Comparable<?>,String>() ;
+        HashMap<Comparable<?>,String> trueIncidenceReportPrep = new HashMap<Comparable<?>,String>() ;
         if (DYNAMIC)
         {
-            incidenceReport = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, END_YEAR, "statusHIV") ;
-            incidenceReportPrep = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
+        	if (atRisk)
+        	{
+            	incidenceReport = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, END_YEAR, "statusHIV") ;
+                incidenceReportPrep = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
+        	}
+        	else
+        	{
+            	trueIncidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "statusHIV") ;
+            	trueIncidenceReportPrep = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
+        	}
         }
         //ArrayList<HashMap<Comparable,Number>> beenTestedReports = new ArrayList<HashMap<Comparable,Number>>() ;
         //ArrayList<ArrayList<String>> condomUseReports = new ArrayList<ArrayList<String>>() ;
@@ -613,7 +626,7 @@ public class Community {
         //encounterReporter = new EncounterReporter(Community.SIM_NAME,Community.FILE_PATH) ;
         
         // commented out:
-        String finalAtRiskString = screeningReporter.prepareFinalAtRiskIncidentsRecord(siteNames, 0, "statusHIV");
+        /*String finalAtRiskString = screeningReporter.prepareFinalAtRiskIncidentsRecord(siteNames, 0, "statusHIV");
         String[] finalAtRiskArray = finalAtRiskString.split(" ");
         int total = 4;
         String hivStatusDifferences = "";
@@ -623,7 +636,7 @@ public class Community {
             String[] trueProperty = finalAtRiskArray[i + total].split(":");
             hivStatusDifferences += trueProperty[0] + "-" + falseProperty[0] + ": " + String.valueOf(Float.valueOf(trueProperty[1]) - Float.valueOf(falseProperty[1])) + "\n";
         }
-        LOGGER.info("by HIV-status " + finalAtRiskString) ;
+        LOGGER.info("by HIV-status " + finalAtRiskString) ;*/
         ////LOGGER.info("Incidence " + encounterReporter.prepareFinalIncidenceRecord(new String[] {"Pharynx","Rectum","Urethra"}, 0, 0, 365, MAX_CYCLES).toString());
         // LOGGER.info("Incidence " + encounterReporter.prepareSortedFinalIncidenceRecord(siteNames, 0, 0, 365, MAX_CYCLES, "statusHIV").toString());
 
@@ -648,12 +661,25 @@ public class Community {
         //populationPresenter.plotAgeAtDeath();
         //PopulationPresenter populationPresenter = new PopulationPresenter("deaths per cycle","deaths per cycle",populationReporter) ;
         //populationPresenter.plotDeathsPerCycle();
-        if (!incidenceReport.isEmpty())
+        if (atRisk)
         {
-            Reporter.DUMP_OUTPUT("riskyIncidence_HIV",SIM_NAME,FILE_PATH,incidenceReport);
-            LOGGER.info(incidenceReport.toString()) ;
-            Reporter.DUMP_OUTPUT("riskyIncidence_Prep",SIM_NAME,FILE_PATH,incidenceReportPrep);
+            if (!incidenceReport.isEmpty())
+            {
+                Reporter.DUMP_OUTPUT("riskyIncidence_HIV",SIM_NAME,FILE_PATH,incidenceReport);
+                LOGGER.info(incidenceReport.toString()) ;
+                Reporter.DUMP_OUTPUT("riskyIncidence_Prep",SIM_NAME,FILE_PATH,incidenceReportPrep);
+            }
         }
+        else
+        {
+            if (!trueIncidenceReport.isEmpty())
+            {
+                Reporter.DUMP_OUTPUT("incidence_HIV",SIM_NAME,FILE_PATH,trueIncidenceReport);
+                LOGGER.info(trueIncidenceReport.toString()) ;
+                Reporter.DUMP_OUTPUT("incidence_Prep",SIM_NAME,FILE_PATH,trueIncidenceReportPrep);
+            }
+        }
+        
         /*Community.ADD_TIME_STAMP("FINAL TIMESTAMP");
         
         LOGGER.info("Time Stamps:");
@@ -815,7 +841,7 @@ public class Community {
                 metaData.add(relationshipsReboot) ;
                 
                 // dump new metadata
-                rebootedSimName = simName + "FROM" + String.valueOf(fromCycle);
+                rebootedSimName = simName + "$" + String.valueOf(fromCycle);
                 rebootedFolderPath = Community.FILE_PATH;
 
                 // TODO: extract "test/" from CONFIG

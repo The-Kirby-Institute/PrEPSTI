@@ -3826,7 +3826,8 @@ public class Reporter {
         // read the old file and add data to newFileText
         BufferedReader reader;
         String newFileText = "";
-        try {
+        try 
+        {
             reader = new BufferedReader(new FileReader(originalFile));
             String line = reader.readLine();
             while (line != null) {
@@ -3843,7 +3844,9 @@ public class Reporter {
                 line = reader.readLine();
             }
 
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             LOGGER.severe(e.toString());
         }
 
@@ -3882,7 +3885,7 @@ public class Reporter {
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
         //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
-        String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
+        String prefix = "to2030linearPrep123to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
@@ -3924,7 +3927,7 @@ public class Reporter {
         //if (simNameList.size() < cutoff)
             cutoff = simNameList.size() ;
         //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-        MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_HIV", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+        MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
         LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
         // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
         //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;
@@ -3965,7 +3968,8 @@ public class Reporter {
         // add rebooted agent data to metadata
         metaLabels.add("Agents") ;
         String agentsReboot = "" ;
-        for (Integer agentId : sortedAgentKeySet) {
+        for (Integer agentId : sortedAgentKeySet) 
+        {
             String newAgentRecord = populationCensusUpToCycle.get(agentId);
             agentsReboot += newAgentRecord;
         }
@@ -3990,7 +3994,7 @@ public class Reporter {
         metaData.add(relationshipsReboot) ;
 
         // dump new metadata
-        String rebootedSimName = simName + "$" + String.valueOf(rebootCycle);
+        String rebootedSimName = simName + "FROM" + String.valueOf(rebootCycle);
         String rebootedFolderPath = Community.FILE_PATH;
 
         // rebootPathAndNames.put("rebootedSimName", rebootedSimName);

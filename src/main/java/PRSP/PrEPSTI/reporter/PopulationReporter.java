@@ -880,19 +880,21 @@ public class PopulationReporter extends Reporter {
         HashMap<String, String> siteReport = screeningReporter.prepareAgentSiteReport(endCycle, agentIdSet);
         
         // identify properties
-        ArrayList<String> fullProps = new ArrayList<String>();
-        for (Object birthReportKeyObj : birthReport.keySet()) {
-            String birthString = birthReport.get(birthReportKeyObj);
+        ArrayList<String> fullProps = new ArrayList<String>() ;
+        String birthString = "" ;
+        for (Object birthReportKeyObj : birthReport.keySet()) 
+        {
+        	birthString = birthReport.get(birthReportKeyObj);
             fullProps = Reporter.IDENTIFY_PROPERTIES(birthString) ;
             break;
         }
-
+        
         // loop through and stop when we see the first "Site"
         ArrayList<String> propertiesArrayList = new ArrayList<String>();
         propertiesArrayList.add("agentId");  // add "agentId" at the start since IDENTIFY_PROPERTIES remove this
-        for (String p : fullProps) {
-            if (p.equals("Site")) break;
-            propertiesArrayList.add(p);
+        for (String property : fullProps) {
+            if (property.equals("Site")) break;
+                propertiesArrayList.add(property);
         }
 
         // convert from ArrayList -> String[]

@@ -1,21 +1,21 @@
 {   
     "paths": {
-        "REBOOT_PATH" : "output/test/",
+        "REBOOT_PATH" : "output/prep/",
         "REPORT_PATH" : "reports/",
         "DATA_PATH" : "data_files/"
     },
 
     "community" : {
         "FILE_PATH" : "output/test/",
-        "NAME_ROOT" : "cali2008brate68a",
-        "MAX_CYCLES" : "25",
+        "NAME_ROOT" : "debugReboot1c",
+        "MAX_CYCLES" : "11",
         "POPULATION" : "40000",
-        "COMMENT" : "calibrate to ASR 2008",
-        "DYNAMIC" : "false",
-        "REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "REBOOT_FROM_CYCLE" : "-1",
-        "START_YEAR" : "2008",
-        "END_YEAR" : "2019",
+        "COMMENT" : "Debug midway reboot",
+        "DYNAMIC" : "true",
+        "REBOOT_SIMULATION" : "to2019testPrEPscreen1c",
+        "REBOOT_FROM_CYCLE" : "9",
+        "START_YEAR" : "2015",
+        "END_YEAR" : "2025",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"

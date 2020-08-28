@@ -557,7 +557,6 @@ public class RelationshipReporter extends Reporter {
         
         Object getReportObject = getReport("commence", this);
 
-        LOGGER.info("test => " + getReportObject.getClass().toString());
         ArrayList<String> commenceReport = (ArrayList<String>) getReport("commence",this) ; //  
         
         ArrayList<String> relationshipRecords ;
