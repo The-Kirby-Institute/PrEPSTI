@@ -3885,7 +3885,7 @@ public class Reporter {
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
         //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
-        String prefix = "to2030linearPrep123to2019noAdjustCondom" ;
+        String prefix = "to2030linearPrep92to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
@@ -3899,7 +3899,7 @@ public class Reporter {
         //String suffix = "Pop40000Cycles7300" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
-        String reportName = "condomUseReport" ;
+        String reportName = "incidenceReport" ;
         ArrayList<String> simNameList = new ArrayList<String>() ;
         String letter2 = "C" ;
         //for (String letter2 : new String[] {"A","B","C"}) // ,"D","E","F","G","H","I","J"})
@@ -3914,7 +3914,7 @@ public class Reporter {
         	
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
-        //MERGE_HASHMAP_CSV(simNameList,reportName,folderPath) ;
+        MERGE_HASHMAP_CSV(simNameList,reportName,folderPath) ;
         
         //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
         //ArrayList<String> closestSimulations
@@ -3927,7 +3927,7 @@ public class Reporter {
         //if (simNameList.size() < cutoff)
             cutoff = simNameList.size() ;
         //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-        MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+        //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
         LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
         // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
         //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;
