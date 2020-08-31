@@ -118,11 +118,11 @@ public class EncounterReporter extends Reporter {
      * @param siteNames
      * @return Records of final transmissions for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number> prepareFinalTransmissionsRecord(String[] siteNames)
+    public HashMap<Comparable,Number> prepareFinalTransmissionReport(String[] siteNames)
     {
         int endCycle = getMaxCycles() ;
         
-        return prepareFinalTransmissionsRecord(siteNames, 0, endCycle) ;
+        return prepareFinalTransmissionReport(siteNames, 0, endCycle) ;
     }
     
     /**
@@ -130,11 +130,12 @@ public class EncounterReporter extends Reporter {
      * @param siteNames
      * @return Records of final transmissions for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number> prepareFinalTransmissionsRecord(String[] siteNames, int backYears, int endCycle)
+    public HashMap<Comparable,Number> prepareFinalTransmissionReport(String[] siteNames, int backYears, int endCycle)
     {
         HashMap<Comparable,Number> finalTransmissionsRecord = new HashMap<Comparable,Number>() ;
         
         int rate ;
+        endCycle -= backYears * DAYS_PER_YEAR ;
         
         String finalTransmissionRecord = getBackCyclesReport(0,0,1,endCycle).get(0) ; // getFinalRecord() ;
         String finalRecord = encounterByValue(TRANSMISSION,TRUE,finalTransmissionRecord) ;
@@ -1381,7 +1382,8 @@ public class EncounterReporter extends Reporter {
     }
         
     /**
-     * TODO: Replace ArrayList withCondom set.
+     * 
+     * 
      * @return (HashMap) key is the transmitting agentId and entries are receiving agentIds
      */
     public HashMap<Comparable,ArrayList<Comparable>> prepareAgentToAgentRecord()
@@ -1424,6 +1426,59 @@ public class EncounterReporter extends Reporter {
                     if (trueIndex < falseIndex)    
                         Reporter.UPDATE_HASHMAP(Integer.valueOf(agentIdPair[0]), Integer.valueOf(agentIdPair[1]), transmissionRecord) ;
                     else    // falseIndex < trueIndex
+                        Reporter.UPDATE_HASHMAP(Integer.valueOf(agentIdPair[1]), Integer.valueOf(agentIdPair[0]), transmissionRecord) ;
+                    contactIndex = encounterString.indexOf(CONTACT,contactIndex+1);
+                }
+            }
+        }
+        return transmissionRecord ;
+    }
+    
+    /**
+     * 
+     * 
+     * @return (HashMap) key is the receiving agentId and entries are transmitting agentIds
+     */
+    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentFromAgentRecord()
+    {
+        HashMap<Comparable,ArrayList<Comparable>> transmissionRecord = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        
+        RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
+        HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
+                //(HashMap<Object,String[]>) getReport("relationshipAgent",relationshipReporter) ; //   
+        
+        // Only consider contacts where transmission occurred
+        ArrayList<String> transmissionReport = prepareTransmissionReport() ;
+        int encounterIndex ;
+        int contactIndex ;
+        String contact ;
+        String[] agentIdPair ;
+        int spaceIndex ;
+        int trueIndex ;
+        int falseIndex ;
+                
+        // Check each record (cycle) in transmissionReport
+        for (String record : transmissionReport)
+        {
+            for (encounterIndex = record.indexOf(RELATIONSHIPID) ; encounterIndex >= 0 ; encounterIndex = record.indexOf(RELATIONSHIPID,encounterIndex+1))
+            {
+                String encounterString = extractEncounter(record,encounterIndex) ;
+                agentIdPair = relationshipAgentReport.get(EXTRACT_VALUE(RELATIONSHIPID,encounterString,0)) ;
+                
+                // Check each sexual contact 
+                contactIndex = encounterString.indexOf(CONTACT);
+                while (contactIndex >= 0)
+                {
+                    contact = extractContact(encounterString,contactIndex) ;
+                    
+                    // Skip number of contact
+                    spaceIndex = contact.indexOf(" ");
+
+                    trueIndex = contact.indexOf("1",spaceIndex);
+                    falseIndex = contact.indexOf("0",spaceIndex);
+                    if (trueIndex > falseIndex)    
+                        Reporter.UPDATE_HASHMAP(Integer.valueOf(agentIdPair[0]), Integer.valueOf(agentIdPair[1]), transmissionRecord) ;
+                    else    // falseIndex > trueIndex
                         Reporter.UPDATE_HASHMAP(Integer.valueOf(agentIdPair[1]), Integer.valueOf(agentIdPair[0]), transmissionRecord) ;
                     contactIndex = encounterString.indexOf(CONTACT,contactIndex+1);
                 }
@@ -1495,6 +1550,68 @@ public class EncounterReporter extends Reporter {
     }
     
     /**
+     * 
+     * @return (HashMap) report of which Agent infected which other Agents in 
+     * which cycle.
+     */
+    public HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentFromAgentReport()
+    {
+        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> objectReport = 
+                            new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>() ;
+        
+        RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
+        HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ; 
+        // (HashMap<Object,String[]>) getReport("relationshipAgent",relationshipReporter) ;
+        
+        // Only consider contacts where transmission occurred
+        ArrayList<String> transmissionReport = prepareTransmissionReport() ;
+        
+        int encounterIndex ;
+        int contactIndex ;
+        String[] agentIdPair ;
+        int spaceIndex ;
+        int trueIndex ;
+        int falseIndex ;
+                
+        // Check each record (cycle) in transmissionReport
+        for (int cycle = 0 ; cycle < transmissionReport.size(); cycle++ )
+        {
+            String record = transmissionReport.get(cycle) ;
+            for (encounterIndex = record.indexOf(RELATIONSHIPID) ; encounterIndex >= 0 ; encounterIndex = record.indexOf(RELATIONSHIPID,encounterIndex+1) )
+            {
+                String encounterString = extractEncounter(record,encounterIndex) ;
+                agentIdPair = relationshipAgentReport.get(EXTRACT_VALUE(RELATIONSHIPID,encounterString,0)) ;
+                
+                // Check each sexual contact 
+                contactIndex = encounterString.indexOf(CONTACT);
+                while (contactIndex >= 0)
+                {
+                    String contact = extractContact(encounterString,contactIndex) ;
+                    
+                    // Skip number of contact
+                    spaceIndex = contact.indexOf(" ");
+
+                    trueIndex = contact.indexOf("1",spaceIndex);
+                    falseIndex = contact.indexOf("0",spaceIndex);
+                    if (trueIndex > falseIndex)    
+                    {
+                        objectReport = Reporter.UPDATE_HASHMAP(agentIdPair[0], agentIdPair[1], cycle, objectReport) ;
+                        break ;
+                    }
+                    else    // falseIndex > trueIndex
+                    {
+                        objectReport = Reporter.UPDATE_HASHMAP(agentIdPair[1], agentIdPair[0], cycle, objectReport) ;
+                        break ;
+                    }
+                    //contactIndex = encounterString.indexOf(CONTACT,contactIndex+1);
+                }
+            }
+        }
+        //return HASHMAP_HASHMAP_NUMBER(objectReport) ;
+        return objectReport ;
+    }
+    
+    /**
      * This method makes use of agentToAgentReport mapping agentId0 to agentId1 
      * to Array of cycles in which transmission occurred.
      * @return HashMap agentId to number of times Agent transmitted disease.
@@ -1521,6 +1638,32 @@ public class EncounterReporter extends Reporter {
     }
 		
     /**
+     * This method makes use of agentFromAgentReport mapping agentId0 to agentId1 
+     * to Array of cycles in which transmission occurred.
+     * @return HashMap agentId to number of times Agent received disease.
+     */
+    public HashMap<Comparable,Integer> prepareAgentReceptionCountReport()
+    {
+        HashMap<Comparable,Integer> agentReceptionCountReport 
+                = new HashMap<Comparable,Integer>() ;
+        
+        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> agentFromAgentReport 
+                = prepareAgentFromAgentReport() ;
+        
+        HashMap<Comparable,ArrayList<Comparable>> agentFromAgentRecord ; 
+        
+        for (Comparable agentId : agentFromAgentReport.keySet())
+        {
+            int agentTotal = 0 ;
+            agentFromAgentRecord = agentFromAgentReport.get(agentId) ;
+            for (Object agentKey : agentFromAgentRecord.keySet()) 
+                agentTotal += agentFromAgentRecord.get(agentKey).size() ;
+            agentReceptionCountReport.put(agentId, agentTotal) ;
+        }
+        return agentReceptionCountReport ;
+    }
+		
+    /**
      * 
      * @return (HashMap) Number of Agents responsible for given number of transmissions.
      */
@@ -1544,7 +1687,34 @@ public class EncounterReporter extends Reporter {
         }
         
         return numberAgentTransmissionReport ;
+    }
+    
+    /**
+     * 
+     * @return (HashMap) Number of Agents who have received given number of transmissions.
+     */
+    public HashMap<Comparable,Number> prepareNumberAgentReceptionReport()
+    {
+        HashMap<Comparable,Number> numberAgentReceptionReport = new HashMap<Comparable,Number>() ;
+
+        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        
+        Collection<Integer> agentReceptionCountValues = agentReceptionCountReport.values() ;
+        
+        int maxValue = Collections.max(agentReceptionCountValues) ;
+        
+        // To track how agentIds have had more than given Relationships
+        int nbAgents ;
+        
+        for (int key = maxValue ; key > 0 ; key-- )
+        {
+            nbAgents = Collections.frequency(agentReceptionCountValues,key) ;
+            numberAgentReceptionReport.put(key, nbAgents) ;
+        }
+        
+        return numberAgentReceptionReport ;
     }        
+   
    
     /**
      * Sorts transmission Report according to sortingProperty of Agents.
@@ -1590,6 +1760,49 @@ public class EncounterReporter extends Reporter {
     }        
    
     /**
+     * Sorts reception Report according to sortingProperty of Agents.
+     * @param sortingProperty
+     * @return (HashMap) sortingProperty maps to (HashMap) agentReceptionReport
+     */
+    public HashMap<Comparable,HashMap<Comparable,Number>> prepareNumberAgentReceptionReport(String sortingProperty)
+    {
+        HashMap<Comparable,HashMap<Comparable,Number>> numberAgentReceptionReport = new HashMap<Comparable,HashMap<Comparable,Number>>() ;
+
+        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        HashMap<Comparable,Number> receptionReport ;
+        
+        PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
+        HashMap<Object,Object> sortingReport = sortingReporter.sortedAgentIds(sortingProperty) ;
+        // LOGGER.log(Level.INFO, "{0}", sortingReport);
+        HashMap<Comparable,HashMap<Comparable,Integer>> sortedAgentReceptionCountReport 
+                = SORT_REPORT(agentReceptionCountReport, sortingReport) ;
+        
+        // Find highest value to count down from amongst all sorting variables
+        ArrayList<Integer> agentReceptionCountList = new ArrayList<Integer>() ;
+        for (HashMap<Comparable,Integer> agentReceptionCount : sortedAgentReceptionCountReport.values()) 
+            agentReceptionCountList.addAll(agentReceptionCount.values()) ;
+        int maxValue = Collections.max(agentReceptionCountList) ;
+            
+        for (Comparable sortingKey : sortedAgentReceptionCountReport.keySet())
+        {
+            receptionReport = new HashMap<Comparable,Number>() ;
+            Collection<Integer> agentReceptionCountValues = sortedAgentReceptionCountReport.get(sortingKey).values() ;
+        
+            // To track how agentIds have had more than given Relationships
+            int nbAgents ;
+
+            for (int key = maxValue ; key > 0 ; key-- )
+            {
+                nbAgents = Collections.frequency(agentReceptionCountValues,key) ;
+                receptionReport.put(key, nbAgents) ;
+            }
+            numberAgentReceptionReport.put(sortingKey, receptionReport) ;
+        }
+        
+        return numberAgentReceptionReport ;
+    }        
+   
+    /**
      * 
      * @return (HashMap) Number of Agents responsible for a given number 
      * or more transmissions.
@@ -1614,6 +1827,35 @@ public class EncounterReporter extends Reporter {
         }
         
         return cumulativeAgentTransmissionReport ;
+        
+    }        
+   
+    
+    /**
+     * 
+     * @return (HashMap) Number of Agents who have received a given number 
+     * or more transmissions.
+     */
+    public HashMap<Comparable,Number> prepareCumulativeAgentReceptionReport()
+    {
+        HashMap<Comparable,Number> cumulativeAgentReceptionReport = new HashMap<Comparable,Number>() ;
+
+        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        
+        Collection<Integer> agentReceptionCountValues = agentReceptionCountReport.values() ;
+        
+        int maxValue = Collections.max(agentReceptionCountValues) ;
+        
+        // To track how agentIds have had more than given Relationships
+        int agentsOver = 0 ;
+        
+        for (int key = maxValue ; key > 0 ; key-- )
+        {
+            agentsOver += Collections.frequency(agentReceptionCountValues,key) ;
+            cumulativeAgentReceptionReport.put(key, agentsOver) ;
+        }
+        
+        return cumulativeAgentReceptionReport ;
         
     }        
    

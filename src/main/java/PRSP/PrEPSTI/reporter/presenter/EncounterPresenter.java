@@ -318,7 +318,7 @@ public class EncounterPresenter extends Presenter {
      */
     public void plotFinalTransmissions(String[] siteNames)
     {
-        HashMap<Comparable,Number> finalTransmissionsRecord = reporter.prepareFinalTransmissionsRecord(siteNames) ;
+        HashMap<Comparable,Number> finalTransmissionsRecord = reporter.prepareFinalTransmissionReport(siteNames) ;
             
       // logger.log(level.info, "{0}", finalTransmissionsRecord);
         plotHashMap("Sites","prevalence",finalTransmissionsRecord) ;        

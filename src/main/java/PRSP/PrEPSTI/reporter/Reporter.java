@@ -3885,7 +3885,7 @@ public class Reporter {
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
         //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
-        String prefix = "to2030linearPrep92to2019noAdjustCondom" ;
+        String prefix = "to2030linearPrep78to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
