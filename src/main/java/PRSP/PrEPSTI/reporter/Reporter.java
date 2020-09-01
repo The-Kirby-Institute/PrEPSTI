@@ -1620,7 +1620,7 @@ public class Reporter {
 //            arrayNames[siteIndex] = siteNames[siteIndex] ;
 //        arrayNames[siteNames.length] = "all" ;
 //        
-        ArrayList<Object> sortedYears = new ArrayList<Object>() ;
+        ArrayList<Comparable> sortedYears = new ArrayList<Comparable>() ;
         
         int backYears = 1 + endYear - startYear ;
         
@@ -1850,7 +1850,7 @@ public class Reporter {
      */
     static public boolean WRITE_CSV(HashMap<Comparable,Number[]> report, String categoryName, String[] scoreNames, String reportName, String simName, String folderPath)
     {
-        return WRITE_CSV(report, categoryName, scoreNames, new ArrayList<Object>(), reportName, simName, folderPath) ;
+        return WRITE_CSV(report, categoryName, scoreNames, new ArrayList<Comparable>(), reportName, simName, folderPath) ;
     }
     
     /**
@@ -1868,7 +1868,7 @@ public class Reporter {
         for (Comparable key : report.keySet())
             convertedReport.put(key, new Number[] {report.get(key)}) ;
         
-        return WRITE_CSV(convertedReport, categoryName, new String[] {scoreName}, new ArrayList<Object>(report.keySet()), reportName, simName, folderPath) ;
+        return WRITE_CSV(convertedReport, categoryName, new String[] {scoreName}, new ArrayList<Comparable>(report.keySet()), reportName, simName, folderPath) ;
     }
     
     /**
@@ -1880,7 +1880,7 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public boolean WRITE_CSV(HashMap<Comparable,Number[]> report, String categoryName, String[] scoreNames, ArrayList<Object> categoryList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV(HashMap<Comparable,Number[]> report, String categoryName, String[] scoreNames, ArrayList<Comparable> categoryList, String reportName, String simName, String folderPath)
     {
         String filePath = folderPath + simName + reportName + ".csv" ;
         String line ;
@@ -1908,7 +1908,8 @@ public class Reporter {
         }
         //LOGGER.log(Level.INFO, "nbProperties:{1}", new Object[] {nbProperties});
         if (categoryList.isEmpty())
-            categoryList = new ArrayList<Object>(report.keySet()) ;
+            categoryList = new ArrayList<Comparable>(report.keySet()) ;
+        categoryList.sort(null) ;
         
         try
         {
@@ -2745,19 +2746,22 @@ public class Reporter {
      * @param folderPath - (String) Name of folder containing files
      * @return (boolean) - true if successful, false otherwise
      */
-    public static boolean MERGE_HASHMAP_CSV(ArrayList<String> fileNames, String reportName, String folderPath)
+    public static boolean MERGE_HASHMAP_CSV(ArrayList<String> fileNames, String reportName, String scoreName, String folderPath)
     {
         HashMap<Comparable,Number[]> report = new HashMap<Comparable,Number[]>() ;
         
         String fileName ;
         Comparable key ;
+        int scoreIndex = -1 ;
         String[] firstLine = new String[] {} ;
+        String[] firstOutput = new String[fileNames.size()] ;
         
         try
         {
         	for (int fileIndex = 0 ; fileIndex < fileNames.size() ; fileIndex++ )
         	{
         		fileName = fileNames.get(fileIndex) ;
+        		firstOutput[fileIndex] = fileName ;
         		
         		BufferedReader fileReader 
                 = new BufferedReader(new FileReader(folderPath + fileName + reportName + CSV)) ;
@@ -2765,8 +2769,19 @@ public class Reporter {
                 // Get first line
                 String record = fileReader.readLine().substring(1) ;    // Remove invisible character at beginning of first entry
                 String[] recordArray = record.split(COMMA) ;
+                
+                for (int recordIndex = 1 ; recordIndex < recordArray.length ; recordIndex++ )
+                {
+                	if (recordArray[recordIndex].equals(scoreName))
+                	{
+                		scoreIndex = recordIndex ; 
+                		break ;
+                	}
+                }
+                assert(scoreIndex >= 0) ;
+                
                 if (firstLine.length == 0)
-                	firstLine = new String[] {recordArray[0], recordArray[3]} ;
+                	firstLine = new String[] {recordArray[0], fileName} ;
             
         
                 record = fileReader.readLine() ;
@@ -2783,7 +2798,7 @@ public class Reporter {
             	    Number[] valueArray = report.get(key).clone() ;
                 //if (recordArray.length > 1)
                 {   
-                    valueArray[fileIndex] = Double.valueOf(recordArray[3]) ;
+                    valueArray[fileIndex] = Double.valueOf(recordArray[scoreIndex]) ;
                     report.put(key, valueArray) ;
                 }
                 //else
@@ -2809,8 +2824,9 @@ public class Reporter {
         // Prepare to write merged file to disk
         fileName = fileNames.get(0) ;
         //fileName = fileName.substring(0, fileName.indexOf(CSV)) ;
+        reportName += "_" + scoreName ;
         
-        return WRITE_CSV(report, firstLine[0], new String[] {firstLine[1]}, "Merged" + reportName, fileName, folderPath) ;
+        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, folderPath) ;
     }
 
     /**
@@ -2946,7 +2962,7 @@ public class Reporter {
      * @param simName
      * @param folderPath 
      */
-    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, ArrayList<Object> categoryList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, ArrayList<Comparable> categoryList, String reportName, String simName, String folderPath)
     {
         HashMap<Comparable,Number[]> newReport = new HashMap<Comparable,Number[]>() ;
         
@@ -2990,7 +3006,7 @@ public class Reporter {
      */
     static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, String reportName, String simName, String folderPath)
     {
-        return WRITE_CSV_STRING(report, categoryName, new ArrayList<Object>(), reportName, simName, folderPath) ;
+        return WRITE_CSV_STRING(report, categoryName, new ArrayList<Comparable>(), reportName, simName, folderPath) ;
     }
     
     static public boolean DUMP_OUTPUT(String reportName, String simName, String folderPath, Object dumpReport)
@@ -3914,7 +3930,7 @@ public class Reporter {
         	
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
-        MERGE_HASHMAP_CSV(simNameList,reportName,folderPath) ;
+        MERGE_HASHMAP_CSV(simNameList,reportName,"all_false",folderPath) ;
         
         //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
         //ArrayList<String> closestSimulations
