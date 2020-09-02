@@ -118,7 +118,7 @@ public class EncounterReporter extends Reporter {
      * @param siteNames
      * @return Records of final transmissions for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number> prepareFinalTransmissionReport(String[] siteNames)
+    public HashMap<Comparable<?>,Number> prepareFinalTransmissionReport(String[] siteNames)
     {
         int endCycle = getMaxCycles() ;
         
@@ -130,9 +130,9 @@ public class EncounterReporter extends Reporter {
      * @param siteNames
      * @return Records of final transmissions for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number> prepareFinalTransmissionReport(String[] siteNames, int backYears, int endCycle)
+    public HashMap<Comparable<?>,Number> prepareFinalTransmissionReport(String[] siteNames, int backYears, int endCycle)
     {
-        HashMap<Comparable,Number> finalTransmissionsRecord = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> finalTransmissionsRecord = new HashMap<Comparable<?>,Number>() ;
         
         int rate ;
         endCycle -= backYears * DAYS_PER_YEAR ;
@@ -512,9 +512,9 @@ public class EncounterReporter extends Reporter {
      * @param sortedReport
      * @return Report of Transmissions per cycle to Agents sorted in sortedReport.
      */
-    public ArrayList<ArrayList<Comparable>> prepareReceiveCountReport( HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> sortedReport )
+    public ArrayList<ArrayList<Comparable<?>>> prepareReceiveCountReport( HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> sortedReport )
     {
-        ArrayList<ArrayList<Comparable>> nbTransmissions = new ArrayList<ArrayList<Comparable>>() ;
+        ArrayList<ArrayList<Comparable<?>>> nbTransmissions = new ArrayList<ArrayList<Comparable<?>>>() ;
         
         // Put keys of sortedReport in order
         Object[] objectKeys = sortedReport.keySet().toArray() ;
@@ -527,12 +527,12 @@ public class EncounterReporter extends Reporter {
         // Loop through keys
         for (int key = 0 ; key <= sortedKeys[sortedKeys.length-1] ; key++)
         {
-            ArrayList<Comparable> recordArray = new ArrayList<Comparable>() ;
+            ArrayList<Comparable<?>> recordArray = new ArrayList<Comparable<?>>() ;
             if (sortedReport.keySet().contains(key))
             {
-                HashMap<Comparable,ArrayList<Comparable>> cycleHashMap = sortedReport.get(key) ;
+                HashMap<Comparable<?>,ArrayList<Comparable<?>>> cycleHashMap = sortedReport.get(key) ;
                 //count = 0;
-                for ( ArrayList<Comparable> value : cycleHashMap.values() )
+                for ( ArrayList<Comparable<?>> value : cycleHashMap.values() )
                     recordArray.addAll(value) ;
             }
             else
@@ -544,10 +544,10 @@ public class EncounterReporter extends Reporter {
     }
     
     
-    public HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>
+    public HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>
         prepareReceiveSortPrepStatusReport(String value )
     {
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> outputHashMap 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> outputHashMap 
                 = prepareReceiveSortPrepStatusReport(new String[] {value}).get(value) ;
         return outputHashMap ;
     }
@@ -557,15 +557,15 @@ public class EncounterReporter extends Reporter {
      * @param values
      * @return HashMap sorting values maps to correspondingTransmissionReport
      */
-    public HashMap<Object,HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>> 
+    public HashMap<Object,HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>> 
         prepareReceiveSortPrepStatusReport(String[] values )
     {
         // LOGGER.info("prepareAgentToAgentReport()") ;
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> transmissionReport = prepareAgentToAgentReport() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> transmissionReport = prepareAgentToAgentReport() ;
         //LOGGER.log(Level.INFO, "{0}", transmissionReport);
         // LOGGER.info("sortPrepStatus()");
         PopulationReporter populationReporter = new PopulationReporter(getMetaDatum("Community.NAME_ROOT"), getFolderPath()); 
-        HashMap<Comparable,ArrayList<Comparable>> sortingReport = populationReporter.sortPrepStatus() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> sortingReport = populationReporter.sortPrepStatus() ;
         // LOGGER.log(Level.INFO, "{0}", sortingReport);
         
         // LOGGER.info("sortReport()");
@@ -649,13 +649,13 @@ public class EncounterReporter extends Reporter {
         String reportEntry ;
         int statusIndex ;
         
-        HashMap<String,HashMap<Comparable,ArrayList<Comparable>>> agentAnalIntercourseReport ;
+        HashMap<String,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentAnalIntercourseReport ;
         
         // Prepare agentRelationshipsRecord
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         //Class[] parameterClazzes = new Class[] {String[].class, int.class, int.class, int.class, int.class} ;
         //Object[] parameters = new Object[] {relationshipClazzNames, backYears, backMonths, backDays, endCycle} ;
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> agentRelationshipsRecord 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentRelationshipsRecord 
           //      = (HashMap<Object,HashMap<Object,ArrayList<Object>>>) getRecord("agentRelationships",relationshipReporter,parameterClazzes,parameters) ;
             = relationshipReporter.prepareAgentRelationshipsRecord(relationshipClazzNames, backYears, backMonths, backDays, endCycle) ;
         
@@ -715,10 +715,10 @@ public class EncounterReporter extends Reporter {
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which they took 
      * part in anal intercourse.
      */
-    public HashMap<String,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentAnalIntercourseReport(int backYears, int backMonths, int backDays, String relationshipClazzName)
+    public HashMap<String,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> prepareAgentAnalIntercourseReport(int backYears, int backMonths, int backDays, String relationshipClazzName)
     {
-        HashMap<String,HashMap<Comparable,ArrayList<Comparable>>> agentAnalIntercourseReport 
-                = new HashMap<String,HashMap<Comparable,ArrayList<Comparable>>>() ;
+        HashMap<String,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentAnalIntercourseReport 
+                = new HashMap<String,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
@@ -737,7 +737,7 @@ public class EncounterReporter extends Reporter {
         //LOGGER.log(Level.INFO, "intercourseReport {0}", intercourseReport);
         for (String condom : new String[] {TRUE,FALSE})
         {
-            agentAnalIntercourseReport.put(condom, new HashMap<Comparable,ArrayList<Comparable>>()) ;
+            agentAnalIntercourseReport.put(condom, new HashMap<Comparable<?>,ArrayList<Comparable<?>>>()) ;
             
             // Filter by condom use
             ArrayList<String> condomReport = prepareFilteredReport(CONDOM,condom,intercourseReport) ;
@@ -751,7 +751,7 @@ public class EncounterReporter extends Reporter {
                 {
                     Comparable[] agentIds = relationshipAgentReport.get(EXTRACT_VALUE(RELATIONSHIPID,encounter)) ;
                     for (Comparable agentId : agentIds)
-                        agentAnalIntercourseReport.put(condom, UPDATE_HASHMAP(agentId,(Comparable) (startCycle + recordNb),agentAnalIntercourseReport.get(condom))) ;
+                        agentAnalIntercourseReport.put(condom, UPDATE_HASHMAP(agentId,(Comparable<?>) (startCycle + recordNb),agentAnalIntercourseReport.get(condom))) ;
                 }
             }
         
@@ -768,7 +768,7 @@ public class EncounterReporter extends Reporter {
      * of Agents to have committed that many such acts in the last backYears years,
      * backMonths months and backDays days.
      */        
-    public HashMap<Comparable,Number> prepareNumberAgentCondomlessReport(int backYears, int backMonths, int backDays, String relationshipClazzName, String concordanceName, boolean concordant)
+    public HashMap<Comparable<?>,Number> prepareNumberAgentCondomlessReport(int backYears, int backMonths, int backDays, String relationshipClazzName, String concordanceName, boolean concordant)
     {
         int endCycle = getMaxCycles() ;
         
@@ -789,14 +789,14 @@ public class EncounterReporter extends Reporter {
      * of Agents to have committed that many such acts in the last backYears years,
      * backMonths months and backDays days.
      */        
-    public HashMap<Comparable,Number> prepareNumberAgentCondomlessReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant)
+    public HashMap<Comparable<?>,Number> prepareNumberAgentCondomlessReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant)
     {
-        HashMap<Comparable,Number> numberAgentCondomlessReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> numberAgentCondomlessReport = new HashMap<Comparable<?>,Number>() ;
         
-        HashMap<Comparable,ArrayList<Comparable>> agentCondomlessReport 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentCondomlessReport 
                 = prepareAgentCondomlessReport(backYears, backMonths, backDays, endCycle, relationshipClazzName, concordanceName, concordant) ;
         
-        for (ArrayList<Comparable> condomlessValue : agentCondomlessReport.values() ) 
+        for (ArrayList<Comparable<?>> condomlessValue : agentCondomlessReport.values() ) 
         {
             int intercourses = condomlessValue.size() ;
             numberAgentCondomlessReport = INCREMENT_HASHMAP(intercourses,numberAgentCondomlessReport) ;
@@ -810,7 +810,7 @@ public class EncounterReporter extends Reporter {
      * @return (HashMap) agentId maps to the cycles in which they had condomless 
      * anal intercourse in a (relationshipClazzName) Relationship.
      */
-    private HashMap<Comparable,ArrayList<Comparable>> prepareAgentCondomlessReport(int backYears, int backMonths, int backDays, String relationshipClazzName)
+    private HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentCondomlessReport(int backYears, int backMonths, int backDays, String relationshipClazzName)
     {
         int endCycle = getMaxCycles() ;
         
@@ -823,9 +823,9 @@ public class EncounterReporter extends Reporter {
      * anal intercourse in a (relationshipClazzName) Relationship con/dis-cordant 
      * according to concordanceName.
      */
-    private HashMap<Comparable,ArrayList<Comparable>> prepareAgentCondomlessReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant)
+    private HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentCondomlessReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant)
     {
-        HashMap<Comparable,ArrayList<Comparable>> agentCondomlessIntercourse = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentCondomlessIntercourse = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
@@ -861,9 +861,9 @@ public class EncounterReporter extends Reporter {
      * anal intercourse in a (relationshipClazzName) Relationship con/dis-cordant 
      * according to concordanceName.
      */
-    private HashMap<Comparable,ArrayList<Comparable>> prepareAgentCondomlessPositionReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant, String position)
+    private HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentCondomlessPositionReport(int backYears, int backMonths, int backDays, int endCycle, String relationshipClazzName, String concordanceName, boolean concordant, String position)
     {
-        HashMap<Comparable,ArrayList<Comparable>> agentCondomlessIntercourse = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentCondomlessIntercourse = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
@@ -907,7 +907,7 @@ public class EncounterReporter extends Reporter {
                 }
                 for (int agentIndex = 0 ; agentIndex < 2 ; agentIndex++ )
                     if ((agentPositions[agentIndex] & positionIndex) == positionIndex)
-                        agentCondomlessIntercourse = UPDATE_HASHMAP(agentIds[agentIndex], (Comparable) (startCycle + recordNb),agentCondomlessIntercourse) ;
+                        agentCondomlessIntercourse = UPDATE_HASHMAP(agentIds[agentIndex], (Comparable<?>) (startCycle + recordNb),agentCondomlessIntercourse) ;
             }
         }
         
@@ -966,7 +966,7 @@ public class EncounterReporter extends Reporter {
         for (String relationshipClazzName : relationshipClassNames)
         {
             //agentId maps to the cycles in which they had condomless anal intercourse 
-            HashMap<Comparable,ArrayList<Comparable>> agentCondomlessReport = prepareAgentCondomlessReport(backYears, backMonths, backDays, endCycle, relationshipClazzName, concordanceName, concordant) ; 
+            HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentCondomlessReport = prepareAgentCondomlessReport(backYears, backMonths, backDays, endCycle, relationshipClazzName, concordanceName, concordant) ; 
             ArrayList<Object> activeAgentList = new ArrayList<Object>() ;
             ArrayList<Object> uniqueAgentList = new ArrayList<Object>() ;
             //for (Object numberKey : agentCondomlessReport.keySet()) //numberAgentCondomlessReport.keySet())
@@ -1386,9 +1386,9 @@ public class EncounterReporter extends Reporter {
      * 
      * @return (HashMap) key is the transmitting agentId and entries are receiving agentIds
      */
-    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentToAgentRecord()
+    public HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentToAgentRecord()
     {
-        HashMap<Comparable,ArrayList<Comparable>> transmissionRecord = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> transmissionRecord = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
@@ -1439,9 +1439,9 @@ public class EncounterReporter extends Reporter {
      * 
      * @return (HashMap) key is the receiving agentId and entries are transmitting agentIds
      */
-    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentFromAgentRecord()
+    public HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentFromAgentRecord()
     {
-        HashMap<Comparable,ArrayList<Comparable>> transmissionRecord = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> transmissionRecord = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ;
@@ -1492,10 +1492,10 @@ public class EncounterReporter extends Reporter {
      * @return (HashMap) report of which Agent infected which other Agents in 
      * which cycle.
      */
-    public HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentToAgentReport()
+    public HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> prepareAgentToAgentReport()
     {
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> objectReport = 
-                            new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> objectReport = 
+                            new HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ; 
@@ -1554,10 +1554,10 @@ public class EncounterReporter extends Reporter {
      * @return (HashMap) report of which Agent infected which other Agents in 
      * which cycle.
      */
-    public HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentFromAgentReport()
+    public HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> prepareAgentFromAgentReport()
     {
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> objectReport = 
-                            new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> objectReport = 
+                            new HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
         
         RelationshipReporter relationshipReporter = new RelationshipReporter(simName,getFolderPath()) ;
         HashMap<Comparable<?>,String[]> relationshipAgentReport = relationshipReporter.prepareRelationshipAgentReport() ; 
@@ -1621,10 +1621,10 @@ public class EncounterReporter extends Reporter {
         HashMap<Comparable,Integer> agentTransmissionCountReport 
                 = new HashMap<Comparable,Integer>() ;
         
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> agentToAgentReport 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentToAgentReport 
                 = prepareAgentToAgentReport() ;
         
-        HashMap<Comparable,ArrayList<Comparable>> agentToAgentRecord ; 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentToAgentRecord ; 
         
         for (Comparable agentId : agentToAgentReport.keySet())
         {
@@ -1647,10 +1647,10 @@ public class EncounterReporter extends Reporter {
         HashMap<Comparable,Integer> agentReceptionCountReport 
                 = new HashMap<Comparable,Integer>() ;
         
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> agentFromAgentReport 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentFromAgentReport 
                 = prepareAgentFromAgentReport() ;
         
-        HashMap<Comparable,ArrayList<Comparable>> agentFromAgentRecord ; 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentFromAgentRecord ; 
         
         for (Comparable agentId : agentFromAgentReport.keySet())
         {
@@ -1864,7 +1864,7 @@ public class EncounterReporter extends Reporter {
      * @param siteNames (String[]) names of body sites in sexual contact
      * @return String[] report of sexual contacts where STI transmission occurred
      */    
-    public HashMap<Comparable,Number> prepareFromSiteToSiteReport(String[] siteNames)
+    public HashMap<Comparable<?>,Number> prepareFromSiteToSiteReport(String[] siteNames)
     {
         return prepareFromSiteToSiteReport(siteNames, 0) ;
     }
@@ -1873,10 +1873,10 @@ public class EncounterReporter extends Reporter {
      * @param siteNames (String[]) names of body sites in sexual contact
      * @return String[] report of sexual contacts where STI transmission occurred
      */    
-    public HashMap<Comparable,Number> prepareFromSiteToSiteReport(String siteNames[], int startCycle)
+    public HashMap<Comparable<?>,Number> prepareFromSiteToSiteReport(String siteNames[], int startCycle)
     {
         // Output HashMap
-        HashMap<Comparable,Number> fromSiteToSiteReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> fromSiteToSiteReport = new HashMap<Comparable<?>,Number>() ;
         int contactIndex ;
         
         // String describing sexual contact
@@ -1967,9 +1967,9 @@ public class EncounterReporter extends Reporter {
      * @param pairArray ArrayList<String[]> of agentId doublets indicating sexual encounters 
      * @return partnerMap - HashMap indicating partnerIds of each agent (key: agentId)
      */
-    private HashMap<Comparable,ArrayList<Comparable>> agentPartners(ArrayList<String[]> pairArray)
+    private HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentPartners(ArrayList<String[]> pairArray)
     {
-        HashMap<Comparable,ArrayList<Comparable>> partnerMap = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> partnerMap = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         String agentNb0 ;
         String agentNb1 ;
         for (String[] pairString : pairArray)

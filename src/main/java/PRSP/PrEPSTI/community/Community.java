@@ -336,7 +336,7 @@ public class Community {
             String relationshipId ;
             HashMap<Object,String> commenceMap = new HashMap<Object,String>() ;
             ArrayList<String> commenceList = new ArrayList<String>() ;
-            ArrayList<Comparable> breakupList ;
+            ArrayList<Comparable<?>> breakupList ;
             float timeGeneratingRel = 0;
             
             LOGGER.info("burning in Relationships") ;
@@ -592,10 +592,10 @@ public class Community {
         // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {"all", prevalenceReport.get(prevalenceReport.size() - 1)}) ;
 
         int backYears = END_YEAR + 1 - START_YEAR ;
-        boolean atRisk = false ;
+        boolean atRisk = true ;
         
-        HashMap<Comparable,String> incidenceReport = new HashMap<Comparable,String>() ;
-        HashMap<Comparable,String> incidenceReportPrep = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> incidenceReport = new HashMap<Comparable<?>,String>() ;
+        HashMap<Comparable<?>,String> incidenceReportPrep = new HashMap<Comparable<?>,String>() ;
         HashMap<Comparable<?>,String> trueIncidenceReport = new HashMap<Comparable<?>,String>() ;
         HashMap<Comparable<?>,String> trueIncidenceReportPrep = new HashMap<Comparable<?>,String>() ;
         if (DYNAMIC)
@@ -1735,7 +1735,7 @@ public class Community {
         Reporter reporter = new Reporter(Community.RELOAD_BURNIN, Community.FILE_PATH) ;
         
         String breakupString = reporter.getMetaDatum("Relationship.BURNIN_BREAKUP") ;
-        ArrayList<Comparable> breakupList = Reporter.EXTRACT_ALL_VALUES(Relationship.RELATIONSHIP_ID, breakupString) ;
+        ArrayList<Comparable<?>> breakupList = Reporter.EXTRACT_ALL_VALUES(Relationship.RELATIONSHIP_ID, breakupString) ;
         String commenceString = reporter.getMetaDatum("Relationship.BURNIN_COMMENCE") ;
         String returnString = "" ;
         

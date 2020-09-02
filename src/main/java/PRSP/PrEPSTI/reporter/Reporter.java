@@ -281,18 +281,18 @@ public class Reporter {
      * @param values
      * @return 
      */
-    protected static HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> 
-        SORT_RECORD(HashMap<Comparable,ArrayList<Comparable>> unsortedReport, 
-            HashMap<Comparable, ArrayList<Comparable>> sortingReport, Object[] values)
+    protected static HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> 
+        SORT_RECORD(HashMap<Comparable<?>,ArrayList<Comparable<?>>> unsortedReport, 
+            HashMap<Comparable<?>, ArrayList<Comparable<?>>> sortingReport, Object[] values)
     {
-        HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> sortedReport 
-                = new HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>>() ;
+        HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> sortedReport 
+                = new HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
         for (Object value : values )
         {
-            sortedReport.put(value, new HashMap<Comparable,ArrayList<Comparable>>()) ;
-            for (Comparable key : unsortedReport.keySet())
+            sortedReport.put(value, new HashMap<Comparable<?>,ArrayList<Comparable<?>>>()) ;
+            for (Comparable<?> key : unsortedReport.keySet())
             {
-                ArrayList<Comparable> arrayList = new ArrayList<Comparable>() ;
+                ArrayList<Comparable<?>> arrayList = new ArrayList<Comparable<?>>() ;
                 for (Comparable entry : unsortedReport.get(key))
                     if (sortingReport.get(value).contains(entry))
                         arrayList.add(entry) ;
@@ -312,22 +312,22 @@ public class Reporter {
      * @param values
      * @return 
      */
-    protected static HashMap<Object,HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>> 
-        SORT_REPORT(HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> unsortedReport, 
-            HashMap<Comparable, ArrayList<Comparable>> sortingReport, Object[] values) 
+    protected static HashMap<Object,HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>> 
+        SORT_REPORT(HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> unsortedReport, 
+            HashMap<Comparable<?>, ArrayList<Comparable<?>>> sortingReport, Object[] values) 
     {
-        HashMap<Object,HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>> sortedReport 
-                = new HashMap<Object,HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>>() ;
+        HashMap<Object,HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>> sortedReport 
+                = new HashMap<Object,HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>>() ;
         
         for (Object value : values )
         {
-            sortedReport.put(value, new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>()) ;
+            sortedReport.put(value, new HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>()) ;
         
-            HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> hashMap1 = new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>() ;
-            for (Comparable key1 : unsortedReport.keySet())
+            HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> hashMap1 = new HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
+            for (Comparable<?> key1 : unsortedReport.keySet())
             {
-                HashMap<Comparable,ArrayList<Comparable>> hashMap2 = new HashMap<Comparable,ArrayList<Comparable>>() ;
-                for (Comparable key2 : unsortedReport.get(key1).keySet())
+                HashMap<Comparable<?>,ArrayList<Comparable<?>>> hashMap2 = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
+                for (Comparable<?> key2 : unsortedReport.get(key1).keySet())
                 {
                     if (!sortingReport.get(value).contains(String.valueOf(key2)))
                         continue ;
@@ -377,18 +377,18 @@ public class Reporter {
      * @param report
      * @return HashMap key:values, entries: ArrayList of values of bound
      */
-    protected static HashMap<Comparable,ArrayList<Comparable>> SORT_BOUNDED_STRING_ARRAY(String propertyName, String[] values, String bound, ArrayList<String> report)
+    protected static HashMap<Comparable<?>,ArrayList<Comparable<?>>> SORT_BOUNDED_STRING_ARRAY(String propertyName, String[] values, String bound, ArrayList<String> report)
     {
-        HashMap<Comparable,ArrayList<Comparable>> sortedHashMap = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> sortedHashMap = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
         int indexStart ;
         String boundedString ;
         Object key ;
         String boundValue ;
         
         // Initialise output HashMap
-        for (Comparable value : values)
-            sortedHashMap.put(value,new ArrayList<Comparable>()) ;
-        sortedHashMap.put(NONE,new ArrayList<Comparable>()) ;
+        for (Comparable<?> value : values)
+            sortedHashMap.put(value,new ArrayList<Comparable<?>>()) ;
+        sortedHashMap.put(NONE,new ArrayList<Comparable<?>>()) ;
 
         for (String record : report)
         {
@@ -582,7 +582,7 @@ public class Reporter {
      * @param string
      * @return ArrayList of (String) values of propertyName from String string
      */
-    public static ArrayList<Comparable> EXTRACT_ALL_VALUES(String propertyName, String string)
+    public static ArrayList<Comparable<?>> EXTRACT_ALL_VALUES(String propertyName, String string)
     {
         return Reporter.EXTRACT_ALL_VALUES(propertyName,string,0) ;
     }
@@ -594,9 +594,9 @@ public class Reporter {
      * @param startIndex
      * @return ArrayList of (String) values of propertyName from String string
      */
-    public static ArrayList<Comparable> EXTRACT_ALL_VALUES(String propertyName, String string, int startIndex)
+    public static ArrayList<Comparable<?>> EXTRACT_ALL_VALUES(String propertyName, String string, int startIndex)
     {
-        ArrayList<Comparable> values = new ArrayList<Comparable>() ;
+        ArrayList<Comparable<?>> values = new ArrayList<Comparable<?>>() ;
         int index = INDEX_OF_PROPERTY(propertyName,startIndex,string) ; 
         
         while ( index >= 0 )
@@ -772,7 +772,7 @@ public class Reporter {
      * @param valueMap - Adding boundValue and sometimes key to this HashMap
      * @return partnerMap - HashMap indicating partnerIds of each agent (key: agentId)
      */
-    public static HashMap<Comparable,ArrayList<Comparable>> UPDATE_HASHMAP(Comparable key, Comparable entry, HashMap<Comparable,ArrayList<Comparable>> valueMap)
+    public static HashMap<Comparable<?>,ArrayList<Comparable<?>>> UPDATE_HASHMAP(Comparable key, Comparable entry, HashMap<Comparable<?>,ArrayList<Comparable<?>>> valueMap)
     {
         return Reporter.UPDATE_HASHMAP(key, entry, valueMap, true) ;
     }
@@ -787,18 +787,18 @@ public class Reporter {
      * @param allowDuplicates
      * @return partnerMap - HashMap indicating partnerIds of each agent (key: agentId)
      */
-    protected static HashMap<Comparable,ArrayList<Comparable>> UPDATE_HASHMAP(Comparable key, Comparable entry, HashMap<Comparable,ArrayList<Comparable>> valueMap, boolean allowDuplicates)
+    protected static HashMap<Comparable<?>,ArrayList<Comparable<?>>> UPDATE_HASHMAP(Comparable key, Comparable entry, HashMap<Comparable<?>,ArrayList<Comparable<?>>> valueMap, boolean allowDuplicates)
     {
         //HashMap<Integer,ArrayList<Integer>> partnerMap = new HashMap<Integer,ArrayList<Integer>>() ;
         
-        ArrayList<Comparable> entryArray ;
+        ArrayList<Comparable<?>> entryArray ;
         if (valueMap.containsKey(key))
         {
             entryArray = valueMap.get(key) ;
         }
         else
         {
-            entryArray = new ArrayList<Comparable>() ;
+            entryArray = new ArrayList<Comparable<?>>() ;
         }
         if (allowDuplicates || !entryArray.contains(entry))
         {
@@ -837,7 +837,7 @@ public class Reporter {
      * @param valueMap - Adding boundValue and sometimes key to this HashMap
      * @return partnerMap - HashMap indicating partnerIds of each agent (key: agentId)
      */
-    protected static HashMap<Comparable,Number> INCREMENT_HASHMAP(Comparable key, HashMap<Comparable,Number> valueMap)
+    protected static HashMap<Comparable<?>,Number> INCREMENT_HASHMAP(Comparable key, HashMap<Comparable<?>,Number> valueMap)
     {
         //HashMap<Integer,ArrayList<Integer>> partnerMap = new HashMap<Integer,ArrayList<Integer>>() ;
         
@@ -875,22 +875,22 @@ public class Reporter {
      * @param valueMap
      * @return 
      */
-    protected static HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> UPDATE_HASHMAP(Object key, 
-            Object key2, int cycle, HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> valueMap)
+    protected static HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> UPDATE_HASHMAP(Object key, 
+            Object key2, int cycle, HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> valueMap)
     {
         //HashMap<Integer,ArrayList<Integer>> partnerMap = new HashMap<Integer,ArrayList<Integer>>() ;
         
-        HashMap<Comparable,ArrayList<Comparable>> entryHashMap ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> entryHashMap ;
         if (valueMap.containsKey(key))
         {
             entryHashMap = valueMap.get(key) ;
         }
         else
         {
-            entryHashMap = new HashMap<Comparable,ArrayList<Comparable>>() ;
+            entryHashMap = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
             //entryArray.add(key2) ;
         }
-        valueMap.put((Comparable) key, UPDATE_HASHMAP((Comparable) key2, (Comparable) cycle, entryHashMap)) ;
+        valueMap.put((Comparable) key, UPDATE_HASHMAP((Comparable<?>) key2, (Comparable<?>) cycle, entryHashMap)) ;
 
         return valueMap ;
     }
@@ -982,12 +982,12 @@ public class Reporter {
      * @param paramHashMap
      * @return HashTable
      */
-    static public HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> 
-        INVERT_HASHMAP_HASHMAP(HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> paramHashMap)
+    static public HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> 
+        INVERT_HASHMAP_HASHMAP(HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> paramHashMap)
     {
-        //LOGGER.info("INVERT_HASHMAP_HASHMAP()");
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> invertedHashMap = new HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>>() ;
-        HashMap<Comparable,ArrayList<Comparable>> cycleHashMap ;
+        //LOGGER.info("INVERT_HASHMAP_HASHMAP()") ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> invertedHashMap = new HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> cycleHashMap ;
         
         for( Comparable key1 : paramHashMap.keySet() )
         {
@@ -998,7 +998,7 @@ public class Reporter {
                 {
             //LOGGER.info(cycle.toString());
                     if (!invertedHashMap.keySet().contains(cycle))
-                        cycleHashMap = new HashMap<Comparable,ArrayList<Comparable>>() ;
+                        cycleHashMap = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
                     else 
                         cycleHashMap = invertedHashMap.get(cycle) ;
                     invertedHashMap.put(cycle, UPDATE_HASHMAP(key1,key2,cycleHashMap)) ;
@@ -1047,10 +1047,10 @@ public class Reporter {
      * @param initialKeys
      * @return (HashMap) of Number[] 
      */
-    static public HashMap<Comparable,Number[]> 
+    static public HashMap<Comparable<?>,Number[]> 
         INVERT_HASHMAP_ARRAY(HashMap<Object,HashMap<Comparable,Number>> initialMap, Object[] initialKeys)
     {
-        HashMap<Comparable,Number[]> invertedMap = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> invertedMap = new HashMap<Comparable<?>,Number[]>() ;
         
         HashMap<Object,Number> innerMap ;
         
@@ -1084,10 +1084,10 @@ public class Reporter {
      * @param initialKeys
      * @return (HashMap) of (ArrayList) of Number 
      */
-    static public HashMap<Comparable,Number[]> 
-        INVERT_HASHMAP_LIST(HashMap<Comparable,HashMap<Comparable,Number>> initialMap, Object[] initialKeys)
+    static public HashMap<Comparable<?>,Number[]> 
+        INVERT_HASHMAP_LIST(HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> initialMap, Object[] initialKeys)
     {
-        HashMap<Comparable,Number[]> invertedMap = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> invertedMap = new HashMap<Comparable<?>,Number[]>() ;
         
         int arraySize = initialKeys.length ;
         
@@ -1272,9 +1272,9 @@ public class Reporter {
      * @param report
      * @return HashMap showing the cycles containing each key 
      */
-    static protected HashMap<Comparable,ArrayList<Comparable>> FIND_AGENTID_KEYS(Integer[] cycles, ArrayList<HashMap<Comparable,?>> report)
+    static protected HashMap<Comparable<?>,ArrayList<Comparable<?>>> FIND_AGENTID_KEYS(Integer[] cycles, ArrayList<HashMap<Comparable,?>> report)
     {
-        HashMap<Comparable,ArrayList<Comparable>> agentIdKeys = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentIdKeys = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
 
         for (int index : cycles)
             for ( Comparable agentId : report.get(index).keySet() )
@@ -1288,9 +1288,9 @@ public class Reporter {
      * @param report
      * @return HashMap showing the cycles containing each value in ArrayList value of HashMap 
      */
-    static protected HashMap<Comparable,ArrayList<Comparable>> FIND_AGENTID_VALUES(Integer[] cycles, ArrayList<HashMap<Comparable,ArrayList<Comparable>>> report)
+    static protected HashMap<Comparable<?>,ArrayList<Comparable<?>>> FIND_AGENTID_VALUES(Integer[] cycles, ArrayList<HashMap<Comparable,ArrayList<Comparable>>> report)
     {
-        HashMap<Comparable,ArrayList<Comparable>> agentIdValues = new HashMap<Comparable,ArrayList<Comparable>>() ;
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentIdValues = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ;
 
         for (int index : cycles)
         {
@@ -1604,9 +1604,9 @@ public class Reporter {
      * @param endYear
      * @return (HashMap) report with where the values are averaged reports in REPORT_LIST.
      */
-    static public HashMap<Comparable,Number[]> PREPARE_GRAY_REPORT(String[] simNames, String folderPath, int startYear, int endYear)
+    static public HashMap<Comparable<?>,Number[]> PREPARE_GRAY_REPORT(String[] simNames, String folderPath, int startYear, int endYear)
     {
-        HashMap<Comparable,Number[]> grayReport = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> grayReport = new HashMap<Comparable<?>,Number[]>() ;
         ArrayList<HashMap<Comparable<?>,String>> hashMapReports = new ArrayList<HashMap<Comparable<?>,String>>() ;
         //ArrayList<ArrayList<Object>> arrayListReports = new ArrayList<ArrayList<Object>>() ;
         ArrayList<String> reportNames = new ArrayList<String>() ;
@@ -1620,7 +1620,7 @@ public class Reporter {
 //            arrayNames[siteIndex] = siteNames[siteIndex] ;
 //        arrayNames[siteNames.length] = "all" ;
 //        
-        ArrayList<Comparable> sortedYears = new ArrayList<Comparable>() ;
+        ArrayList<Comparable<?>> sortedYears = new ArrayList<Comparable<?>>() ;
         
         int backYears = 1 + endYear - startYear ;
         
@@ -1848,9 +1848,9 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public boolean WRITE_CSV(HashMap<Comparable,Number[]> report, String categoryName, String[] scoreNames, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV(HashMap<Comparable<?>,Number[]> report, String categoryName, String[] scoreNames, String reportName, String simName, String folderPath)
     {
-        return WRITE_CSV(report, categoryName, scoreNames, new ArrayList<Comparable>(), reportName, simName, folderPath) ;
+        return WRITE_CSV(report, categoryName, scoreNames, new ArrayList<Comparable<?>>(), reportName, simName, folderPath) ;
     }
     
     /**
@@ -1862,13 +1862,13 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public boolean WRITE_CSV(HashMap<Comparable,Number> report, String categoryName, String scoreName, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV(HashMap<Comparable<?>,Number> report, String categoryName, String scoreName, String reportName, String simName, String folderPath)
     {
-        HashMap<Comparable,Number[]> convertedReport = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> convertedReport = new HashMap<Comparable<?>,Number[]>() ;
         for (Comparable key : report.keySet())
             convertedReport.put(key, new Number[] {report.get(key)}) ;
         
-        return WRITE_CSV(convertedReport, categoryName, new String[] {scoreName}, new ArrayList<Comparable>(report.keySet()), reportName, simName, folderPath) ;
+        return WRITE_CSV(convertedReport, categoryName, new String[] {scoreName}, new ArrayList<Comparable<?>>(report.keySet()), reportName, simName, folderPath) ;
     }
     
     /**
@@ -1880,7 +1880,7 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public boolean WRITE_CSV(HashMap<Comparable,Number[]> report, String categoryName, String[] scoreNames, ArrayList<Comparable> categoryList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV(HashMap<Comparable<?>,Number[]> report, String categoryName, String[] scoreNames, ArrayList<Comparable<?>> categoryList, String reportName, String simName, String folderPath)
     {
         String filePath = folderPath + simName + reportName + ".csv" ;
         String line ;
@@ -1908,7 +1908,7 @@ public class Reporter {
         }
         //LOGGER.log(Level.INFO, "nbProperties:{1}", new Object[] {nbProperties});
         if (categoryList.isEmpty())
-            categoryList = new ArrayList<Comparable>(report.keySet()) ;
+            categoryList = new ArrayList<Comparable<?>>(report.keySet()) ;
         categoryList.sort(null) ;
         
         try
@@ -2748,7 +2748,7 @@ public class Reporter {
      */
     public static boolean MERGE_HASHMAP_CSV(ArrayList<String> fileNames, String reportName, String scoreName, String folderPath)
     {
-        HashMap<Comparable,Number[]> report = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> report = new HashMap<Comparable<?>,Number[]>() ;
         
         String fileName ;
         Comparable key ;
@@ -2962,9 +2962,9 @@ public class Reporter {
      * @param simName
      * @param folderPath 
      */
-    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, ArrayList<Comparable> categoryList, String reportName, String simName, String folderPath)
+    static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, ArrayList<Comparable<?>> categoryList, String reportName, String simName, String folderPath)
     {
-        HashMap<Comparable,Number[]> newReport = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> newReport = new HashMap<Comparable<?>,Number[]>() ;
         
         String scoreString ;
         String reportValue ;
@@ -3006,7 +3006,7 @@ public class Reporter {
      */
     static public boolean WRITE_CSV_STRING(HashMap<Comparable<?>,String> report, String categoryName, String reportName, String simName, String folderPath)
     {
-        return WRITE_CSV_STRING(report, categoryName, new ArrayList<Comparable>(), reportName, simName, folderPath) ;
+        return WRITE_CSV_STRING(report, categoryName, new ArrayList<Comparable<?>>(), reportName, simName, folderPath) ;
     }
     
     static public boolean DUMP_OUTPUT(String reportName, String simName, String folderPath, Object dumpReport)

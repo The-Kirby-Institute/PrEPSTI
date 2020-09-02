@@ -675,7 +675,7 @@ public class ScreeningPresenter extends Presenter {
         // set new title
         this.chartTitle = "Final Symptomatic";
 
-        HashMap<Comparable,Number> finalSymptomaticRecord = reporter.prepareFinalSymptomaticRecord(siteNames) ;
+        HashMap<Comparable<?>,Number> finalSymptomaticRecord = reporter.prepareFinalSymptomaticRecord(siteNames) ;
         
         
         plotHashMap("Sites","symptomatic",finalSymptomaticRecord) ;        
@@ -970,7 +970,7 @@ public class ScreeningPresenter extends Presenter {
         {
             // LOGGER.info(simulation);
             ScreeningReporter screeningReporter = new ScreeningReporter(simulation,reporter.getFolderPath()) ;
-            HashMap<Comparable,String> report = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, lastYear, sortingProperty) ;
+            HashMap<Comparable<?>,String> report = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, backYears, lastYear, sortingProperty) ;
             Reporter.CLEAR_REPORT_LIST() ; 
             reports.add((HashMap<Comparable<?>,String>) report.clone()) ;
             Reporter.DUMP_OUTPUT(reportName,simulation,reporter.getFolderPath(),report);
@@ -1019,7 +1019,7 @@ public class ScreeningPresenter extends Presenter {
         // set new title
         this.chartTitle = "Number Agent Testing Report";
 
-        HashMap<Comparable,Number> numberAgentTestingReport 
+        HashMap<Comparable<?>,Number> numberAgentTestingReport 
                 = reporter.prepareNumberAgentTestingReport(backYears, backMonths, backDays) ;
     
         String yLabel = "proportion of Agents in last " + GET_TIME_PERIOD_STRING(backYears, backMonths, backDays) ;
@@ -1091,7 +1091,7 @@ public class ScreeningPresenter extends Presenter {
         // set new title
         this.chartTitle = "Number Agent Treated Report";
 
-        HashMap<Comparable,Number> numberAgentTreatedReport 
+        HashMap<Comparable<?>,Number> numberAgentTreatedReport 
                 = reporter.prepareNumberAgentTreatedReport(backYears, backMonths, backDays) ;
     
         String yLabel = "proportion of Agents in last " + GET_TIME_PERIOD_STRING(backYears, backMonths, backDays) ;
@@ -1114,7 +1114,7 @@ public class ScreeningPresenter extends Presenter {
         // set new title
         this.chartTitle = "Number Agent Treated Report";
 
-        HashMap<Comparable,Number[]> numberAgentTreatedReport 
+        HashMap<Comparable<?>,Number[]> numberAgentTreatedReport 
                 = reporter.prepareNumberAgentTreatedReport(backYears, backMonths, backDays, sortingProperty, maxNumber) ;
         // LOGGER.info(numberAgentTreatedReport.toString());
     
@@ -1334,7 +1334,7 @@ public class ScreeningPresenter extends Presenter {
      */
     public void coplotFinalPrevalence(String[] simNames)
     {
-        HashMap<Comparable,Number> prevalenceRecordList = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> prevalenceRecordList = new HashMap<Comparable<?>,Number>() ;
         ArrayList<String> legend = new ArrayList<String>() ;
         int reportSize ;
         String finalRecord ;

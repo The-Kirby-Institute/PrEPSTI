@@ -215,7 +215,7 @@ public class Relationship {
                 = relationshipReporter.prepareRelationshipAgentReport() ;
         
         String[] relationshipClassNames = new String[] {"Regular","Monogomous"} ; // "Casual",
-        HashMap<Comparable,HashMap<Comparable,ArrayList<Comparable>>> relationshipsRecord 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> relationshipsRecord 
                 = relationshipReporter.prepareAgentRelationshipsRecord(relationshipClassNames, 0, 0, 1) ;
         ArrayList<Object> currentRelationshipIds = new ArrayList<Object>() ;
         String[] agentIds = new String[2] ;
@@ -227,7 +227,7 @@ public class Relationship {
             for (String relationshipName : relationshipClassNames)
             {
                 Class<?> relationshipClazz = Class.forName("PRSP.PrEPSTI.community.".concat(relationshipName)) ;
-                for (ArrayList<Comparable> relationshipIdList : relationshipsRecord.get(relationshipName).values())
+                for (ArrayList<Comparable<?>> relationshipIdList : relationshipsRecord.get(relationshipName).values())
                 {
                     for (Object relationshipId : relationshipIdList)
                     {

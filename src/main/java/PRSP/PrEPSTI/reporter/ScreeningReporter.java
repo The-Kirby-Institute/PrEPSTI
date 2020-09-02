@@ -344,7 +344,7 @@ public class ScreeningReporter extends Reporter {
      */
     public String prepareFinalNotificationsRecord(String[] siteNames, boolean unique, int backYears, int backMonths, int backDays, int endCycle, ArrayList<String> sortedAgents)
     {
-        HashMap<Comparable,Number[]> finalNotifications = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> finalNotifications = new HashMap<Comparable<?>,Number[]>() ;
         StringBuilder sbFinalNotifications = new StringBuilder();
         sbFinalNotifications.append(ADD_REPORT_LABEL(NOTIFICATION));
         // String finalNotificationsString = ADD_REPORT_LABEL(NOTIFICATION) ;
@@ -392,7 +392,7 @@ public class ScreeningReporter extends Reporter {
                 positiveRecord = BOUNDED_STRING_BY_CONTENTS(TREATED,AGENTID,record) ;
                 
                 // Extract agentIds with positive result
-                ArrayList<Comparable> positiveList = EXTRACT_ALL_VALUES(AGENTID,positiveRecord) ;
+                ArrayList<Comparable<?>> positiveList = EXTRACT_ALL_VALUES(AGENTID,positiveRecord) ;
                 notifications += positiveList.size() ;
                 //notifications += COUNT_VALUE_INCIDENCE("treated","",record,0)[1] ;
                 // Avoid double counting, ACCESS counts unique patient visits
@@ -421,7 +421,7 @@ public class ScreeningReporter extends Reporter {
             notifications += COUNT_VALUE_INCIDENCE(TESTED,TREATED,sortedRecord,0)[0] ;
             
             record = BOUNDED_STRING_BY_CONTENTS(TESTED,AGENTID,sortedRecord) ;
-            ArrayList<Comparable> testedList = EXTRACT_ALL_VALUES(AGENTID,record) ;
+            ArrayList<Comparable<?>> testedList = EXTRACT_ALL_VALUES(AGENTID,record) ;
             // Avoid double counting Agents
             if (unique)
                     testedList.removeAll(testedAgents) ;
@@ -429,7 +429,7 @@ public class ScreeningReporter extends Reporter {
             
             // Positive Agents
             record = BOUNDED_STRING_BY_CONTENTS(TREATED,AGENTID,finalNotificationsRecord) ;
-            ArrayList<Comparable> positiveList = EXTRACT_ALL_VALUES(AGENTID,record) ;
+            ArrayList<Comparable<?>> positiveList = EXTRACT_ALL_VALUES(AGENTID,record) ;
             // Avoid double counting
             if (unique)
                     positiveList.removeAll(positiveAgents) ;
@@ -473,9 +473,9 @@ public class ScreeningReporter extends Reporter {
      * @param unique  - Count one positive result per Agent. 
      * @return Records of final notifications for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number[]> prepareFinalNotificationsRecord_Site(String[] siteNames, boolean unique, int backYears, int backMonths, int backDays, int endCycle)
+    public HashMap<Comparable<?>,Number[]> prepareFinalNotificationsRecord_Site(String[] siteNames, boolean unique, int backYears, int backMonths, int backDays, int endCycle)
     {
-        HashMap<Comparable,Number[]> finalNotifications = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> finalNotifications = new HashMap<Comparable<?>,Number[]>() ;
         for (String siteName : siteNames)
             finalNotifications.put(siteName, new Number[] {0,0}) ;
         
@@ -585,8 +585,8 @@ public class ScreeningReporter extends Reporter {
         positiveAgents = new ArrayList<Object>() ;
         for (String finalNotificationsRecord : finalNotificationsReport)
         {
-            ArrayList<Comparable> testedList = new ArrayList<Comparable>() ;
-            ArrayList<Comparable> positiveList = new ArrayList<Comparable>() ;
+            ArrayList<Comparable<?>> testedList = new ArrayList<Comparable<?>>() ;
+            ArrayList<Comparable<?>> positiveList = new ArrayList<Comparable<?>>() ;
             
             notifications += COUNT_VALUE_INCIDENCE(TREATED,"",finalNotificationsRecord,0)[1] ;
             
@@ -815,9 +815,9 @@ public class ScreeningReporter extends Reporter {
      * @param siteNames
      * @return Records of final symptomatic prevalences for specified siteNames and in total.
      */
-    public HashMap<Comparable,Number> prepareFinalSymptomaticRecord(String[] siteNames)
+    public HashMap<Comparable<?>,Number> prepareFinalSymptomaticRecord(String[] siteNames)
     {
-        HashMap<Comparable,Number> finalSymptomaticRecords = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> finalSymptomaticRecords = new HashMap<Comparable<?>,Number>() ;
         
         int symptomatic ;
         
@@ -854,7 +854,7 @@ public class ScreeningReporter extends Reporter {
      * @return (HashMap) Report where number of tests maps to number of Agents taking 
      * that many tests in given time frame.
      */
-    public HashMap<Comparable,Number> prepareNumberAgentTestingReport(int backYears, int backMonths, int backDays)
+    public HashMap<Comparable<?>,Number> prepareNumberAgentTestingReport(int backYears, int backMonths, int backDays)
     {
         int endCycle = getMaxCycles() ;
         
@@ -871,12 +871,12 @@ public class ScreeningReporter extends Reporter {
      * @return (HashMap) Report number of tests maps to number of Agents taking 
      * that many tests in given time frame.
      */
-    public HashMap<Comparable,Number> prepareNumberAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle, ArrayList<String> sortedAgentIds)
+    public HashMap<Comparable<?>,Number> prepareNumberAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle, ArrayList<String> sortedAgentIds)
     {
-        HashMap<Comparable,Number> numberAgentTestingReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> numberAgentTestingReport = new HashMap<Comparable<?>,Number>() ;
         
         // (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
-        HashMap<Comparable,ArrayList<Comparable>> agentTestingReport 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTestingReport 
                 = prepareAgentTestingReport(backYears, backMonths, backDays, endCycle, sortedAgentIds) ;
         
         int population ;
@@ -888,7 +888,7 @@ public class ScreeningReporter extends Reporter {
         Integer untested = population ;
         
         int nbTests ;
-        for (ArrayList<Comparable> value : agentTestingReport.values())
+        for (ArrayList<Comparable<?>> value : agentTestingReport.values())
         {
             nbTests = value.size() ;
             numberAgentTestingReport = INCREMENT_HASHMAP(nbTests,numberAgentTestingReport) ;
@@ -911,10 +911,10 @@ public class ScreeningReporter extends Reporter {
      * @return Year-by-year Report of the number of tests mapping to the number of Agents
      * who have had that many tests in each year
      */
-    public HashMap<Comparable,Number[]> 
+    public HashMap<Comparable<?>,Number[]> 
         prepareYearsNumberAgentTestingReport(int backYears, int backMonths, int backDays, int lastYear) 
         {
-            HashMap<Comparable,Number[]> numberAgentTestingYears = new HashMap<Comparable,Number[]>() ;
+            HashMap<Comparable<?>,Number[]> numberAgentTestingYears = new HashMap<Comparable<?>,Number[]>() ;
             //HashMap<Object,Number[]> numberAgentTestingYears = new HashMap<Object,Number[]>() ;
             
             // Whether to save this Report to file
@@ -925,7 +925,7 @@ public class ScreeningReporter extends Reporter {
             int maxCycles = getMaxCycles() ;
             int endCycle ;
             
-            HashMap<Comparable,Number> numberAgentTestingRecord = new HashMap<Comparable,Number>() ;
+            HashMap<Comparable<?>,Number> numberAgentTestingRecord = new HashMap<Comparable<?>,Number>() ;
             HashMap<String,Number> numberAgentStringRecord = new HashMap<String,Number>() ;
             for (int year = 0 ; year < backYears ; year++ )
             {
@@ -1008,7 +1008,7 @@ public class ScreeningReporter extends Reporter {
             else
                 sortedAgentIds = sortedAgentReport.get(value) ;
             
-            HashMap<Comparable,Number> numberAgentTestingReport = prepareNumberAgentTestingReport(backYears,backMonths, backDays, endCycle, sortedAgentIds) ;
+            HashMap<Comparable<?>,Number> numberAgentTestingReport = prepareNumberAgentTestingReport(backYears,backMonths, backDays, endCycle, sortedAgentIds) ;
 
             Double testedAgents = 0.0 ;
             Integer totalTests = 0 ;
@@ -1055,7 +1055,7 @@ public class ScreeningReporter extends Reporter {
         HashMap<Comparable,Number> cumulativeAgentTestingRecord = new HashMap<Comparable,Number>() ;
         
         // (HashMap) number of tests maps to number of agentIds to have taken that many tests
-        HashMap<Comparable,Number> agentTestingReport 
+        HashMap<Comparable<?>,Number> agentTestingReport 
                 = prepareNumberAgentTestingReport(backYears, backMonths, backDays, endCycle, sortedAgentIds) ;
         
         int population ;
@@ -1287,7 +1287,7 @@ public class ScreeningReporter extends Reporter {
      * @param backDays
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
      */
-    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentTestingReport(int backYears, int backMonths, int backDays)
+    public HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentTestingReport(int backYears, int backMonths, int backDays)
     {
         int maxCycle = getMaxCycles() ;
         
@@ -1302,7 +1302,7 @@ public class ScreeningReporter extends Reporter {
      * @param endCycle
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
      */
-    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle)
+    public HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle)
     {
         return prepareAgentTestingReport(backYears, backMonths, backDays, endCycle, new ArrayList<String>()) ;
     }
@@ -1316,9 +1316,9 @@ public class ScreeningReporter extends Reporter {
      * @param sortedAgentIds
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
      */
-    public HashMap<Comparable,ArrayList<Comparable>> prepareAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle, ArrayList<String> sortedAgentIds)
+    public HashMap<Comparable<?>,ArrayList<Comparable<?>>> prepareAgentTestingReport(int backYears, int backMonths, int backDays, int endCycle, ArrayList<String> sortedAgentIds)
     {
-        HashMap<Comparable,ArrayList<Comparable>> agentTestingReport = new HashMap<Comparable,ArrayList<Comparable>>() ; 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTestingReport = new HashMap<Comparable<?>,ArrayList<Comparable<?>>>() ; 
         
         int backCycles = GET_BACK_CYCLES(backYears, backMonths, backDays, endCycle) ;
         int startCycle = endCycle - backCycles ;
@@ -1342,7 +1342,7 @@ public class ScreeningReporter extends Reporter {
             for (String agentRecord : agentReport)
             {
                 agentId = EXTRACT_VALUE(AGENTID,agentRecord) ;
-                agentTestingReport = (HashMap<Comparable,ArrayList<Comparable>>) UPDATE_HASHMAP(agentId, startCycle + cycle, agentTestingReport) ;
+                agentTestingReport = (HashMap<Comparable<?>,ArrayList<Comparable<?>>>) UPDATE_HASHMAP(agentId, startCycle + cycle, agentTestingReport) ;
             }
         }
         return agentTestingReport ;
@@ -1359,19 +1359,19 @@ public class ScreeningReporter extends Reporter {
      * @return (HashMap) Report number of treatments maps to number of Agents 
      * receiving that many treatments in given time frame for each value of sortingProperty.
      */
-    public HashMap<Comparable,Number[]> 
+    public HashMap<Comparable<?>,Number[]> 
         prepareNumberAgentTreatedReport(int backYears, int backMonths, int backDays, String sortingProperty, int maxNumber)
     {
-        HashMap<Comparable,Number[]> sortedNumberAgentTreatedReport 
-                = new HashMap<Comparable,Number[]>() ;
+        HashMap<Comparable<?>,Number[]> sortedNumberAgentTreatedReport 
+                = new HashMap<Comparable<?>,Number[]>() ;
         
         // (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
-        HashMap<Comparable,ArrayList<Comparable>> agentTreatedReport 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTreatedReport 
                 = prepareAgentTreatedReport(new String[] {}, backYears, backMonths, backDays).get("all") ;
         
         // For sorting agentTreatedReport
-        HashMap<Object,HashMap<Object,ArrayList<Comparable>>> sortedAgentTreatedReport 
-                = new HashMap<Object,HashMap<Object,ArrayList<Comparable>>>() ;
+        HashMap<Object,HashMap<Object,ArrayList<Comparable<?>>>> sortedAgentTreatedReport 
+                = new HashMap<Object,HashMap<Object,ArrayList<Comparable<?>>>>() ;
         
         // Generate required spaces in label names
         //categoryEntry.sort(null);
@@ -1393,12 +1393,12 @@ public class ScreeningReporter extends Reporter {
             Object propertyKey = sortedAgentReport.get(agentId) ;
             // Create key if still needed
             if (!sortedAgentTreatedReport.containsKey(propertyKey))
-                sortedAgentTreatedReport.put(propertyKey, new HashMap<Object,ArrayList<Comparable>>()) ;
+                sortedAgentTreatedReport.put(propertyKey, new HashMap<Object,ArrayList<Comparable<?>>>()) ;
             
             if (agentTreatedReport.containsKey(agentId))
                 sortedAgentTreatedReport.get(propertyKey).put(agentId, agentTreatedReport.get(agentId)) ;
             else
-                sortedAgentTreatedReport.get(propertyKey).put(agentId, new ArrayList<Comparable>()) ;
+                sortedAgentTreatedReport.get(propertyKey).put(agentId, new ArrayList<Comparable<?>>()) ;
         }
         int nbKeys = sortedAgentTreatedReport.size() ;
         int sortedPopulation ;
@@ -1408,14 +1408,14 @@ public class ScreeningReporter extends Reporter {
         String maxNumberString = String.valueOf(maxNumber).concat("+") ;
         for (Object propertyKey : sortedAgentTreatedReport.keySet())
         {
-            HashMap<Comparable,Number> numberAgentTreatedReport = new HashMap<Comparable,Number>() ;
+            HashMap<Comparable<?>,Number> numberAgentTreatedReport = new HashMap<Comparable<?>,Number>() ;
             
-            HashMap<Object,ArrayList<Comparable>> sortedTreatedReport 
+            HashMap<Object,ArrayList<Comparable<?>>> sortedTreatedReport 
                     = sortedAgentTreatedReport.get(propertyKey) ;
             
             // Read in values corresponding to propertyKey
             sortedPopulation = sortedTreatedReport.size() ;
-            for (ArrayList<Comparable> value : sortedTreatedReport.values())
+            for (ArrayList<Comparable<?>> value : sortedTreatedReport.values())
             {
                 nbTreatments = value.size() ;
                 numberAgentTreatedReport = INCREMENT_HASHMAP(nbTreatments,numberAgentTreatedReport) ;
@@ -1472,19 +1472,19 @@ public class ScreeningReporter extends Reporter {
      * @return (HashMap) Report number of treatments maps to number of Agents 
      * receiving that many treatments in given time frame.
      */
-    public HashMap<Comparable,Number> prepareNumberAgentTreatedReport(int backYears, int backMonths, int backDays)
+    public HashMap<Comparable<?>,Number> prepareNumberAgentTreatedReport(int backYears, int backMonths, int backDays)
     {
-        HashMap<Comparable,Number> numberAgentTreatedReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> numberAgentTreatedReport = new HashMap<Comparable<?>,Number>() ;
         
         // (HashMap) agentId maps to (ArrayList) of cycles in which Agent was tested.
-        HashMap<Comparable,ArrayList<Comparable>> agentTreatedReport 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTreatedReport 
                 = prepareAgentTreatedReport(new String[] {}, backYears, backMonths, backDays).get("all") ;
         
         int population = getPopulation() ;
         int untreated = population ;
         
         int nbTreatments ;
-        for (ArrayList<Comparable> value : agentTreatedReport.values())
+        for (ArrayList<Comparable<?>> value : agentTreatedReport.values())
         {
             nbTreatments = value.size() ;
             numberAgentTreatedReport = INCREMENT_HASHMAP(nbTreatments,numberAgentTreatedReport) ;
@@ -1505,7 +1505,7 @@ public class ScreeningReporter extends Reporter {
      * @param backDays
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which Agent was treated for STIs.
      */
-    public HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentTreatedReport(String [] siteNames, int backYears, int backMonths, int backDays)
+    public HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> prepareAgentTreatedReport(String [] siteNames, int backYears, int backMonths, int backDays)
     {
         int endCycle = getMaxCycles() ;
         
@@ -1520,12 +1520,12 @@ public class ScreeningReporter extends Reporter {
      * @param endCycle
      * @return (HashMap) agentId maps to (ArrayList) of cycles in which Agent was treated for STIs.
      */
-    public HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> prepareAgentTreatedReport(String[] siteNames, int backYears, int backMonths, int backDays, int endCycle)
+    public HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> prepareAgentTreatedReport(String[] siteNames, int backYears, int backMonths, int backDays, int endCycle)
     {
-        HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> agentTreatedReport = new HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>>() ; 
+        HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentTreatedReport = new HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>() ; 
         for (String siteName : siteNames)
-            agentTreatedReport.put(siteName, new HashMap<Comparable,ArrayList<Comparable>>()) ; 
-        agentTreatedReport.put("all", new HashMap<Comparable,ArrayList<Comparable>>()) ;
+            agentTreatedReport.put(siteName, new HashMap<Comparable<?>,ArrayList<Comparable<?>>>()) ; 
+        agentTreatedReport.put("all", new HashMap<Comparable<?>,ArrayList<Comparable<?>>>()) ;
         
         int backCycles = GET_BACK_CYCLES(backYears, backMonths, backDays, endCycle) ;
         int startCycle = endCycle - backCycles ;
@@ -1559,9 +1559,9 @@ public class ScreeningReporter extends Reporter {
      * @param sortingProperty
      * @return
      */
-    public HashMap<Comparable,String> prepareYearsAtRiskIncidenceReport(String[] relationshipClassNames, int backYears, int lastYear, String sortingProperty)
+    public HashMap<Comparable<?>,String> prepareYearsAtRiskIncidenceReport(String[] relationshipClassNames, int backYears, int lastYear, String sortingProperty)
     {
-        HashMap<Comparable,String> incidentRateReport = new HashMap<Comparable,String>() ;
+        HashMap<Comparable<?>,String> incidentRateReport = new HashMap<Comparable<?>,String>() ;
         //HashMap<Object,Number[]> percentAgentCondomlessYears = new HashMap<Object,Number[]>() ;
     
         for (int year = 0 ; year < backYears ; year++ )
@@ -1627,8 +1627,8 @@ public class ScreeningReporter extends Reporter {
         //LOGGER.info(sortedAgentsReport.keySet().toString());
         //LOGGER.log(Level.INFO, "false:{0} true:{1}", new Object[] {sortedAgentsReport.get("false").size(),sortedAgentsReport.get("true").size()});
             
-        HashMap<Comparable,ArrayList<Comparable>> agentTestingReport = prepareAgentTestingReport(backYears, backMonths, backDays, endCycle) ; 
-        HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> agentTreatedReport = prepareAgentTreatedReport(siteNames, backYears, backMonths, backDays, endCycle) ; 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTestingReport = prepareAgentTestingReport(backYears, backMonths, backDays, endCycle) ; 
+        HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentTreatedReport = prepareAgentTreatedReport(siteNames, backYears, backMonths, backDays, endCycle) ; 
         //LOGGER.info(agentTreatedReport.get("all").keySet().toString()) ;
         
         HashMap<Object,HashMap<Object,ArrayList<Integer>>> timeAtRiskReport = prepareTimeAtRiskReport(agentTestingReport,agentTreatedReport) ;
@@ -1644,7 +1644,7 @@ public class ScreeningReporter extends Reporter {
                 nbIncidents = 0 ;
                 int intervalRisk ;
 
-                HashMap<Comparable,ArrayList<Comparable>> treatedRecord = agentTreatedReport.get(siteName) ;
+                HashMap<Comparable<?>,ArrayList<Comparable<?>>> treatedRecord = agentTreatedReport.get(siteName) ;
                     //LOGGER.info(treatedRecord.keySet().toString());
                 HashMap<Object,ArrayList<Integer>> atRiskReport = timeAtRiskReport.get(siteName) ;
 
@@ -1655,10 +1655,10 @@ public class ScreeningReporter extends Reporter {
                     agentIdList.retainAll(sortedAgentsReport.get(sortingValue)) ;
                 for (Object agentId : agentIdList)
                 {
-                    ArrayList<Comparable> agentTestingRecord = agentTestingReport.get(agentId.toString()) ;
-                    ArrayList<Comparable> agentTreatedRecord = treatedRecord.get(agentId.toString()) ;
+                    ArrayList<Comparable<?>> agentTestingRecord = agentTestingReport.get(agentId.toString()) ;
+                    ArrayList<Comparable<?>> agentTreatedRecord = treatedRecord.get(agentId.toString()) ;
                     if (agentTreatedRecord == null)
-                        agentTreatedRecord = new ArrayList<Comparable>() ;
+                        agentTreatedRecord = new ArrayList<Comparable<?>>() ;
                     if (!atRiskReport.containsKey(agentId))
                         continue ;
                     ArrayList<Integer> agentTimeAtRiskRecord = atRiskReport.get(agentId.toString()) ;
@@ -1697,8 +1697,8 @@ public class ScreeningReporter extends Reporter {
      * is the number of days since the last positive test, unless the last test was positive 
      * in which case it is zero.
      */
-    private HashMap<Object,HashMap<Object,ArrayList<Integer>>> prepareTimeAtRiskReport(HashMap<Comparable,ArrayList<Comparable>> agentTestingReport, 
-            HashMap<Object,HashMap<Comparable,ArrayList<Comparable>>> agentTreatedReport)
+    private HashMap<Object,HashMap<Object,ArrayList<Integer>>> prepareTimeAtRiskReport(HashMap<Comparable<?>,ArrayList<Comparable<?>>> agentTestingReport, 
+            HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentTreatedReport)
     {
         HashMap<Object,HashMap<Object,ArrayList<Integer>>> timeAtRiskReport = new HashMap<Object,HashMap<Object,ArrayList<Integer>>>() ;
         
@@ -1711,19 +1711,19 @@ public class ScreeningReporter extends Reporter {
         Integer day ;
         for (Object siteName : agentTreatedReport.keySet())
         {
-            HashMap<Comparable,ArrayList<Comparable>> treatedReport = agentTreatedReport.get(siteName) ;
-            ArrayList<Comparable> agentTreatedRecord = new ArrayList<Comparable>() ;
+            HashMap<Comparable<?>,ArrayList<Comparable<?>>> treatedReport = agentTreatedReport.get(siteName) ;
+            ArrayList<Comparable<?>> agentTreatedRecord = new ArrayList<Comparable<?>>() ;
             HashMap<Object,ArrayList<Integer>> atRiskReport = new HashMap<Object,ArrayList<Integer>>() ;
             //LOGGER.info(treatedReport.toString()) ;
             for (Object agentId : agentTestingReport.keySet())
             {
                 ArrayList<Object> atRiskRecord = new ArrayList<Object>() ;
 
-                ArrayList<Comparable> agentTestingRecord = agentTestingReport.get(agentId) ;
+                ArrayList<Comparable<?>> agentTestingRecord = agentTestingReport.get(agentId) ;
                 if (treatedReport.containsKey(agentId))
                     agentTreatedRecord = treatedReport.get(agentId) ;
                 else
-                    agentTreatedRecord = new ArrayList<Comparable>() ;
+                    agentTreatedRecord = new ArrayList<Comparable<?>>() ;
                 //LOGGER.info(agentTreatedRecord.toString()) ;
 
                 previousTest = 0 ;
