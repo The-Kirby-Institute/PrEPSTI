@@ -7,7 +7,7 @@
 
     "community" : {
         "FILE_PATH" : "output/test/",
-        "NAME_ROOT" : "debugReboot1c",
+        "NAME_ROOT" : "master1",
         "MAX_CYCLES" : "11",
         "POPULATION" : "40000",
         "COMMENT" : "Debug midway reboot",

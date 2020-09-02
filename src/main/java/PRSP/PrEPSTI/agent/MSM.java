@@ -279,7 +279,7 @@ public class MSM extends Agent {
         	MSM msm =(MSM) agent ;
         	if (msm.getStatusHIV())
         	    newScreenCycle = msm.sampleGamma(shapePositive, SCALE_POSITIVE, 1.0) ;
-        	else if (msm.getPrepStatus() && msm.getPrepScreen())
+        	else if (msm.getPrepStatus()) // && msm.getPrepScreen())
         		newScreenCycle = msm.sampleGamma(PREP_SCREEN_SHAPE, PREP_SCREEN_SCALE, 1.0) + PREP_SCREEN_DISPLACEMENT ;    // 61 + msm.sampleGamma(SHAPE_PREP, scalePrep, 1.0) ; //
         	else    // HIV-negative either not on PrEP or not following PrEP screening guidelines
         		newScreenCycle = msm.sampleGamma(shapeNegative, scaleNegative, 1.0) ; 
@@ -327,7 +327,7 @@ public class MSM extends Agent {
         	MSM msm =(MSM) agent ;
         	if (msm.getStatusHIV())
         		newScreenCycle = msm.sampleTriangular(cdfPositive, TRIANGULAR_LOWER) ;
-        	else if (msm.getPrepStatus() && msm.getPrepScreen())
+        	else if (msm.getPrepStatus() ) // && msm.getPrepScreen())
         		newScreenCycle = msm.sampleTriangular(77, 92, 107) ;
         	else    // HIV-negative either not on PrEP or not following PrEP screening guidelines
         		newScreenCycle = msm.sampleTriangular(cdfNegative, TRIANGULAR_LOWER) ; 
@@ -419,7 +419,7 @@ public class MSM extends Agent {
     			MSM msm = (MSM) agent ;
     			if (msm.prepStatus)    // giving up PrEP 
                 {
-                    newStatus = RAND.nextDouble() < changeProbability ;    // '<' is deliberate, as is !newStus next line
+                    newStatus = RAND.nextDouble() < changeProbability ;    // '<' is deliberate, as is !newStatus next line
                     if (!newStatus)
                     {
                     	msm.prepStatus = newStatus ;
