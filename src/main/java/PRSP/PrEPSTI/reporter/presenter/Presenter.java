@@ -89,6 +89,7 @@ public class Presenter {
     static protected String INTERVAL = "interval" ;
     static protected String PROPORTION = "proportion" ;
     static protected String GROUP = "__" ;
+    static final String YEAR = "year" ;
     static final String CSV = Reporter.CSV ;
     static final String COMMA = Reporter.COMMA ;
 
@@ -504,11 +505,11 @@ public class Presenter {
         ConfigLoader.load();
         //String simName = "NoPrepCalibration12Pop40000Cycles2000" ;
         //String simName = "RelationshipCalibrationPop40000Cycles200" ; // "testPlotCondomUsePop4000Cycles500" ; // args[0] ;
-        //String folder = "output/test/" ;
-        String folder = "data_files/" ;
+        String folder = "output/long_sims/" ;
+        //String folder = "data_files/" ;
         //String fileName = "incidence" ;
-        //String property = "PrEP users - PrEP use 0.31" ;
-        String property = "Overall - HIV negative (PrEP use grows linearly)" ;
+        String property = "PrEP users - PrEP use (constant parameters)" ; // 0.31" ;
+        //String property = "Overall - HIV negative (constant parameters)" ; // (PrEP use grows linearly)" ;
         String chartTitle = property ;
         // LOGGER.info(chartTitle) ;
         String[] legend ;
@@ -527,14 +528,16 @@ public class Presenter {
         HashMap<String, HashMap<String,String[]>> propertyToYAndRange = new HashMap<String, HashMap<String,String[]>>();
         String fileName ;
         //for (String fileName : args)
-        for (int argIndex = 0 ; argIndex < args.length ; argIndex++ )
-        {
-        	fileName = args[argIndex] ;
-        	LOGGER.info(fileName);
-            HashMap<Comparable, String[]> readCSV = Reporter.READ_CSV_STRING(fileName, FOLDER_PATH, 1);
-            HashMap<String, String[]> yAndRange = Reporter.extractYValueAndRange(readCSV);
-            propertyToYAndRange.put(legend[argIndex], yAndRange);
-        }
+        boolean loopThroughFileNames = false ;
+        if (loopThroughFileNames)
+            for (int argIndex = 0 ; argIndex < args.length ; argIndex++ )
+            {
+            	fileName = args[argIndex] ;
+        	    LOGGER.info(fileName);
+                HashMap<Comparable, String[]> readCSV = Reporter.READ_CSV_STRING(fileName, FOLDER_PATH, 1);
+                HashMap<String, String[]> yAndRange = Reporter.extractYValueAndRange(readCSV);
+                propertyToYAndRange.put(legend[argIndex], yAndRange);
+            }
         //LOGGER.info(propertyToYAndRange.toString()) ;
         
 
@@ -547,7 +550,9 @@ public class Presenter {
         }
         */
         
-        presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
+        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, ScreeningPresenter.INCIDENCE, YEAR, legend) ;
+        
+        //presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
         
         /*
         ScreeningReporter screeningReporter = 
@@ -689,6 +694,55 @@ public class Presenter {
           // logger.log(level.info, "{0}", hashMapNumber) ;
             plotHashMap(arrayHeader[0],arrayHeader[1],hashMapNumber) ;
         }
+    }
+    
+    /**
+     * Extracts information from a range of .csv files
+     * where each .csv file is name a property IF:
+     * * legend is null OR
+     * * legend.length does NOT equal fileNames.length
+     * 
+     * @param fileNames - full path of fileNames we are extracting information from
+     * @param title - title of our chart
+     * @param yLabel - label for our y-axis
+     * @param xLabel - label for our x-axis
+     * @param legend - String array of properties
+     */
+    public void plotMedianAndRangeFromCSVFileNames(String[] fileNames, String title, String yLabel, String xLabel, String[] legend) 
+    {
+        HashMap<String, HashMap<String,String[]>> propertyToYAndRange = new HashMap<String, HashMap<String,String[]>>();
+
+        for (int i = 0; i < fileNames.length; ++i) {
+
+            // if the legend is the same size as fileNames, we use the legend instead
+            String property = (legend != null && legend.length == fileNames.length) ? legend[i] : fileNames[i];
+
+            String fileName = fileNames[i];
+            HashMap<Comparable, String[]> readCSV = Reporter.READ_CSV_STRING(fileName, FOLDER_PATH, 1);
+            
+            int VALUES_TO_ADD = 3; // y-value, lower, upper
+            int yValueIndex = 0;
+            int lowerIndex = 1;
+            int upperIndex = 2;
+
+            for (Comparable<?> keyCmp : readCSV.keySet()) {
+                String[] values = readCSV.get(keyCmp);
+                String[] to_add = Reporter.generateMedianAndRangeArrayFromValuesArray(values);
+
+                String[] newValues = new String[values.length + VALUES_TO_ADD];
+                newValues[yValueIndex] = to_add[yValueIndex];
+                newValues[lowerIndex] = to_add[lowerIndex];
+                newValues[upperIndex] = to_add[upperIndex];
+                for (int j = 0; j < values.length; ++j)
+                    newValues[VALUES_TO_ADD+j] = values[j];
+                readCSV.put(keyCmp, newValues); 
+            }
+            
+            HashMap<String, String[]> yAndRange = Reporter.extractYValueAndRange(readCSV);
+            propertyToYAndRange.put(property, yAndRange);
+        }
+        
+        plotShadedHashMapStringCI(propertyToYAndRange, yLabel, xLabel, legend);
     }
     
     /**

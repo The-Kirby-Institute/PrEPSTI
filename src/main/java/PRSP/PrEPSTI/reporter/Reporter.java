@@ -2761,17 +2761,20 @@ public class Reporter {
         	for (int fileIndex = 0 ; fileIndex < fileNames.size() ; fileIndex++ )
         	{
         		fileName = fileNames.get(fileIndex) ;
+        		LOGGER.info(fileName) ;
         		firstOutput[fileIndex] = fileName ;
         		
         		BufferedReader fileReader 
                 = new BufferedReader(new FileReader(folderPath + fileName + reportName + CSV)) ;
         
                 // Get first line
-                String record = fileReader.readLine().substring(1) ;    // Remove invisible character at beginning of first entry
+                String record = fileReader.readLine() ; // .substring(1) ;    // Remove invisible character at beginning of first entry
+                LOGGER.info(record) ;
                 String[] recordArray = record.split(COMMA) ;
                 
                 for (int recordIndex = 1 ; recordIndex < recordArray.length ; recordIndex++ )
                 {
+            		LOGGER.info(recordArray[recordIndex]) ;
                 	if (recordArray[recordIndex].equals(scoreName))
                 	{
                 		scoreIndex = recordIndex ; 
@@ -2779,6 +2782,7 @@ public class Reporter {
                 	}
                 }
                 assert(scoreIndex >= 0) ;
+                LOGGER.info(String.valueOf(scoreIndex)) ;
                 
                 if (firstLine.length == 0)
                 	firstLine = new String[] {recordArray[0], fileName} ;
@@ -2826,7 +2830,7 @@ public class Reporter {
         //fileName = fileName.substring(0, fileName.indexOf(CSV)) ;
         reportName += "_" + scoreName ;
         
-        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, folderPath) ;
+        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, DATA_FOLDER) ;
     }
 
     /**
@@ -3900,8 +3904,8 @@ public class Reporter {
         //String prefix = "to2019noAdjustCondom" ;
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
-        //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
-        String prefix = "to2030linearPrep78to2019noAdjustCondom" ;
+        String prefix = "to2030prep123screen6to2019noAdjustCondom" ;
+        //String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
@@ -3915,7 +3919,7 @@ public class Reporter {
         //String suffix = "Pop40000Cycles7300" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
-        String reportName = "incidenceReport" ;
+        String reportName = "incidenceReport_Prep" ;
         ArrayList<String> simNameList = new ArrayList<String>() ;
         String letter2 = "C" ;
         //for (String letter2 : new String[] {"A","B","C"}) // ,"D","E","F","G","H","I","J"})
@@ -3930,7 +3934,7 @@ public class Reporter {
         	
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
-        MERGE_HASHMAP_CSV(simNameList,reportName,"all_false",folderPath) ;
+        MERGE_HASHMAP_CSV(simNameList,reportName,"all_true",folderPath) ;
         
         //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
         //ArrayList<String> closestSimulations
@@ -3943,7 +3947,7 @@ public class Reporter {
         //if (simNameList.size() < cutoff)
             cutoff = simNameList.size() ;
         //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-        MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+        //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
         LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
         // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
         //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;

@@ -1364,52 +1364,5 @@ public class ScreeningPresenter extends Presenter {
     
     }
 
-    /**
-     * Extracts information from a range of .csv files
-     * where each .csv file is name a property IF:
-     * * legend is null OR
-     * * legend.length does NOT equal fileNames.length
-     * 
-     * @param fileNames - full path of fileNames we are extracting information from
-     * @param title - title of our chart
-     * @param yLabel - label for our y-axis
-     * @param xLabel - label for our x-axis
-     * @param legend - String array of properties
-     */
-    public void plotMedianAndRangeFromCSVFileNames(String[] fileNames, String title, String yLabel, String xLabel, String[] legend) {
-        HashMap<String, HashMap<String,String[]>> propertyToYAndRange = new HashMap<String, HashMap<String,String[]>>();
-
-        for (int i = 0; i < fileNames.length; ++i) {
-
-            // if the legend is the same size as fileNames, we use the legend instead
-            String property = (legend != null && legend.length == fileNames.length) ? legend[i] : fileNames[i];
-
-            String fileName = fileNames[i];
-            HashMap<Comparable, String[]> readCSV = Reporter.READ_CSV_STRING(fileName, reporter.getFolderPath(), 1);
-            
-            int VALUES_TO_ADD = 3; // y-value, lower, upper
-            int yValueIndex = 0;
-            int lowerIndex = 1;
-            int upperIndex = 2;
-
-            for (Comparable<?> keyCmp : readCSV.keySet()) {
-                String[] values = readCSV.get(keyCmp);
-                String[] to_add = Reporter.generateMedianAndRangeArrayFromValuesArray(values);
-
-                String[] newValues = new String[values.length + VALUES_TO_ADD];
-                newValues[yValueIndex] = to_add[yValueIndex];
-                newValues[lowerIndex] = to_add[lowerIndex];
-                newValues[upperIndex] = to_add[upperIndex];
-                for (int j = 0; j < values.length; ++j)
-                    newValues[VALUES_TO_ADD+j] = values[j];
-                readCSV.put(keyCmp, newValues); 
-            }
-            
-            HashMap<String, String[]> yAndRange = Reporter.extractYValueAndRange(readCSV);
-            propertyToYAndRange.put(property, yAndRange);
-        }
-        
-        plotShadedHashMapStringCI(propertyToYAndRange, yLabel, xLabel, legend);
-    }
     
 }

@@ -145,14 +145,24 @@ public class EncounterReporter extends Reporter {
         double denominator = population/(100.0 * DAYS_PER_YEAR) ;
         for (String siteName : siteNames)
         {
-            // Count infected siteName
-            rate = COUNT_VALUE_INCIDENCE(siteName,"0",finalRecord,0)[1];
-            finalTransmissionsRecord.put(siteName,rate/denominator) ;
+            if (denominator == 0.0)
+                finalTransmissionsRecord.put(siteName,0.0) ;
+            else
+            {
+            	// Count infected siteName
+                rate = COUNT_VALUE_INCIDENCE(siteName,"0",finalRecord,0)[1] ;
+                finalTransmissionsRecord.put(siteName,rate/denominator) ;
+            }
         }
         
         // All encounters with transmission
-        rate = COUNT_VALUE_INCIDENCE(RELATIONSHIPID,"",finalRecord,0)[1];
-        finalTransmissionsRecord.put("all",rate/denominator) ;
+        if (denominator == 0.0)
+            finalTransmissionsRecord.put("all",0.0) ;
+        else
+        {
+        	rate = COUNT_VALUE_INCIDENCE(RELATIONSHIPID,"",finalRecord,0)[1];
+            finalTransmissionsRecord.put("all",rate/denominator) ;
+        }
         
         return finalTransmissionsRecord ;
     }
@@ -461,7 +471,11 @@ public class EncounterReporter extends Reporter {
             {
                 String entryName = siteNameList.get(siteIndex) + "_" + sortingKey.toString() ;
                 Number entryValue = sortedFinalIncidence.get(sortingKey)[siteIndex] ;
-                sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,entryValue.doubleValue()/denominator));
+                if (denominator == 0.0)
+                    sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,0.0)) ;
+                else
+                	sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,entryValue.doubleValue()/denominator)) ;
+                
                 // finalIncidence += ADD_REPORT_PROPERTY(entryName,entryValue.doubleValue()/denominator) ;
             }
         }
