@@ -98,17 +98,28 @@ public class EncounterReporter extends Reporter {
      */    
     public ArrayList<String> prepareTransmissionReport()
     {
+    	return prepareTransmissionReport(0, 0, getMaxCycles(), getMaxCycles()) ;
+    }
+    
+	/**
+     * 
+     * @return String[] report of sexual contacts where STI transmission occurred
+     */    
+    public ArrayList<String> prepareTransmissionReport(int backYears, int backMonths, int backDays, int endCycle)
+    {
         ArrayList<String> transmissionReport = new ArrayList<String>() ;
 
-        String record ;
-
-        for (boolean nextInput = true ; nextInput ; nextInput = updateReport())
-            for (int reportNb = 0 ; reportNb < input.size() ; reportNb += outputCycle )
-            {
-                record = input.get(reportNb) ;
-                //LOGGER.log(Level.INFO, "prepare: {0}", record) ;
-                transmissionReport.add(encounterByValue(TRANSMISSION,TRUE,record)) ;
-            }
+	    String record ;
+	    
+	    ArrayList<String> encounterReport = getBackCyclesReport(backYears, backMonths, backDays, endCycle) ;
+	
+	    //for (boolean nextInput = true ; nextInput ; nextInput = updateReport())    // Redundant 9/11/20
+        for (int reportNb = 0 ; reportNb < encounterReport.size() ; reportNb += outputCycle )
+        {
+            record = encounterReport.get(reportNb) ;
+            //LOGGER.log(Level.INFO, "prepare: {0}", record) ;
+            transmissionReport.add(encounterByValue(TRANSMISSION,TRUE,record)) ;
+        }
             
         return transmissionReport ;
     }
@@ -144,25 +155,15 @@ public class EncounterReporter extends Reporter {
         // Rate measured per 100 man-years
         double denominator = population/(100.0 * DAYS_PER_YEAR) ;
         for (String siteName : siteNames)
-        {
-            if (denominator == 0.0)
-                finalTransmissionsRecord.put(siteName,0.0) ;
-            else
-            {
-            	// Count infected siteName
-                rate = COUNT_VALUE_INCIDENCE(siteName,"0",finalRecord,0)[1] ;
-                finalTransmissionsRecord.put(siteName,rate/denominator) ;
-            }
+        {   
+           	// Count infected siteName
+            rate = COUNT_VALUE_INCIDENCE(siteName,"0",finalRecord,0)[1] ;
+            finalTransmissionsRecord.put(siteName,SAFE_DIVISION(rate,denominator)) ;
         }
         
         // All encounters with transmission
-        if (denominator == 0.0)
-            finalTransmissionsRecord.put("all",0.0) ;
-        else
-        {
-        	rate = COUNT_VALUE_INCIDENCE(RELATIONSHIPID,"",finalRecord,0)[1];
-            finalTransmissionsRecord.put("all",rate/denominator) ;
-        }
+        rate = COUNT_VALUE_INCIDENCE(RELATIONSHIPID,"",finalRecord,0)[1];
+        finalTransmissionsRecord.put("all",SAFE_DIVISION(rate,denominator)) ;
         
         return finalTransmissionsRecord ;
     }
@@ -294,7 +295,7 @@ public class EncounterReporter extends Reporter {
             // Count them
             incidents += COUNT_VALUE_INCIDENCE(RELATIONSHIPID,"",record,0)[1] ;
         }
-        sbFinalIncidence.append(ADD_REPORT_PROPERTY("all",incidents/denominator));
+        sbFinalIncidence.append(ADD_REPORT_PROPERTY("all",SAFE_DIVISION(incidents,denominator))) ;
         // finalIncidence += ADD_REPORT_PROPERTY("all",incidents/denominator) ;
         
         for (String siteName : siteNames)
@@ -310,7 +311,7 @@ public class EncounterReporter extends Reporter {
                 incidents += COUNT_VALUE_INCIDENCE(TRANSMISSION,TRUE,record,0)[0] ;
                 
             }
-            sbFinalIncidence.append(ADD_REPORT_PROPERTY(siteName,incidents/denominator));
+            sbFinalIncidence.append(ADD_REPORT_PROPERTY(siteName,SAFE_DIVISION(incidents,denominator)));
             // finalIncidence += ADD_REPORT_PROPERTY(siteName,incidents/denominator) ;
         }
         
@@ -471,10 +472,7 @@ public class EncounterReporter extends Reporter {
             {
                 String entryName = siteNameList.get(siteIndex) + "_" + sortingKey.toString() ;
                 Number entryValue = sortedFinalIncidence.get(sortingKey)[siteIndex] ;
-                if (denominator == 0.0)
-                    sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,0.0)) ;
-                else
-                	sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,entryValue.doubleValue()/denominator)) ;
+                sbFinalIncidence.append(ADD_REPORT_PROPERTY(entryName,SAFE_DIVISION(entryValue.doubleValue(),denominator))) ;
                 
                 // finalIncidence += ADD_REPORT_PROPERTY(entryName,entryValue.doubleValue()/denominator) ;
             }
@@ -1630,10 +1628,10 @@ public class EncounterReporter extends Reporter {
      * to Array of cycles in which transmission occurred.
      * @return HashMap agentId to number of times Agent transmitted disease.
      */
-    public HashMap<Comparable,Integer> prepareAgentTransmissionCountReport()
+    public HashMap<Comparable<?>,Integer> prepareAgentTransmissionCountReport()
     {
-        HashMap<Comparable,Integer> agentTransmissionCountReport 
-                = new HashMap<Comparable,Integer>() ;
+        HashMap<Comparable<?>,Integer> agentTransmissionCountReport 
+                = new HashMap<Comparable<?>,Integer>() ;
         
         HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentToAgentReport 
                 = prepareAgentToAgentReport() ;
@@ -1656,10 +1654,10 @@ public class EncounterReporter extends Reporter {
      * to Array of cycles in which transmission occurred.
      * @return HashMap agentId to number of times Agent received disease.
      */
-    public HashMap<Comparable,Integer> prepareAgentReceptionCountReport()
+    public HashMap<Comparable<?>,Integer> prepareAgentReceptionCountReport()
     {
-        HashMap<Comparable,Integer> agentReceptionCountReport 
-                = new HashMap<Comparable,Integer>() ;
+        HashMap<Comparable<?>,Integer> agentReceptionCountReport 
+                = new HashMap<Comparable<?>,Integer>() ;
         
         HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> agentFromAgentReport 
                 = prepareAgentFromAgentReport() ;
@@ -1685,7 +1683,7 @@ public class EncounterReporter extends Reporter {
     {
         HashMap<Comparable,Number> numberAgentTransmissionReport = new HashMap<Comparable,Number>() ;
 
-        HashMap<Comparable,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
+        HashMap<Comparable<?>,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
         
         Collection<Integer> agentTransmissionCountValues = agentTransmissionCountReport.values() ;
         
@@ -1711,7 +1709,7 @@ public class EncounterReporter extends Reporter {
     {
         HashMap<Comparable,Number> numberAgentReceptionReport = new HashMap<Comparable,Number>() ;
 
-        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        HashMap<Comparable<?>,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
         
         Collection<Integer> agentReceptionCountValues = agentReceptionCountReport.values() ;
         
@@ -1739,7 +1737,7 @@ public class EncounterReporter extends Reporter {
     {
         HashMap<Comparable,HashMap<Comparable,Number>> numberAgentTransmissionReport = new HashMap<Comparable,HashMap<Comparable,Number>>() ;
 
-        HashMap<Comparable,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
+        HashMap<Comparable<?>,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
         HashMap<Comparable,Number> transmissionReport ;
         
         PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
@@ -1778,12 +1776,12 @@ public class EncounterReporter extends Reporter {
      * @param sortingProperty
      * @return (HashMap) sortingProperty maps to (HashMap) agentReceptionReport
      */
-    public HashMap<Comparable,HashMap<Comparable,Number>> prepareNumberAgentReceptionReport(String sortingProperty)
+    public HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> prepareNumberAgentReceptionReport(String sortingProperty)
     {
-        HashMap<Comparable,HashMap<Comparable,Number>> numberAgentReceptionReport = new HashMap<Comparable,HashMap<Comparable,Number>>() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> numberAgentReceptionReport = new HashMap<Comparable<?>,HashMap<Comparable<?>,Number>>() ;
 
-        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
-        HashMap<Comparable,Number> receptionReport ;
+        HashMap<Comparable<?>,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        HashMap<Comparable<?>,Number> receptionReport ;
         
         PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
         HashMap<Object,Object> sortingReport = sortingReporter.sortedAgentIds(sortingProperty) ;
@@ -1799,7 +1797,7 @@ public class EncounterReporter extends Reporter {
             
         for (Comparable sortingKey : sortedAgentReceptionCountReport.keySet())
         {
-            receptionReport = new HashMap<Comparable,Number>() ;
+            receptionReport = new HashMap<Comparable<?>,Number>() ;
             Collection<Integer> agentReceptionCountValues = sortedAgentReceptionCountReport.get(sortingKey).values() ;
         
             // To track how agentIds have had more than given Relationships
@@ -1825,7 +1823,7 @@ public class EncounterReporter extends Reporter {
     {
         HashMap<Comparable,Number> cumulativeAgentTransmissionReport = new HashMap<Comparable,Number>() ;
 
-        HashMap<Comparable,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
+        HashMap<Comparable<?>,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
         
         Collection<Integer> agentTransmissionCountValues = agentTransmissionCountReport.values() ;
         
@@ -1854,7 +1852,7 @@ public class EncounterReporter extends Reporter {
     {
         HashMap<Comparable,Number> cumulativeAgentReceptionReport = new HashMap<Comparable,Number>() ;
 
-        HashMap<Comparable,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        HashMap<Comparable<?>,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
         
         Collection<Integer> agentReceptionCountValues = agentReceptionCountReport.values() ;
         
