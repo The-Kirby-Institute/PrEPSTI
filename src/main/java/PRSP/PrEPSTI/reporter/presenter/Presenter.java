@@ -90,7 +90,7 @@ public class Presenter {
     static protected String INTERVAL = "interval" ;
     static protected String PROPORTION = "proportion" ;
     static protected String GROUP = "__" ;
-    static final String YEAR = "year" ;
+
     static final String CSV = Reporter.CSV ;
     static final String COMMA = Reporter.COMMA ;
 
@@ -550,7 +550,7 @@ public class Presenter {
         }
         */
         
-        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, ScreeningPresenter.INCIDENCE, YEAR, legend) ;
+        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, ScreeningPresenter.INCIDENCE, Reporter.YEAR, legend) ;
         
         //presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
         
@@ -727,7 +727,7 @@ public class Presenter {
 
             for (Comparable<?> keyCmp : readCSV.keySet()) {
                 String[] values = readCSV.get(keyCmp);
-                String[] to_add = Reporter.generateMedianAndRangeArrayFromValuesArray(values);
+                String[] to_add = Reporter.GENERATE_MEDIAN_AND_RANGE_ARRAY_FROM_VALUES_ARRAY(values);
 
                 String[] newValues = new String[values.length + VALUES_TO_ADD];
                 newValues[yValueIndex] = to_add[yValueIndex];

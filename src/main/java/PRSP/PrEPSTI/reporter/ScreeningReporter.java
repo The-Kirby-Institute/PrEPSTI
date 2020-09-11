@@ -402,7 +402,7 @@ public class ScreeningReporter extends Reporter {
                     positiveList.removeAll(positiveAgents) ;
                 positiveAgents.addAll(positiveList) ;
             }
-            Number[] entry = new Number[] {notifications/denominator,positiveAgents.size()} ;
+            Number[] entry = new Number[] {SAFE_DIVISION(notifications,denominator),positiveAgents.size()} ;
             finalNotifications.put(siteName,entry) ;
             sbFinalNotifications.append(ADD_REPORT_PROPERTY(siteName, entry[0].doubleValue())) ;
             // finalNotificationsString += ADD_REPORT_PROPERTY(siteName, entry[0].doubleValue()) ;
@@ -440,7 +440,7 @@ public class ScreeningReporter extends Reporter {
         }
         double nbTested = (double) testedAgents.size() ;
         double nbTreated = (double) positiveAgents.size() ;
-        Number[] entry = new Number[] {notifications/denominator,nbTreated/nbTested} ;
+        Number[] entry = new Number[] {SAFE_DIVISION(notifications,denominator),nbTreated/nbTested} ;
         finalNotifications.put("all",entry) ;
         sbFinalNotifications.append(ADD_REPORT_PROPERTY("all",entry[0].doubleValue())) ;
         sbFinalNotifications.append(ADD_REPORT_LABEL(POSITIVITY)) ;
@@ -578,7 +578,7 @@ public class ScreeningReporter extends Reporter {
                 testedAgents.addAll(testedList) ;
             }
             //LOGGER.log(Level.INFO, "{0} {1}", new Object[] {denominator,testedAgents.size()});
-            Number[] entry = new Number[] {notifications/denominator,((double) positiveAgents.size())/testedAgents.size()} ;
+            Number[] entry = new Number[] {SAFE_DIVISION(notifications,denominator),((double) positiveAgents.size())/testedAgents.size()} ;
             finalNotifications.put(siteName,entry) ;
         }
         notifications = 0 ;
@@ -610,7 +610,7 @@ public class ScreeningReporter extends Reporter {
         }
         double nbTested = (double) testedAgents.size() ;
         double nbTreated = (double) positiveAgents.size() ;
-        Number[] entry = new Number[] {notifications/denominator,nbTreated/nbTested} ;
+        Number[] entry = new Number[] {SAFE_DIVISION(notifications,denominator),nbTreated/nbTested} ;
         finalNotifications.put("all",entry) ;
         
         if (WRITE_REPORT)
@@ -1023,7 +1023,7 @@ public class ScreeningReporter extends Reporter {
             // per Agents per YEAR
             Double denominator = testedAgents * GET_BACK_CYCLES(backYears, backMonths, backDays, endCycle)/DAYS_PER_YEAR ;
 
-            testingRateReport.put(value,totalTests/denominator) ;
+            testingRateReport.put(value,SAFE_DIVISION(totalTests,denominator)) ;
         }
         
         return testingRateReport ;

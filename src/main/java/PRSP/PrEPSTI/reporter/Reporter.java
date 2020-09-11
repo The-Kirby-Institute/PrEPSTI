@@ -43,6 +43,8 @@ public class Reporter {
     /** Reader for accessing saved reports. */
     protected Reader reader ;
     
+    static public String YEAR = "year" ;
+    
     /**
      * To avoid generating reports more than once. 
      * reportName maps to report.
@@ -222,6 +224,20 @@ public class Reporter {
     }
     
     /**
+     * Allows division without having to check that the denoominator is non-zero.
+     * @param numerator (double)
+     * @param denominator (double)
+     * @return (double) 0.0 if denominator is zero, numerator/denominator otherwise
+     */
+    protected static double SAFE_DIVISION(double numerator, double denominator)
+    {
+    	if (denominator == 0.0)
+    		return 0.0 ;
+    	else
+    		return numerator/denominator ;
+    }
+    
+    /**
      * Filters records leaving only those encounters containing propertyName with (String) value.
      * @param propertyName
      * @param value
@@ -251,7 +267,7 @@ public class Reporter {
      * @param sortingReport
      * @return 
      */
-    protected static HashMap<Comparable,HashMap<Comparable,Integer>> SORT_REPORT(HashMap<Comparable,Integer> unsortedReport, 
+    protected static HashMap<Comparable,HashMap<Comparable,Integer>> SORT_REPORT(HashMap<Comparable<?>,Integer> unsortedReport, 
             HashMap<Object,Object> sortingReport)
     {
         HashMap<Comparable,HashMap<Comparable,Integer>> outputHashMap = new HashMap<Comparable,HashMap<Comparable,Integer>>() ;
@@ -1086,7 +1102,8 @@ public class Reporter {
      * Convert HashMap of HashMaps to form usable by plotSpline().
      * @param initialMap
      * @param initialKeys
-     * @return (HashMap) of (ArrayList) of Number 
+     * @return (HashMap) whose inner key maps to (Number[]) values in order determined by 
+     * looping through initialKeys 
      */
     static public HashMap<Comparable<?>,Number[]> 
         INVERT_HASHMAP_LIST(HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> initialMap, Object[] initialKeys)
@@ -2201,7 +2218,7 @@ public class Reporter {
             ArrayList<String> valuesArrayList = new ArrayList<String>(Arrays.asList(valuesArray));
             String year = valuesArrayList.remove(0); // remove the year and store it in a variable
             
-            String[] medianAndRange = Reporter.generateMedianAndRangeArrayFromValuesArray(valuesArray);
+            String[] medianAndRange = Reporter.GENERATE_MEDIAN_AND_RANGE_ARRAY_FROM_VALUES_ARRAY(valuesArray);
 
             // // calculate confidence intervals
             // Double[] confidenceInterval = Reporter.get95ConfidenceIntervalDoubleArray(  meanValue,
@@ -2257,7 +2274,7 @@ public class Reporter {
      * @return String[]
      * @author dstass
      */
-    public static String[] generateMedianAndRangeArrayFromValuesArray(String[] values) {
+    public static String[] GENERATE_MEDIAN_AND_RANGE_ARRAY_FROM_VALUES_ARRAY(String[] values) {
         int VALUES_TO_ADD = 3; // y-value, lower, upper
         String[] toReturn = new String[VALUES_TO_ADD];
 
@@ -3904,7 +3921,9 @@ public class Reporter {
      */
     public static void main(String[] args)
     {
-        ConfigLoader.load();
+        ConfigLoader.load() ;
+        String simName = args[0] ;
+        boolean mergeReports = true ;
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
         String folderPath = "output/long_sims/" ;
         //String folderPath = "output/to2025/" ;
@@ -3912,9 +3931,8 @@ public class Reporter {
         //String folderPath = "output/" ;
         //String folderPath = "output/prep/" ;
         //String folderPath = "output/prePrEP/" ;
-        //String[] simNames = new String[] {"from2007seek27aPop40000Cycles5475","from2007seek27bPop40000Cycles5475","from2007seek27cPop40000Cycles5475","from2007seek27dPop40000Cycles5475","from2007seek27ePop40000Cycles5475",
-        //"from2007seek27fPop40000Cycles5475","from2007seek27gPop40000Cycles5475","from2007seek27hPop40000Cycles5475","from2007seek27iPop40000Cycles5475","from2007seek27jPop40000Cycles5475"} ;
-    
+        
+
         //String prefix = "to2019noAdjustCondom" ;
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
@@ -3933,38 +3951,91 @@ public class Reporter {
         //String suffix = "Pop40000Cycles7300" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
-        String reportName = "incidenceReport_Prep" ;
+        
+        String reportName = "IncidenceReport" ;
+        String sortingProperty = "statusHIV" ;
+        //String sortProperty = "prepStatus" ;
+        reportName += "_" + sortingProperty ;
+        String property = "all_false" ;
+        
         ArrayList<String> simNameList = new ArrayList<String>() ;
+        int END_YEAR = 2030 ;
+        int START_YEAR = 2020 ;
+        int backYears = END_YEAR + 1 - START_YEAR ;
+        
         String letter2 = "C" ;
         //for (String letter2 : new String[] {"A","B","C"}) // ,"D","E","F","G","H","I","J"})
     	//for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
         //	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
         //		simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
 
-    	//for (String letter50 : new String[] {"Eje","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-        for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
+
+        if (mergeReports)
+        {
+        	//for (String letter50 : new String[] {"Eje","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
+            for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
                              simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
-        	
+            simName = simNameList.get(0) ;
+        }	
+        else
+        	simNameList.add(simName) ;
+        
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
-        MERGE_HASHMAP_CSV(simNameList,reportName,"all_true",folderPath) ;
+        //if (mergeReports)
+        {
+        	String[] siteNames = MSM.SITE_NAMES ;
+        	for (String simNameLoop : simNameList) 
+        	{
+        		//ScreeningReporter screeningReporter = new ScreeningReporter(simName, folderPath) ;
+                EncounterReporter encounterReporter = new EncounterReporter(simNameLoop, folderPath) ;
+                
+                //incidenceReport = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, 41, END_YEAR, statusHIV) ;
+                //incidenceReportPrep = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, 41, END_YEAR, prepStatus) ;
+                //HashMap<Comparable,Number> beenTestedReport ;
+                //beenTestedReport = screeningReporter.prepareYearsBeenTestedReport(backYears, 0, 0, END_YEAR) ;
+                //ArrayList<Object> condomUseReport ;
+                //HashMap<Comparable<?>,String> incidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, sortProperty) ;
+                HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> incidenceReport = encounterReporter.prepareNumberAgentReceptionReport(sortingProperty) ;
+                String[] sortingValues = new String[incidenceReport.keySet().size()] ;
+                Object[] sortingArray = incidenceReport.keySet().toArray() ;
+                for (int sortingIndex = 0 ; sortingIndex < sortingArray.length ; sortingIndex++ )
+                	sortingValues[sortingIndex] = sortingArray[sortingIndex].toString() ;
+                HashMap<Comparable<?>,Number[]> invertedIncidenceReport = INVERT_HASHMAP_LIST(incidenceReport,sortingArray) ;
+                
+                //HashMap<Comparable,String> disclosureReport = encounterReporter.prepareYearsDisclosureReport(13,2019) ;
+                //HashMap<Comparable,String> condomlessReport = encounterReporter.preparePercentAgentCondomlessYears(relationshipClazzNames, backYears, END_YEAR, "statusHIV", false, "") ;
+                //HashMap<Comparable,String> condomlessHivReport = encounterReporter.preparePercentAgentCondomlessYears(relationshipClazzNames, backYears, END_YEAR, "statusHIV", false, "statusHIV") ;
+                    //condomUseReport = (ArrayList<Object>) encounterReporter.prepareYearsCondomUseRecord(backYears, END_YEAR).clone() ;
+                //Reporter.DUMP_OUTPUT("beenTestedReport",simName,folderPath,beenTestedReport);
+                
+
+                Reporter.WRITE_CSV(invertedIncidenceReport,YEAR,sortingValues,reportName,simNameLoop,folderPath) ;
+                //Reporter.WRITE_CSV_STRING(incidenceReport,YEAR,reportName,simName,folderPath) ;
+        	}
         
-        //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
-        //ArrayList<String> closestSimulations
-        String[] scoreNames = new String[] {"all_false","all_true"} ;
-        double[] weight = new double[] {1,1/12.25} ;
-        //simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_Prep",folderPath,"gonoGoneWild","data_files/") ;
-        LOGGER.info(String.valueOf(simNameList.size()) + " simulations included.") ;
-        //MULTI_WRITE_CSV(simNameList, "condomUse", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; //
-        int cutoff = 50 ;
-        //if (simNameList.size() < cutoff)
-            cutoff = simNameList.size() ;
-        //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-        //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-        LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
-        // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
-        //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;
+        	if (mergeReports)
+        		MERGE_HASHMAP_CSV(simNameList,reportName,"all_true",folderPath) ;
+        }
+        //else
+        {
+            //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
+            //ArrayList<String> closestSimulations
+            String[] scoreNames = new String[] {"all_false","all_true"} ;
+            double[] weight = new double[] {1,1/12.25} ;
+            //simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_Prep",folderPath,"gonoGoneWild","data_files/") ;
+            LOGGER.info(String.valueOf(simNameList.size()) + " simulations included.") ;
+            //MULTI_WRITE_CSV(simNameList, "condomUse", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; //
+            int cutoff = 50 ;
+            //if (simNameList.size() < cutoff)
+                cutoff = simNameList.size() ;
+            //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+            //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+            LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
+            // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
+            //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;
+        }
     }
 
     /**
