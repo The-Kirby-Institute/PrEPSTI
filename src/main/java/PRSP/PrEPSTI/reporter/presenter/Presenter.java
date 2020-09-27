@@ -508,13 +508,15 @@ public class Presenter {
         String folder = "output/long_sims/" ;
         //String folder = "data_files/" ;
         //String fileName = "incidence" ;
-        String property = "PrEP users - PrEP use (constant parameters)" ; // 0.31" ;
+        String property = "PrEP users with cumulative number of infections" ; // 0.31" ;
+        
         //String property = "Overall - HIV negative (constant parameters)" ; // (PrEP use grows linearly)" ;
         String chartTitle = property ;
         // LOGGER.info(chartTitle) ;
         String[] legend ;
         // legend = args ;
-        legend = new String[] {" 78 days"," 92 days (standard)","106 days","123 days","154 days"} ; //,"185 days"} ; //,"216 days"} ;    // 
+        //legend = new String[] {"true","false"} ;
+         legend = new String[] {" 78 days"," 92 days (standard)","106 days","123 days","154 days"} ; //,"185 days"} ; //,"216 days"} ;    // 
         //legend = new String[] {"screening no PrEP","PrEP no screening","no PrEP","constant"} ;
         //PREP_PROBABILITY_ARRAY = new double[] {0.39,0.46,0.53,0.60,0.67,0.74} ; // 2013 to 2019
         // gonoGoneWild header  
@@ -528,7 +530,7 @@ public class Presenter {
         HashMap<String, HashMap<String,String[]>> propertyToYAndRange = new HashMap<String, HashMap<String,String[]>>();
         String fileName ;
         //for (String fileName : args)
-        boolean loopThroughFileNames = false ;
+        boolean loopThroughFileNames = true ;
         if (loopThroughFileNames)
             for (int argIndex = 0 ; argIndex < args.length ; argIndex++ )
             {
@@ -550,7 +552,7 @@ public class Presenter {
         }
         */
         
-        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, ScreeningPresenter.INCIDENCE, Reporter.YEAR, legend) ;
+        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, "Number of PrEP users", "Number of infections", legend) ;
         
         //presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
         

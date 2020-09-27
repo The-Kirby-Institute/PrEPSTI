@@ -374,7 +374,7 @@ abstract public class Site {
     
     /**
      * Randomly chooses how long an infection lasts, assuming it is untreated.
-     * @return Randomly chosen from Gamma Distribution from half mean cutoff.
+     * @return Randomly chosen integer.
      */
     public int applyInfectionDuration()
     {

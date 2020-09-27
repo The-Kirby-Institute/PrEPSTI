@@ -1264,7 +1264,7 @@ public class ScreeningReporter extends Reporter {
                 if (!sortingProperty.isEmpty())
                 {
                     agentIdSorted = sortedAgentIds.get(sortingValue) ;
-                    ArrayList<Comparable> deadAgentIds = populationReporter.prepareAgentsDeadRecord(endCycle - year * DAYS_PER_YEAR) ;
+                    ArrayList<Comparable<?>> deadAgentIds = populationReporter.prepareAgentsDeadRecord(endCycle - year * DAYS_PER_YEAR) ;
                     agentIdSorted.removeAll(deadAgentIds) ;
                     population = agentIdSorted.size() ;
                 }
@@ -1399,7 +1399,7 @@ public class ScreeningReporter extends Reporter {
         // Sort agentTreatedReport according to sortingProperty of Agents
         PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
         int startCycle = getMaxCycles() - getBackCycles(backYears,backMonths, backDays) ;
-        ArrayList<Comparable> agentsDeadRecord = populationReporter.prepareAgentsDeadRecord(startCycle) ;
+        ArrayList<Comparable<?>> agentsDeadRecord = populationReporter.prepareAgentsDeadRecord(startCycle) ;
         
         // agentId maps to sortingProperty
         HashMap<Object,Object> sortedAgentReport = populationReporter.sortedAgentIds(sortingProperty) ;
@@ -2061,7 +2061,10 @@ public class ScreeningReporter extends Reporter {
      * @param endCycle
      * @return
      */
-    public HashMap<String, HashMap<String, String>> prepareRawAgentSiteReport(int endCycle, HashSet<String> agentIdSet) {
+    public HashMap<String, HashMap<String, String>> prepareRawAgentSiteReport(int endCycle, HashSet<String> agentIdSet) 
+    {
+        HashMap<String, HashMap<String, String>> returnReport = new HashMap<String, HashMap<String, String>> () ;
+        
         float t0 = System.nanoTime();
         String[] siteNames = Site.getAvailableSites();
 
@@ -2071,32 +2074,46 @@ public class ScreeningReporter extends Reporter {
         String lastCycle = screeningBackCycles.get(screeningBackCycles.size() - 1);
         HashMap<String, String> lastCycleHashMap = SPLIT_RECORD_BY_PROPERTY("agentId", lastCycle);        
         HashMap<String, String> infectiousAgentsHashMap = new HashMap<String, String>();
-        for (String agentId : lastCycleHashMap.keySet()) {
-            if (lastCycleHashMap.get(agentId).contains("tested:clear")) continue;
+        
+        for (String agentId : lastCycleHashMap.keySet()) 
+        {
+            if (lastCycleHashMap.get(agentId).contains("treated")) 
+            	continue ;
+            if (!agentIdSet.contains(agentId))    // agentId died while infected in endCycleth cycle
+            {
+            	LOGGER.log(Level.WARNING, "agentId {0} missing from agentIdSet {1} Check for agent's death in final cycle.", new Object[] {agentId,lastCycleHashMap.get(agentId)}) ;
+            	continue ;
+            }
             infectiousAgentsHashMap.put(agentId, lastCycleHashMap.get(agentId));
         }
         
-        HashMap<String, HashMap<String, String>> returnReport = new HashMap<String, HashMap<String, String>> ();
-        
         // populate report with empty strings - all sites for all agents clear
-        for (String agentId : agentIdSet) {
+        for (String agentId : agentIdSet) 
+        {
             HashMap<String, String> siteHashMap = new HashMap<String, String>();
-            for (String site : siteNames) siteHashMap.put(site, "");
-            returnReport.put(agentId, siteHashMap);
+            for (String site : siteNames) 
+            	siteHashMap.put(site, "");
+            returnReport.put(agentId, (HashMap<String,String>) siteHashMap.clone());
         }
 
         ArrayList<String> screeningBackCyclesReport = getBackCyclesReport(0, 0, endCycle, endCycle) ;
-        
+
         
         // modify internal hashmap with infectious agents
         ConcurrentHashMap<String, ConcurrentHashMap<String, String>> concurrentReturnReport = Concurrency.convertNormalToConcurrentHashMap(returnReport);
         infectiousAgentsHashMap.keySet().parallelStream().forEach(agentId -> 
         {
             String agentInfectiousRecord = infectiousAgentsHashMap.get(agentId);
-            for (String site : siteNames) {
+            for (String site : siteNames) 
+            {
                 // if the site is infectious
-                if (agentInfectiousRecord.contains(site)) {
-                    
+                if (agentInfectiousRecord.contains(site)) 
+                {
+                    // Remove the sites which have cleared
+                	ArrayList<Comparable<?>> clearedSites = EXTRACT_ALL_VALUES("cleared",agentInfectiousRecord) ;
+                	if (clearedSites.contains(site))
+                		continue ;
+                	
                     // extract correct values
                     String symptomatic = EXTRACT_VALUE(site, agentInfectiousRecord);
                     String[] infectionAndIncubation = extractInfectionAndIncubationTimeFromBackCycles(agentId, site, symptomatic, screeningBackCyclesReport);
@@ -2109,11 +2126,26 @@ public class ScreeningReporter extends Reporter {
                     newSiteRecord += Reporter.ADD_REPORT_PROPERTY("incubationTime", incubationTime);
                     newSiteRecord = newSiteRecord.substring(0, newSiteRecord.length() - 1);
                     
+                    //if (Integer.parseInt(infectionTime) < 0)
+                    //	LOGGER.log(Level.INFO,"agentId:{0} site:{1}", new Object[] {agentId,site});
+                    
                     // replace with the new record
+                    try
+                    {
+                    	//if (agentId.equals("33368"))
+                    	//	LOGGER.info(String.valueOf(concurrentReturnReport.containsKey(agentId)));
                     concurrentReturnReport.get(agentId).put(site, newSiteRecord);
+                    }
+                    catch ( Exception e)
+                    {
+                    	LOGGER.info(agentId) ;
+                    	LOGGER.log(Level.INFO, "agent:{0} site:{1} record:{2}", new Object[] {agentId,site,newSiteRecord}) ;
+                    	continue ;
+                    }
                 }
             }
         });
+        
 
         returnReport = Concurrency.convertConcurrentToNormalHashMap(concurrentReturnReport);
         
@@ -2155,20 +2187,33 @@ public class ScreeningReporter extends Reporter {
      * @return
      */
     private String[] extractInfectionAndIncubationTimeFromBackCycles(String agentId, String site, String symptomatic, ArrayList<String> screeningBackCycles) {      
-        int foundCycle = screeningBackCycles.size() - 1;
-        for (int i = screeningBackCycles.size() - 1; i >= 0; --i) {
-            foundCycle -= 1;
-            String screenCycleRecord = screeningBackCycles.get(i);
-            HashMap<String, String> screenedAgents = SPLIT_RECORD_BY_PROPERTY(AGENTID, screenCycleRecord);
-
-            // if agent is not screened or when screened, the given site is non-infectious, the agent is cleared
-            if (!screenedAgents.containsKey(agentId) || !screenedAgents.get(agentId).contains(site)) break;
+        int foundCycle = screeningBackCycles.size() ;
+        String screenCycleRecord = "" ;
+        HashMap<String, String> screenedAgents = new HashMap<String, String>() ;
+        String screenedAgent ;
+        for (int index = screeningBackCycles.size() - 1; index >= 0; --index) 
+        {
+            foundCycle = index ;
+            screenCycleRecord = screeningBackCycles.get(index);
+            screenedAgents = SPLIT_RECORD_BY_PROPERTY(AGENTID, screenCycleRecord) ;
+            if (!screenedAgents.containsKey(agentId) || !screenedAgents.get(agentId).contains(site) ) 
+            	break ;
+            
+            // if agent is not infected, or the given site is non-infectious, the agent is cleared
+            if (screenedAgents.get(agentId).contains("treat"))    // Caught by screening or symptoms
+            	break ;
+            if (screenedAgents.get(agentId).contains("cleared"))    // Infection clears naturally
+            {
+            	if (EXTRACT_ALL_VALUES("cleared",screenedAgents.get(agentId)).contains(site))  // Did this site clear naturally?
+                	break ;
+            }
         }
-        foundCycle += 1;
+        //foundCycle += 1;
         int infectionDuration = 0;
         int incubationDuration = 0;
 
-        switch (site) {
+        switch (site) 
+        {
             case "Pharynx":
                 Pharynx pharynx = new Pharynx();
                 infectionDuration = pharynx.getInfectionDuration();
@@ -2189,7 +2234,13 @@ public class ScreeningReporter extends Reporter {
         // infectionDuration = (new Class.forName("PRSP.PrEPSTI.site"+site).getDeclaredConstructor().newInstance()).getInfectionDuration() ;
 
         int infectionTime = infectionDuration - ((screeningBackCycles.size() - 1) - foundCycle);
-        int incubationTime = Math.max(0, incubationDuration - ((screeningBackCycles.size() - 1) - foundCycle));
+        int incubationTime = Math.max(0, incubationDuration - ((screeningBackCycles.size() - 1) - foundCycle)) ;
+        if (infectionTime < 0)
+        {
+        	//infectionTime += infectionDuration ;
+        	LOGGER.log(Level.INFO,"{0} {4} infectionDuration:{1} size:{2} foundCycle{3}", new Object[] {agentId,infectionDuration,screeningBackCycles.size(),foundCycle,site}) ;
+        }
+        
 
         // return
         String[] infectionAndIncubation = new String[2];
@@ -2209,18 +2260,21 @@ public class ScreeningReporter extends Reporter {
     public HashMap<String, String> prepareAgentSiteReport(int endCycle, HashSet<String> agentIdSet) {
         String[] siteNames = Site.getAvailableSites();
         float t0 = System.nanoTime();
-        HashMap<String, HashMap<String, String>> rawReport = prepareRawAgentSiteReport(endCycle, agentIdSet);
+        HashMap<String, HashMap<String, String>> rawReport = prepareRawAgentSiteReport(endCycle, agentIdSet) ;
 
         // long tafter = System.nanoTime();
         // Community.ADD_TIME_STAMP("prepareAgentSiteReport -> prepareRawAgentSiteReport: " + (tafter - tbefore) / 1_000_000_000 + "s");
 
         HashMap<String, String> returnReport = new HashMap<String, String>();
-        for (String agentId : agentIdSet) {
+        for (String agentId : agentIdSet) 
+        {
             String agentRecord = "";
-            for (String site : siteNames) {
+            for (String site : siteNames) 
+            {
                 String siteRecord = rawReport.get(agentId).get(site);
                 agentRecord += Reporter.ADD_REPORT_PROPERTY("Site",site);
-                if (siteRecord.length() > 0) agentRecord += siteRecord + " ";
+                if (siteRecord.length() > 0) 
+                	agentRecord += siteRecord + " ";
             }
             returnReport.put(agentId, agentRecord);
         }

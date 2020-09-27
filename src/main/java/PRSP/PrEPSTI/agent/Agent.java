@@ -413,8 +413,9 @@ public abstract class Agent {
 //                if (deadAgentIds.contains(id))
 //                    continue ;
                 
-                startAge = Integer.valueOf(Reporter.EXTRACT_VALUE("age",birth));
+                startAge = Integer.valueOf(Reporter.EXTRACT_VALUE("age",birth)) ;
                 //age += (maxCycles - birthIndex)/daysPerYear ;
+                
                 className = Reporter.EXTRACT_VALUE("agent",birth);
                 try
                 {
@@ -447,6 +448,7 @@ public abstract class Agent {
                     String propertySite ; // = birthRecord.substring(birthRecord.indexOf(siteString)) ;
                     ArrayList<String> siteProperties ;
                     String valueString ;
+                    
                     for (Site site : sites)
                     {
                         propertySite = Reporter.BOUNDED_STRING_BY_VALUE("Site",site.toString(),"Site", stringSite) ;
@@ -516,8 +518,6 @@ public abstract class Agent {
                             //LOGGER.log(Level.SEVERE, "{0} {1} {2}", new Object[] {propertyClazz, valueString}) ;
                         }
                     }
-                    //if (uninfected)
-                    //LOGGER.info(infectionString) ; // (String.valueOf(newAgent.getInfectedStatus()));
                 }
                 catch ( Exception e )
                 {
@@ -544,15 +544,15 @@ public abstract class Agent {
     {
         propertyArray.remove("agent") ;
         propertyArray.remove("age") ;
-        
         Field[] agentDeclaredFields = Agent.class.getDeclaredFields() ;
         
-        HashMap<Class,Field[]> clazzFields = new HashMap<Class,Field[]>() ;  
-        clazzFields.put(Agent.class , Agent.class.getDeclaredFields()) ;
+        
+        HashMap<Class<?>,Field[]> clazzFields = new HashMap<Class<?>,Field[]>() ;  
+        clazzFields.put(Agent.class , agentDeclaredFields) ; //  Agent.class.getDeclaredFields()) ;
         //for (Field field : agentDeclaredFields)
           //  agentFieldNames.add(field.getName()) ;
         
-        for (Class agentClazz = newAgent.getClass() ; !Agent.class.equals(agentClazz) ; agentClazz = agentClazz.getSuperclass())
+        for (Class<?> agentClazz = newAgent.getClass() ; !Agent.class.equals(agentClazz) ; agentClazz = agentClazz.getSuperclass())
             clazzFields.put(agentClazz , agentClazz.getDeclaredFields()) ;
         
         //Class agentClazz = newAgent.getClass().getSuperclass() ;
@@ -560,9 +560,9 @@ public abstract class Agent {
 
         String valueString = "";
         String setterName ;
-        Class propertyClazz = Object.class ;
-        Class valueOfClazz = propertyClazz ;
-        Class methodClazz = Agent.class ;
+        Class<?> propertyClazz = Object.class ;
+        Class<?> valueOfClazz = propertyClazz ;
+        Class<?> methodClazz = Agent.class ;
         Method setMethod ;
         Method valueOfMethod ;
         String testProperty = "" ;
@@ -578,7 +578,7 @@ public abstract class Agent {
                 }
 
                 
-                for (Class agentClazz : clazzFields.keySet())
+                for (Class<?> agentClazz : clazzFields.keySet())
                     for (Field field : clazzFields.get(agentClazz))
                         if (field.getName().equals(property))
                         {
@@ -604,6 +604,7 @@ public abstract class Agent {
                             setMethod.invoke(newAgent, valueOfMethod.invoke(null,valueString)) ;
                             break ;
                         }
+                
             }
         }
         catch (Exception e)
@@ -611,7 +612,6 @@ public abstract class Agent {
             LOGGER.severe(e.toString());
             LOGGER.log(Level.SEVERE, "{0} {1} {2}", new Object[] {propertyClazz, testProperty, valueString}) ;
         }
-        
     }
     
     /**
@@ -654,16 +654,14 @@ public abstract class Agent {
     private int initAge(int startAge)
     {
         int ageYears ;
-        if (startAge >= Agent.MAX_LIFE) {
-            return startAge;
-        }
-
+        
         if (startAge == -1) // Choose random starting Age from 16 to 65
             ageYears = RAND.nextInt(50) + 16 ;
         else if (startAge == 0) // Choose random starting Age from 16 to 25, reaching sexual maturity
             ageYears = RAND.nextInt(10) + 16 ;
         else
             ageYears = startAge ;
+        
         age = ageYears * DAYS_PER_YEAR + RAND.nextInt(DAYS_PER_YEAR) ;
         return age ;
     }
@@ -722,7 +720,7 @@ public abstract class Agent {
     }
 
     /**
-     * Sets age of Agent to ageYears years and random (0 to 365) days.
+     * Sets age of Agent to ageYears years and random (0 to 364) days.
      * @param ageYears
      * @param ageDays 
      */
@@ -737,11 +735,8 @@ public abstract class Agent {
      */
     public boolean update(int year)
     {
-    	double testBase = GET_YEAR(TEST_RATES,0) ;
-        
-        double ratio = testBase/GET_YEAR(TEST_RATES,year) ;
-        //newScreenCycle = 
-        initScreenCycle(ratio) ;
+    	//newScreenCycle = 
+        initScreenCycle(year) ;
         
         return true ;
     }
@@ -851,7 +846,7 @@ public abstract class Agent {
      * not every Agent gets screened at the same time.
      * @param rescale (double) Factor by which the screening cycle is rescaled.
      */
-    abstract void initScreenCycle(double rescale) ;
+    abstract void initScreenCycle(int year) ;
     
     protected int reInitScreenCycle(double rescale)
     {
@@ -1542,17 +1537,24 @@ public abstract class Agent {
  keeping track of whether the Agent is still infected.
      * @return (boolean) whether the infection was cleared
      */
-    public boolean progressSitesInfection()
+    public String progressSitesInfection()
     {
+    	String record = "" ;
         Site[] sites = getSites() ;
         boolean stillInfected = false ;
+        boolean siteCleared ;
         for (Site site : sites)
             if (site.getInfectedStatus() > 0)
-                stillInfected = ((!site.progressInfection()) || stillInfected ) ;
+            {
+            	siteCleared = site.progressInfection() ;
+            	stillInfected = ((!siteCleared) || stillInfected ) ;
+            	if (siteCleared)
+            		record += Reporter.ADD_REPORT_PROPERTY("cleared", site) ;
+            }
         
         if (!stillInfected)
             setInfectedStatus(0) ;
-        return !stillInfected ;
+        return record ;
     }
 
     /**

@@ -6,16 +6,17 @@
     },
 
     "community" : {
-        "FILE_PATH" : "output/test/",
-        "NAME_ROOT" : "master1",
+        "FILE_PATH" : "output/prep/",
+        "NAME_ROOT" : "rebootTest2test3",
         "MAX_CYCLES" : "11",
         "POPULATION" : "40000",
-        "REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Debug midway reboot",
+        "REBOOT_SIMULATION" : "rebootTest2",
+        "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
+        "COMMENT" : "Debug midway reboot - midway reboot from end",
         "DYNAMIC" : "true",
-        "REBOOT_FROM_CYCLE" : "-1",
-        "START_YEAR" : "2008",
-        "END_YEAR" : "2019",
+        "REBOOT_FROM_CYCLE" : "5110",
+        "START_YEAR" : "2020",
+        "END_YEAR" : "2030",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"

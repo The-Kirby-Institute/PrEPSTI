@@ -321,7 +321,7 @@ public class MSM extends Agent {
         double cdfNegative = GET_YEAR(CDF_NEGATIVE, year) ;
 
         if (year > 5)
-            GET_YEAR(SCALE_PREP, year - 6) ;
+        	PREP_SCREEN_SCALE = GET_YEAR(SCALE_PREP, year - 6) ;
                 
         for (Agent agent : agentList)
         {
@@ -2188,36 +2188,12 @@ public class MSM extends Agent {
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("riskyStatus", riskyStatus)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("riskyStatusCasual", riskyStatusCasual)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("riskyStatusRegular", riskyStatusRegular)) ;
-        sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondom", probabilityUseCondom)) ;
-        sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomCasual", probabilityUseCondomCasual)) ;
-        sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomRegular", probabilityUseCondomRegular)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("undetectableStatus", undetectableStatus)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("trustUndetectable", trustUndetectable)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("trustPrep", trustPrep)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("consentCasualProbability", consentCasualProbability)) ;
 
-        // String censusReport = super.getCensusReport() ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("prepStatus", prepStatus) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("statusHIV", statusHIV) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("discloseStatusHIV", discloseStatusHIV) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("seroSortCasual", seroSortCasual) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("seroSortRegular", seroSortRegular) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("seroSortMonogomous", seroSortMonogomous) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("seroPosition", seroPosition) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("riskyStatus", riskyStatus) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("riskyStatusCasual", riskyStatusCasual) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("riskyStatusRegular", riskyStatusRegular) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("probabilityUseCondom", probabilityUseCondom) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomCasual", probabilityUseCondomCasual) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomRegular", probabilityUseCondomRegular) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("undetectableStatus", undetectableStatus) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("trustUndetectable", trustUndetectable) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("trustPrep", trustPrep) ;
-        // censusReport += Reporter.ADD_REPORT_PROPERTY("consentCasualProbability", consentCasualProbability) ;
         
-//        censusReport += Reporter.ADD_REPORT_PROPERTY("",) ;
-//        censusReport += Reporter.ADD_REPORT_PROPERTY("",) ;
-//        censusReport += Reporter.ADD_REPORT_PROPERTY("",) ;
         
         for (Site site : sites)
             sbCensusReport.append(site.getCensusReport());
@@ -2727,7 +2703,7 @@ public class MSM extends Agent {
         }
         setPrepStatus(prep) ;
         setPrepScreen(true) ;
-        initScreenCycle(1.0) ; // (382.0/333.0) ;    // Rescale for 2010
+        initScreenCycle(0) ; // (382.0/333.0) ;    // Rescale for 2010
     }
     
     /**
@@ -2747,7 +2723,7 @@ public class MSM extends Agent {
      * @param rescale
      */
     @Override
-    protected void initScreenCycle(double rescale)
+    protected void initScreenCycle(int year)
     {
     	
     	//double cdfNegative = CDF_NEGATIVE[0] ;
@@ -2757,17 +2733,17 @@ public class MSM extends Agent {
         	setPrepScreenCycle(1.0, 1.0) ;
         else
         {
-        	double positiveShape = SHAPE_POSITIVE[0] ;
+        	double positiveShape = GET_YEAR(SHAPE_POSITIVE,year) ;
         	double positiveScale = SCALE_POSITIVE ;
-        	double negativeShape = SHAPE_NEGATIVE[0] ;
-        	double negativeScale = SCALE_NEGATIVE[0] ;
+        	double negativeShape = GET_YEAR(SHAPE_NEGATIVE,year) ;
+        	double negativeScale = GET_YEAR(SCALE_NEGATIVE,0) ;
             
         	//int firstScreenCycle = (int) new GammaDistribution(7,55).sample() ; 
             //setScreenCycle(firstScreenCycle) ;  // 49.9% screen within a year 2016
             if (statusHIV)
-            	setScreenCycle(sampleGamma(positiveShape,positiveScale,rescale)) ; // 41% screen within a year
+            	setScreenCycle(sampleGamma(positiveShape,positiveScale)) ; // 41% screen within a year
             else
-            	setScreenCycle(sampleGamma(negativeShape,negativeScale,rescale)) ; // 26% screen within a year
+            	setScreenCycle(sampleGamma(negativeShape,negativeScale)) ; // 26% screen within a year
             //if (statusHIV)
             //	setScreenCycle(sampleTriangular(cdfPositive, TRIANGULAR_LOWER)) ;    // 41% screen within a year
             //else

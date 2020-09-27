@@ -267,18 +267,18 @@ public class Reporter {
      * @param sortingReport
      * @return 
      */
-    protected static HashMap<Comparable,HashMap<Comparable,Integer>> SORT_REPORT(HashMap<Comparable<?>,Integer> unsortedReport, 
+    protected static HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>> SORT_REPORT(HashMap<Comparable<?>,Integer> unsortedReport, 
             HashMap<Object,Object> sortingReport)
     {
-        HashMap<Comparable,HashMap<Comparable,Integer>> outputHashMap = new HashMap<Comparable,HashMap<Comparable,Integer>>() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>> outputHashMap = new HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>>() ;
         //HashMap<Object,?> entryHashMap = new HashMap<Object,Object>() ;
         
         ArrayList<String> unsortedEntries ;
         Object sortingValue ;
                 
-        for (Comparable unsortedKey : unsortedReport.keySet())
+        for (Comparable<?> unsortedKey : unsortedReport.keySet())
         {
-                Comparable sortingKey = (Comparable) sortingReport.get(unsortedKey) ;
+                Comparable<?> sortingKey = (Comparable<?>) sortingReport.get(unsortedKey) ;
                 /*if (!entryHashMap.containsKey(sortingKey))
                     entryHashMap.put(sortingValue, ) ;
                 entryHashMap.put(sortingValue,entryHashMap.get(sortingValue) + entry) ;
@@ -286,7 +286,7 @@ public class Reporter {
             for (Object entryKey : entryHashMap.keySet())
             {*/
                 if (!outputHashMap.containsKey(sortingKey))
-                    outputHashMap.put(sortingKey, new HashMap<Comparable,Integer>()) ;
+                    outputHashMap.put(sortingKey, new HashMap<Comparable<?>,Integer>()) ;
                 outputHashMap.get(sortingKey).put(unsortedKey, unsortedReport.get(unsortedKey)) ;
             //}
         }
@@ -546,7 +546,8 @@ public class Reporter {
      * @param record
      * @return
      */
-    public static HashMap<String, String> SPLIT_RECORD_BY_PROPERTY(String property, String record) {
+    public static HashMap<String, String> SPLIT_RECORD_BY_PROPERTY(String property, String record) 
+    {
         return SPLIT_RECORD_BY_PROPERTY(property, record, new HashSet<String>());
     }
 
@@ -560,18 +561,24 @@ public class Reporter {
      * @param keys: only add keys that exist in this set, if it is empty, add all keys
      * @return
      */
-    public static HashMap<String, String> SPLIT_RECORD_BY_PROPERTY(String property, String record, HashSet<String> keys) {
-        HashMap<String, String> splitRecord = new HashMap<>();
+    public static HashMap<String, String> SPLIT_RECORD_BY_PROPERTY(String property, String record, HashSet<String> keys) 
+    {
+        HashMap<String, String> splitRecord = new HashMap<String,String>();
 
         int previousIndex = 0;
         int count  = 0;
 
         // Identify where property exists in the string one by one
-        for (int i = -1; (i = record.indexOf(property, i + 1)) != -1; ++i) {
-            if (count > 0) {
+        for (int i = -1; (i = record.indexOf(property, i + 1)) != -1; ++i) 
+        {
+            if (count > 0) 
+            {
                 String recordString = record.substring(previousIndex, i).trim();
                 String key = EXTRACT_VALUE(property, recordString);
-                if (keys.size() == 0 || keys.contains(key)) splitRecord.put(key, recordString);
+                if (keys.size() == 0 || keys.contains(key)) 
+                	splitRecord.put(key, recordString) ;
+                if (null == recordString)
+                	LOGGER.info(key) ;
             }
             previousIndex = i;
             count++;
@@ -580,7 +587,10 @@ public class Reporter {
         // ADD the last record
         String recordString = record.substring(previousIndex, record.length()).trim();
         String key = EXTRACT_VALUE(property, recordString);
-        if (keys.size() == 0 || keys.contains(key) && key.length() > 0) splitRecord.put(key, recordString);
+        if (null == recordString)
+        	LOGGER.info(key) ;
+        if (keys.size() == 0 || keys.contains(key) && key.length() > 0) 
+        	splitRecord.put(key, recordString);
 
         return splitRecord;
     }
@@ -1218,7 +1228,8 @@ public class Reporter {
      * @param string
      * @return
      */
-    public HashMap<String, String> STRING_TO_HASHMAP(String string) {
+    static public HashMap<String, String> STRING_TO_HASHMAP(String string) 
+    {
         HashMap<String, String> toReturn = new HashMap<String, String>();
 
         String[] stringSplit = string.split(" ");
@@ -1238,7 +1249,8 @@ public class Reporter {
      * @param properties
      * @return
      */
-    public String HASHMAP_TO_STRING(HashMap<String, String> report, String[] properties) {
+    static public String HASHMAP_TO_STRING(HashMap<String, String> report, String[] properties) 
+    {
         float t0 = System.nanoTime();
         String toReturn = "";
         Set<String> keySet = report.keySet();
@@ -2400,7 +2412,12 @@ public class Reporter {
      */
     private static ArrayList<Double> convertArrayListStringToSortedArrayListDouble(ArrayList<String> strArrayList) {
         ArrayList<Double> toReturn = new ArrayList<Double>();
-        for (String s : strArrayList) toReturn.add(Double.valueOf(s));
+        for (String s : strArrayList) 
+        {
+        	if ("null".equals(s)) 
+        		s = "0";
+        	toReturn.add(Double.valueOf(s));
+        }
         Collections.sort(toReturn);
         return toReturn;
     }
@@ -2789,7 +2806,6 @@ public class Reporter {
         	for (int fileIndex = 0 ; fileIndex < fileNames.size() ; fileIndex++ )
         	{
         		fileName = fileNames.get(fileIndex) ;
-        		LOGGER.info(fileName) ;
         		firstOutput[fileIndex] = fileName ;
         		
         		BufferedReader fileReader 
@@ -2797,20 +2813,17 @@ public class Reporter {
         
                 // Get first line
                 String record = fileReader.readLine() ; // .substring(1) ;    // Remove invisible character at beginning of first entry
-                LOGGER.info(record) ;
                 String[] recordArray = record.split(COMMA) ;
                 
                 for (int recordIndex = 1 ; recordIndex < recordArray.length ; recordIndex++ )
                 {
-            		LOGGER.info(recordArray[recordIndex]) ;
-                	if (recordArray[recordIndex].equals(scoreName))
+            		if (recordArray[recordIndex].equals(scoreName))
                 	{
                 		scoreIndex = recordIndex ; 
                 		break ;
                 	}
                 }
                 assert(scoreIndex >= 0) ;
-                LOGGER.info(String.valueOf(scoreIndex)) ;
                 
                 if (firstLine.length == 0)
                 	firstLine = new String[] {recordArray[0], fileName} ;
@@ -3922,7 +3935,9 @@ public class Reporter {
     public static void main(String[] args)
     {
         ConfigLoader.load() ;
-        String simName = args[0] ;
+        String simName = "" ;
+        if (args.length > 0)
+        	simName = args[0] ;
         boolean mergeReports = true ;
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
         String folderPath = "output/long_sims/" ;
@@ -3936,7 +3951,7 @@ public class Reporter {
         //String prefix = "to2019noAdjustCondom" ;
         //String prefix = "to2019newScreenA" ;
         //String prefix = "to2019serosortA" ;
-        String prefix = "to2030prep123screen6to2019noAdjustCondom" ;
+        String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
         //String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
         //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
         //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
@@ -3952,11 +3967,12 @@ public class Reporter {
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
         
-        String reportName = "IncidenceReport" ;
-        String sortingProperty = "statusHIV" ;
-        //String sortProperty = "prepStatus" ;
+        String reportName = "CumulativeInfectionsReport" ;
+        //String reportName = "IncidenceReport" ;
+        //String sortingProperty = "statusHIV" ;
+        String sortingProperty = "prepStatus" ;
         reportName += "_" + sortingProperty ;
-        String property = "all_false" ;
+        String scoreName = "true" ;
         
         ArrayList<String> simNameList = new ArrayList<String>() ;
         int END_YEAR = 2030 ;
@@ -3983,7 +3999,9 @@ public class Reporter {
         
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
-        //if (mergeReports)
+        LOGGER.info(simNameList.toString()) ;
+        
+        if (!mergeReports)
         {
         	String[] siteNames = MSM.SITE_NAMES ;
         	for (String simNameLoop : simNameList) 
@@ -3997,12 +4015,13 @@ public class Reporter {
                 //beenTestedReport = screeningReporter.prepareYearsBeenTestedReport(backYears, 0, 0, END_YEAR) ;
                 //ArrayList<Object> condomUseReport ;
                 //HashMap<Comparable<?>,String> incidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, sortProperty) ;
-                HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> incidenceReport = encounterReporter.prepareNumberAgentReceptionReport(sortingProperty) ;
-                String[] sortingValues = new String[incidenceReport.keySet().size()] ;
-                Object[] sortingArray = incidenceReport.keySet().toArray() ;
+                HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> cumulativeIncidenceReport = encounterReporter.prepareCumulativeAgentReceptionReport(sortingProperty) ;
+                //HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> incidenceReport = encounterReporter.prepareNumberAgentReceptionReport(sortingProperty) ;
+                String[] sortingValues = new String[cumulativeIncidenceReport.keySet().size()] ;
+                Object[] sortingArray = cumulativeIncidenceReport.keySet().toArray() ;
                 for (int sortingIndex = 0 ; sortingIndex < sortingArray.length ; sortingIndex++ )
                 	sortingValues[sortingIndex] = sortingArray[sortingIndex].toString() ;
-                HashMap<Comparable<?>,Number[]> invertedIncidenceReport = INVERT_HASHMAP_LIST(incidenceReport,sortingArray) ;
+                HashMap<Comparable<?>,Number[]> invertedIncidenceReport = INVERT_HASHMAP_LIST(cumulativeIncidenceReport,sortingArray) ;
                 
                 //HashMap<Comparable,String> disclosureReport = encounterReporter.prepareYearsDisclosureReport(13,2019) ;
                 //HashMap<Comparable,String> condomlessReport = encounterReporter.preparePercentAgentCondomlessYears(relationshipClazzNames, backYears, END_YEAR, "statusHIV", false, "") ;
@@ -4015,10 +4034,10 @@ public class Reporter {
                 //Reporter.WRITE_CSV_STRING(incidenceReport,YEAR,reportName,simName,folderPath) ;
         	}
         
-        	if (mergeReports)
-        		MERGE_HASHMAP_CSV(simNameList,reportName,"all_true",folderPath) ;
+        	
         }
-        //else
+        else if (mergeReports)
+    		MERGE_HASHMAP_CSV(simNameList,reportName,scoreName,folderPath) ;
         {
             //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
             //ArrayList<String> closestSimulations

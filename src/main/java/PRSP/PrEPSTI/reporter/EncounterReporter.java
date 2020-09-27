@@ -573,7 +573,28 @@ public class EncounterReporter extends Reporter {
         prepareReceiveSortPrepStatusReport(String[] values )
     {
         // LOGGER.info("prepareAgentToAgentReport()") ;
-        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> transmissionReport = prepareAgentToAgentReport() ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> transmissionReport = prepareAgentFromAgentReport() ;
+        //LOGGER.log(Level.INFO, "{0}", transmissionReport);
+        // LOGGER.info("sortPrepStatus()");
+        PopulationReporter populationReporter = new PopulationReporter(getMetaDatum("Community.NAME_ROOT"), getFolderPath()); 
+        HashMap<Comparable<?>,ArrayList<Comparable<?>>> sortingReport = populationReporter.sortPrepStatus() ;
+        // LOGGER.log(Level.INFO, "{0}", sortingReport);
+        
+        // LOGGER.info("sortReport()");
+        //String[] values = new String[] {TRUE, FALSE} ;
+        return Reporter.SORT_REPORT(transmissionReport, sortingReport, values) ;
+    }
+        
+    /**
+     * 
+     * @param values
+     * @return HashMap sorting values maps to correspondingTransmissionReport
+     */
+    public HashMap<Object,HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>> 
+        prepareReceiveSortedReport(String[] values )
+    {
+        // LOGGER.info("prepareAgentToAgentReport()") ;
+        HashMap<Comparable<?>,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> transmissionReport = prepareAgentFromAgentReport() ;
         //LOGGER.log(Level.INFO, "{0}", transmissionReport);
         // LOGGER.info("sortPrepStatus()");
         PopulationReporter populationReporter = new PopulationReporter(getMetaDatum("Community.NAME_ROOT"), getFolderPath()); 
@@ -1743,12 +1764,12 @@ public class EncounterReporter extends Reporter {
         PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
         HashMap<Object,Object> sortingReport = sortingReporter.sortedAgentIds(sortingProperty) ;
         // LOGGER.log(Level.INFO, "{0}", sortingReport);
-        HashMap<Comparable,HashMap<Comparable,Integer>> sortedAgentTransmissionCountReport 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>> sortedAgentTransmissionCountReport 
                 = SORT_REPORT(agentTransmissionCountReport, sortingReport) ;
         
         // Find highest value to count down from amongst all sorting variables
         ArrayList<Integer> agentTransmissionCountList = new ArrayList<Integer>() ;
-        for (HashMap<Comparable,Integer> agentTransmissionCount : sortedAgentTransmissionCountReport.values()) 
+        for (HashMap<Comparable<?>,Integer> agentTransmissionCount : sortedAgentTransmissionCountReport.values()) 
             agentTransmissionCountList.addAll(agentTransmissionCount.values()) ;
         int maxValue = Collections.max(agentTransmissionCountList) ;
             
@@ -1786,12 +1807,12 @@ public class EncounterReporter extends Reporter {
         PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
         HashMap<Object,Object> sortingReport = sortingReporter.sortedAgentIds(sortingProperty) ;
         // LOGGER.log(Level.INFO, "{0}", sortingReport);
-        HashMap<Comparable,HashMap<Comparable,Integer>> sortedAgentReceptionCountReport 
+        HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>> sortedAgentReceptionCountReport 
                 = SORT_REPORT(agentReceptionCountReport, sortingReport) ;
         
         // Find highest value to count down from amongst all sorting variables
         ArrayList<Integer> agentReceptionCountList = new ArrayList<Integer>() ;
-        for (HashMap<Comparable,Integer> agentReceptionCount : sortedAgentReceptionCountReport.values()) 
+        for (HashMap<Comparable<?>,Integer> agentReceptionCount : sortedAgentReceptionCountReport.values()) 
             agentReceptionCountList.addAll(agentReceptionCount.values()) ;
         int maxValue = Collections.max(agentReceptionCountList) ;
             
@@ -1868,6 +1889,54 @@ public class EncounterReporter extends Reporter {
         }
         
         return cumulativeAgentReceptionReport ;
+        
+    }        
+   
+    
+    /**
+     * Sorts reception Report according to sortingProperty of Agents.
+     * @param sortingProperty
+     * @return (HashMap) Number of Agents who have received a given number 
+     * or more transmissions.
+     */
+    public HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> prepareCumulativeAgentReceptionReport(String sortingProperty)
+    {
+    	HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> sortedCumulativeAgentReceptionReport = new HashMap<Comparable<?>,HashMap<Comparable<?>,Number>>() ;
+
+        HashMap<Comparable<?>,Integer> agentReceptionCountReport = prepareAgentReceptionCountReport() ;
+        HashMap<Comparable<?>,Number> cumulativeReceptionReport ;
+        
+        PopulationReporter sortingReporter = new PopulationReporter(simName,getFolderPath()) ;
+        HashMap<Object,Object> sortingReport = sortingReporter.sortedAgentIds(sortingProperty) ;
+        // LOGGER.log(Level.INFO, "{0}", sortingReport);
+        HashMap<Comparable<?>,HashMap<Comparable<?>,Integer>> sortedAgentReceptionCountReport 
+                = SORT_REPORT(agentReceptionCountReport, sortingReport) ;
+        
+        // Find highest value to count down from amongst all sorting variables
+        ArrayList<Integer> agentReceptionCountList = new ArrayList<Integer>() ;
+        for (HashMap<Comparable<?>,Integer> agentReceptionCount : sortedAgentReceptionCountReport.values()) 
+            agentReceptionCountList.addAll(agentReceptionCount.values()) ;
+        int maxValue = Collections.max(agentReceptionCountList) ;
+        
+        for (Comparable<?> sortingKey : sortedAgentReceptionCountReport.keySet())
+        {
+            cumulativeReceptionReport = new HashMap<Comparable<?>,Number>() ;
+            Collection<Integer> agentReceptionCountValues = sortedAgentReceptionCountReport.get(sortingKey).values() ;
+        
+            // To track how agentIds have had more than given Relationships
+            int agentsOver = 0 ;
+            
+            for (int key = maxValue ; key > 0 ; key-- )
+            {
+                agentsOver += Collections.frequency(agentReceptionCountValues,key) ;
+                cumulativeReceptionReport.put(key, agentsOver) ;
+            }
+            
+            sortedCumulativeAgentReceptionReport.put(sortingKey, cumulativeReceptionReport) ;
+        }
+        
+        
+        return sortedCumulativeAgentReceptionReport ;
         
     }        
    
