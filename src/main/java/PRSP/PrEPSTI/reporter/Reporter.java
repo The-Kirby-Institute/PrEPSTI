@@ -1254,8 +1254,10 @@ public class Reporter {
         float t0 = System.nanoTime();
         String toReturn = "";
         Set<String> keySet = report.keySet();
-        for (String property : properties) {
-            if (keySet.contains(property)) {
+        for (String property : properties) 
+        {
+            if (keySet.contains(property)) 
+            {
                 toReturn += property + ":" + report.get(property) + " ";
             }
         }
