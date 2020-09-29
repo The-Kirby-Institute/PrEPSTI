@@ -2234,7 +2234,8 @@ public class ScreeningReporter extends Reporter {
         // infectionDuration = (new Class.forName("PRSP.PrEPSTI.site"+site).getDeclaredConstructor().newInstance()).getInfectionDuration() ;
 
         int infectionTime = infectionDuration - ((screeningBackCycles.size() - 1) - foundCycle);
-        int incubationTime = Math.max(0, incubationDuration - ((screeningBackCycles.size() - 1) - foundCycle)) ;
+        //int incubationTime = incubationDuration - ((screeningBackCycles.size() - 1) - foundCycle) ;
+        int incubationTime = Math.max(-1, incubationDuration - ((screeningBackCycles.size() - 1) - foundCycle)) ;
         if (infectionTime < 0)
         {
         	//infectionTime += infectionDuration ;

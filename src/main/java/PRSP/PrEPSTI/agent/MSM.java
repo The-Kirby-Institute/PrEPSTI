@@ -964,7 +964,9 @@ public class MSM extends Agent {
                 if (msm.discloseStatusHIV)
                     continue ;
                 changeProbability = (newDiscloseProbability - oldDiscloseProbability)/(1 - oldDiscloseProbability) ;
-                msm.setDiscloseStatusHIV(RAND.nextDouble() < changeProbability);
+                msm.setDiscloseStatusHIV(RAND.nextDouble() < changeProbability) ;
+                if (msm.getDiscloseStatusHIV())
+                    sbReport.append(Reporter.ADD_REPORT_PROPERTY(String.valueOf(msm.getAgentId()), msm.getDiscloseStatusHIV())) ;
             }
             else    // if less likely to disclose
             {
@@ -974,6 +976,8 @@ public class MSM extends Agent {
                 // equivalent to correct calculation: RAND > (1 - changeProbability)
                 msm.setDiscloseStatusHIV(RAND.nextDouble() < changeProbability);
                 //msm.initSeroStatus(changeProbability) ;
+                if (!msm.getDiscloseStatusHIV())
+                    sbReport.append(Reporter.ADD_REPORT_PROPERTY(String.valueOf(msm.getAgentId()), msm.getDiscloseStatusHIV())) ;
             }
             
         }

@@ -668,7 +668,7 @@ public class PopulationReporter extends Reporter {
         
         for (String record : changeReport)
         {
-            propertyIndex = record.indexOf(findPropertyName) ;
+            propertyIndex = record.indexOf(findPropertyName + " ") ;
             if (propertyIndex < 0)
             {
             	//if ("riskyStatusRegular".equals(propertyName))
@@ -681,8 +681,8 @@ public class PopulationReporter extends Reporter {
                 endPropertyIndex = record.indexOf("!", propertyIndex) ;
             propertyRecord = record.substring(propertyIndex + findPropertyName.length() + 1, endPropertyIndex) ;
             propertyChangeReport.add(propertyRecord) ;
-            //if ("riskyStatusRegular".equals(propertyName))
-              //  LOGGER.info(String.valueOf(propertyChangeReport.size()) + propertyChangeReport.get(propertyChangeReport.size() - 1) + " " + propertyRecord);
+            if ("riskyStatus".equals(propertyName))
+                LOGGER.info(String.valueOf(propertyChangeReport.size()) + propertyChangeReport.get(propertyChangeReport.size() - 1) + " " + propertyRecord);
         }
 
         float t1 = System.nanoTime();
@@ -1017,7 +1017,6 @@ public class PopulationReporter extends Reporter {
             fullProps = Reporter.IDENTIFY_PROPERTIES(birthString) ;
             break;
         }
-        LOGGER.info(String.valueOf(fullProps.toString())) ;
 
         // loop through and stop when we see the first "Site"
         ArrayList<String> propertiesArrayList = new ArrayList<String>();
@@ -1035,9 +1034,12 @@ public class PopulationReporter extends Reporter {
             properties[i] = propertiesArrayList.get(i);
         }
         
+        HashSet<String> propertyAgentIdSet = new HashSet<String>() ;
+        
         LOGGER.info(propertiesArrayList.toString()) ;
         for (String property : properties) 
         {
+            Collections.addAll(propertyAgentIdSet, agentIdSet.toArray(new String[0])) ;
         	//LOGGER.log(Level.INFO,"property:{0} {1}", new Object[] {property,property.contains("riskyStatus")});
             // get all change reports at a given cycle with a particular property
             ArrayList<String> changeReport = prepareChangeReport(property, endCycle) ;
@@ -1047,11 +1049,7 @@ public class PopulationReporter extends Reporter {
             {
                 String changeRecord = changeReport.get(index) ;
                 ArrayList<String> changeAgentIds = IDENTIFY_PROPERTIES(changeRecord) ;
-                if ("riskyStatusRegular".equals(property) && changeAgentIds.contains("32619"))
-                {
-                	LOGGER.info(changeRecord) ;
-                }
-                changeAgentIds.retainAll(agentIdSet) ;
+                changeAgentIds.retainAll(propertyAgentIdSet) ;
                 
                 
                 // for each agent id in current change report
@@ -1061,8 +1059,8 @@ public class PopulationReporter extends Reporter {
                     //	continue ;
                 	
 
-                    if ("riskyStatusRegular".equals(property) && !changeRecord.isEmpty())
-                    	LOGGER.info(String.valueOf(agentIdSet.size()) + " " + agentIdSet.contains("32619")) ;
+                    //if ("riskyStatusRegular".equals(property) && !changeRecord.isEmpty())
+                    //	LOGGER.info(String.valueOf(propertyAgentIdSet.size()) + " " + propertyAgentIdSet.contains("32619")) ;
                 	
                     // extract string between an agent's id and the next
                     int agentIndex = INDEX_OF_PROPERTY(agentId.toString(),changeRecord) ;
@@ -1074,12 +1072,16 @@ public class PopulationReporter extends Reporter {
 
                     // extract the entire string
                     String value = changeRecord.substring(colonIndex + 1, spaceIndex).trim() ;
-                    if ("riskyStatusRegular".equals(property))
-                		if  ("32619".equals(agentId) || "32788".equals(agentId))
-                		LOGGER.log(Level.INFO,"agentId:{0} riskyStatusRegular:{1}", new Object[] {agentId,value}) ;
+                    //if ("riskyStatusRegular".equals(property))
+                	//	if  ("32619".equals(agentId) || "32788".equals(agentId))
+                	//	    LOGGER.log(Level.INFO,"agentId:{0} riskyStatusRegular:{1}", new Object[] {agentId,value}) ;
                     
                     // map changes
-                    if (value.startsWith("{")) {
+                    if (value.startsWith("{")) 
+                    {
+                    //	if ("riskyStatusRegular".equals(property))
+                    //		if  ("32619".equals(agentId) || "32788".equals(agentId))
+                    //		    LOGGER.log(Level.INFO,"agentId:{0} riskyStatusRegular:{1}", new Object[] {agentId,value}) ;
                         value = value.replace("=", ":") ;
                         value = value.substring(1, value.length() - 1) ;
                         ArrayList<String> valueProperties = IDENTIFY_PROPERTIES(value) ;
@@ -1089,9 +1091,9 @@ public class PopulationReporter extends Reporter {
                     else
                     {
                     	rawReport.get(agentId).put(property, value) ;
-                    	if ("riskyStatusRegular".equals(property))
-                    		if  ("32619".equals(agentId) || "32788".equals(agentId))
-                    		LOGGER.log(Level.INFO,"agentId:{0} riskyStatusRegular:{1}", new Object[] {agentId,value}) ;
+                    	if ("riskyStatus".equals(property))
+                    		if  ("303".equals(agentId) || "32788".equals(agentId))
+                    		    LOGGER.log(Level.INFO,"agentId:{0} riskyStatus:{1}", new Object[] {agentId,value}) ;
                     }
                      
                     if ("screenCycle".equals(property))
@@ -1118,9 +1120,9 @@ public class PopulationReporter extends Reporter {
                     
                     //	LOGGER.log(Level.INFO, "agentId:{0} screenCycle:{1} screenTime:{2}", new Object[] {agentId,value,rawReport.get(agentId).get("screenTime")}) ;
                     
-                    agentIdSet.remove(agentId) ;
+                    propertyAgentIdSet.remove(agentId) ;
                 }
-                if (agentIdSet.isEmpty()) 
+                if (propertyAgentIdSet.isEmpty()) 
                 	break ;
             }
         }
@@ -1155,8 +1157,6 @@ public class PopulationReporter extends Reporter {
     	String cycleRecord ;
 
     	ArrayList<String> agentIds ;
-		if ("58063".equals(agentId))
-		    LOGGER.info(String.valueOf(checkCycle)) ;
 
     	String screenCycle = "-1" ;
     	int cycleIndex ;
@@ -1172,8 +1172,6 @@ public class PopulationReporter extends Reporter {
     		
     		screenCycle = EXTRACT_VALUE(agentId,changeRecord) ;
 
-    		if ("58063".equals(agentId))
-    		    LOGGER.info(String.valueOf(changeIndex) + " " + changeRecord + " " + screenCycle) ;
     		break ;
     	}
 
