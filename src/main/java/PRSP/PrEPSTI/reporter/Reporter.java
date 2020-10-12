@@ -1779,7 +1779,7 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public void WRITE_CSV(ArrayList<Object> report, String reportName, String simName, String folderPath)
+    static public void WRITE_CSV(ArrayList<String> report, String reportName, String simName, String folderPath)
     {
         Reporter.WRITE_CSV(report, new String[] {reportName}, simName, folderPath) ;
     }
@@ -1792,7 +1792,7 @@ public class Reporter {
      * @param simName 
      * @param folderPath 
      */
-    static public void WRITE_CSV(ArrayList<Object> report, String[] scoreNames, String simName, String folderPath)
+    static public void WRITE_CSV(ArrayList<String> report, String[] scoreNames, String simName, String folderPath)
     {
         String filePath ;
         String line ;
@@ -1802,7 +1802,7 @@ public class Reporter {
         
         //Object firstRecord = report.get(0) ;
         filePath = folderPath + simName + scoreNames[0] + ".csv";
-        properties = IDENTIFY_PROPERTIES((String) report.get(0)) ;    // TODO: Try (String) instead of String.valueOf()
+        properties = IDENTIFY_PROPERTIES(report.get(0)) ;   
         //for (int index = 1 ; index < properties.size() ; index++ )
           //  fileHeader += "," + properties.get(index) ;
         fileHeader += String.join(COMMA, properties) ;
@@ -1812,11 +1812,11 @@ public class Reporter {
             fileWriter.write(fileHeader) ;
             fileWriter.newLine();
             int cycle = 0 ;
-            for (Object record : report)
+            for (String record : report)
             {
                 line = String.valueOf(cycle) ;
                 for (String property : properties)
-                    line += COMMA + EXTRACT_VALUE(property,(String) record) ;
+                    line += COMMA + EXTRACT_VALUE(property,record) ;
                 fileWriter.write(line) ;
                 fileWriter.newLine() ;
                 cycle++ ;
@@ -2255,7 +2255,7 @@ public class Reporter {
         Collections.sort(categoryValues,String.CASE_INSENSITIVE_ORDER) ;
 
         // write to csv
-        String filePath = DATA_FOLDER + reportName + "_" + scoreName + "_" + simNames.get(0) + ".csv" ;
+        String filePath = folderPath + reportName + "_" + scoreName + "_" + simNames.get(0) + ".csv" ;    // DATA_FOLDER 
         try
         {
             BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath,false));
@@ -3940,90 +3940,91 @@ public class Reporter {
         String simName = "" ;
         if (args.length > 0)
         	simName = args[0] ;
-        boolean mergeReports = true ;
+        boolean mergeReports = false ;
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
         String folderPath = "output/long_sims/" ;
         //String folderPath = "output/to2025/" ;
         //String folderPath = "data_files/" ;
         //String folderPath = "output/" ;
         //String folderPath = "output/prep/" ;
+        //String folderPath = "output/publish/" ;
         //String folderPath = "output/prePrEP/" ;
         
 
         //String prefix = "to2019noAdjustCondom" ;
-        //String prefix = "to2019newScreenA" ;
+        //String prefix = "publish" ;
         //String prefix = "to2019serosortA" ;
-        String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
+        //String prefix = "to2030prep78screen6to2019noAdjustCondom" ;
         //String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
-        //String prefix = "from2015to2019early1Prepto2019noAdjustCondom" ;
-        //String prefix = "from2015to2025noPrepto2019noAdjustCondom" ;
-        //String prefix = "from2015to2025constantto2019noAdjustCondom" ;
-        //String prefix = "to2025prepNoScreen" ; // to2019noAdjustCondom" ;
-        //String prefix = "from2015to2025screenNoPrepto2019noAdjustCondom" ;
+        String prefix = "from2015to2035prepRollout20publish" ;
+        //String prefix = "from2015to2035noPreppublish" ;
+        //String prefix = "from2015to2035constantpublish" ;
+        //String prefix = "from2015to2035prepNoTestpublish" ; // to2019noAdjustCondom" ;
+        //String prefix = "from2015to2035screenNoPreppublish" ; // to2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ; 
         //String suffix = "" ;
         //String suffix = "Pop40000Cycles5110" ;
         //String suffix = "Pop40000Cycles1825" ;
-        String suffix = "Pop40000Cycles4015" ;
-        //String suffix = "Pop40000Cycles7300" ;
+        //String suffix = "Pop40000Cycles4015" ;
+        String suffix = "Pop40000Cycles7665" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
         
-        String reportName = "CumulativeInfectionsReport" ;
-        //String reportName = "IncidenceReport" ;
+        //String reportName = "CumulativeInfectionsReport" ;
+        String reportName = "incidenceReport" ;
         //String sortingProperty = "statusHIV" ;
         String sortingProperty = "prepStatus" ;
         reportName += "_" + sortingProperty ;
-        String scoreName = "true" ;
+        String scoreName = "false" ;
         
         ArrayList<String> simNameList = new ArrayList<String>() ;
-        int END_YEAR = 2030 ;
-        int START_YEAR = 2020 ;
+        int END_YEAR = 2035 ;
+        int START_YEAR = 2007 ;
         int backYears = END_YEAR + 1 - START_YEAR ;
         
-        String letter2 = "C" ;
-        //for (String letter2 : new String[] {"A","B","C"}) // ,"D","E","F","G","H","I","J"})
-    	//for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-        //	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-        //		simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
+        //String letter2 = "C" ;
+        //for (String letter2 : new String[] {"A","B","C","D","E","F","G","H","I","J"})
+    	  //  for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+            //	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+        	//	    simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
 
 
-        if (mergeReports)
+        if (mergeReports || simNameList.isEmpty())
         {
-        	//for (String letter50 : new String[] {"Eje","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-            for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
+        	//for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
+            for (String letter50 : new String[] {"Hje","Big","Iib","Bje","Gfi","Jhd","Jij","Icg","Dhe","Ejf","Bbg","Bee","Hgd","Bfi","Daj","Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei","Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd"})
                              simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
             simName = simNameList.get(0) ;
         }	
-        else
+        else if (simNameList.isEmpty())
         	simNameList.add(simName) ;
         
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
         LOGGER.info(simNameList.toString()) ;
-        
-        if (!mergeReports)
+        boolean findReport = false ;
+        if (!mergeReports && simNameList.size() < 101 && findReport)
         {
         	String[] siteNames = MSM.SITE_NAMES ;
         	for (String simNameLoop : simNameList) 
         	{
-        		//ScreeningReporter screeningReporter = new ScreeningReporter(simName, folderPath) ;
+        		ScreeningReporter screeningReporter = new ScreeningReporter(simName, folderPath) ;
                 EncounterReporter encounterReporter = new EncounterReporter(simNameLoop, folderPath) ;
                 
-                //incidenceReport = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, 41, END_YEAR, statusHIV) ;
+                //HashMap<Comparable<?>,String> incidenceReport = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, 13, END_YEAR, sortingProperty) ;
                 //incidenceReportPrep = screeningReporter.prepareYearsAtRiskIncidenceReport(siteNames, 41, END_YEAR, prepStatus) ;
                 //HashMap<Comparable,Number> beenTestedReport ;
                 //beenTestedReport = screeningReporter.prepareYearsBeenTestedReport(backYears, 0, 0, END_YEAR) ;
                 //ArrayList<Object> condomUseReport ;
-                //HashMap<Comparable<?>,String> incidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, sortProperty) ;
-                HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> cumulativeIncidenceReport = encounterReporter.prepareCumulativeAgentReceptionReport(sortingProperty) ;
+                HashMap<Comparable<?>,String> incidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, sortingProperty) ;
+                //HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> cumulativeIncidenceReport = encounterReporter.prepareCumulativeAgentReceptionReport(sortingProperty) ;
                 //HashMap<Comparable<?>,HashMap<Comparable<?>,Number>> incidenceReport = encounterReporter.prepareNumberAgentReceptionReport(sortingProperty) ;
-                String[] sortingValues = new String[cumulativeIncidenceReport.keySet().size()] ;
-                Object[] sortingArray = cumulativeIncidenceReport.keySet().toArray() ;
-                for (int sortingIndex = 0 ; sortingIndex < sortingArray.length ; sortingIndex++ )
-                	sortingValues[sortingIndex] = sortingArray[sortingIndex].toString() ;
-                HashMap<Comparable<?>,Number[]> invertedIncidenceReport = INVERT_HASHMAP_LIST(cumulativeIncidenceReport,sortingArray) ;
+                //String[] sortingValues = new String[incidenceReport.keySet().size()] ;
+                //Object[] sortingArray = incidenceReport.keySet().toArray() ;
+                //for (int sortingIndex = 0 ; sortingIndex < sortingArray.length ; sortingIndex++ )
+                //	sortingValues[sortingIndex] = sortingArray[sortingIndex].toString() ;
+                //HashMap<Comparable<?>,Number[]> invertedIncidenceReport = INVERT_HASHMAP_LIST(incidenceReport,sortingArray) ;
                 
                 //HashMap<Comparable,String> disclosureReport = encounterReporter.prepareYearsDisclosureReport(13,2019) ;
                 //HashMap<Comparable,String> condomlessReport = encounterReporter.preparePercentAgentCondomlessYears(relationshipClazzNames, backYears, END_YEAR, "statusHIV", false, "") ;
@@ -4032,27 +4033,29 @@ public class Reporter {
                 //Reporter.DUMP_OUTPUT("beenTestedReport",simName,folderPath,beenTestedReport);
                 
 
-                Reporter.WRITE_CSV(invertedIncidenceReport,YEAR,sortingValues,reportName,simNameLoop,folderPath) ;
-                //Reporter.WRITE_CSV_STRING(incidenceReport,YEAR,reportName,simName,folderPath) ;
+                //Reporter.WRITE_CSV(invertedIncidenceReport,YEAR,sortingValues,reportName,simNameLoop,folderPath) ;
+                Reporter.WRITE_CSV_STRING(incidenceReport,YEAR,reportName,simName,folderPath) ;
         	}
         
         	
         }
         else if (mergeReports)
     		MERGE_HASHMAP_CSV(simNameList,reportName,scoreName,folderPath) ;
+        else
         {
             //String[] simNames = new String[] {"newSortRisk12aPop40000Cycles1825"} ;
             //ArrayList<String> closestSimulations
             String[] scoreNames = new String[] {"all_false","all_true"} ;
             double[] weight = new double[] {1,1/12.25} ;
-            //simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_Prep",folderPath,"gonoGoneWild","data_files/") ;
+            int cutoff = 52 ;
+            if (simNameList.size() > cutoff)
+                simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_HIV",folderPath,"gonoGoneWild","data_files/") ;
             LOGGER.info(String.valueOf(simNameList.size()) + " simulations included.") ;
             //MULTI_WRITE_CSV(simNameList, "condomUse", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; //
-            int cutoff = 50 ;
-            //if (simNameList.size() < cutoff)
+            if (simNameList.size() < cutoff)
                 cutoff = simNameList.size() ;
             //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-            //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_false", "riskyIncidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+            MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_true", "incidence_Prep", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
             LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
             // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
             //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;

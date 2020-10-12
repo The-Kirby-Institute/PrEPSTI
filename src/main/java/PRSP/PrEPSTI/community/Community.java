@@ -410,10 +410,11 @@ public class Community {
         float timeIntCom = 0;
         float timeGrimReaper = 0;
 
-        for (int cycle = 0; cycle < Community.MAX_CYCLES; cycle++)
+        for (int cycle = 0; cycle < 200 ; cycle++ ) //  Community.MAX_CYCLES; cycle++)
         {	
             //if ((cycle % 10) == 0) //((cycle/outputInterval) * outputInterval))
-              // logger.log(level.info, "Cycle no. {0}", cycleString);
+               LOGGER.log(Level.INFO, "Cycle no. {0}", cycleString);
+               LOGGER.info(String.valueOf(RAND.nextDouble())) ;
 
         	StringBuilder sbRelationshipRecord = new StringBuilder();
 
@@ -600,6 +601,8 @@ public class Community {
             // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {siteName, prevalenceReport.get(prevalenceReport.size() - 1)}) ;
         }
         prevalenceReport = screeningReporter.preparePrevalenceReport() ;
+        Reporter.WRITE_CSV( prevalenceReport,"prevalence (all)",SIM_NAME,FILE_PATH) ;
+
         //Community.ADD_TIME_STAMP("after prev reports");
         // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {"all", prevalenceReport.get(prevalenceReport.size() - 1)}) ;
 
@@ -624,6 +627,11 @@ public class Community {
             	trueIncidenceReportPrep = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
         	}
         }
+        else if (atRisk)
+        {
+        	incidenceReport.put("2007", screeningReporter.prepareFinalAtRiskIncidentsRecord(siteNames, 0, "statusHIV")) ;
+        }
+        
         //ArrayList<HashMap<Comparable,Number>> beenTestedReports = new ArrayList<HashMap<Comparable,Number>>() ;
         //ArrayList<ArrayList<String>> condomUseReports = new ArrayList<ArrayList<String>>() ;
         //beenTestedReports.add(screeningReporter.prepareYearsBeenTestedReport(backYears, 0, 0, END_YEAR)) ;
@@ -679,7 +687,8 @@ public class Community {
             {
                 Reporter.DUMP_OUTPUT("riskyIncidence_HIV",SIM_NAME,FILE_PATH,incidenceReport);
                 LOGGER.info(incidenceReport.toString()) ;
-                Reporter.DUMP_OUTPUT("riskyIncidence_Prep",SIM_NAME,FILE_PATH,incidenceReportPrep);
+                if (DYNAMIC)
+                    Reporter.DUMP_OUTPUT("riskyIncidence_Prep",SIM_NAME,FILE_PATH,incidenceReportPrep);
             }
         }
         else
@@ -781,7 +790,7 @@ public class Community {
         HashMap<String, Long> seeds = Reporter.parseSeedsFromMetadata(simName, folderPath);
         long seed = Long.valueOf(seeds.get("Community.REBOOT_SEED")) ;
         RANDOM_SEED = seed ;
-        RAND = new Random(seed) ;
+        RAND.setSeed(RANDOM_SEED) ;
 
         seed = Long.valueOf(seeds.get("Agent.REBOOT_SEED")) ;
         Agent.SET_RAND(seed) ;
@@ -806,7 +815,8 @@ public class Community {
     {
         initialRecord = "" ;
 
-        if (!simName.isEmpty()) rebootRandomSeeds(simName) ;
+        if (!simName.isEmpty()) 
+        	rebootRandomSeeds(simName) ;
         initialiseCommunity();         
     }
     
@@ -1130,7 +1140,7 @@ public class Community {
         float t1 = System.nanoTime();
         // ArrayList<Agent> availableAgents = agentsMDLL.toArrayList() ;
         // ArrayList<Agent> availableAgents = agents;
-        MDLL<Agent> availableMDLL = agentsMDLL.returnShuffled();
+        MDLL<Agent> availableMDLL = agentsMDLL.returnShuffled(RAND.nextLong()) ;
         
         // Collections.shuffle(availableAgents, RAND) ;
         // for (Agent a : availableAgents) availableMDLL.add(a.getAgentId(), a);
@@ -1463,7 +1473,8 @@ public class Community {
                 relationship = currentRelationships.get(relationshipIndex) ;
                 // Avoid checking relationship twice
                 //int agentId = agent.getAgentId() ;
-                if (agent == relationship.getLowerIdAgent()) sbRecord.append(endRelationship(relationship));
+                if (agent == relationship.getLowerIdAgent()) 
+                	sbRecord.append(endRelationship(relationship));
                     // record += endRelationship(relationship) ;
                 //LOGGER.log(Level.INFO, "nbRelationships: {0}", new Object[]{nbRelationships});
 

@@ -76,7 +76,7 @@ public abstract class Agent {
     static public void SET_RAND(long seed)
     {
         RANDOM_SEED = seed ;
-        RAND = new Random(RANDOM_SEED) ;
+        RAND.setSeed(RANDOM_SEED) ;
     }
     
     /** 
@@ -1601,13 +1601,17 @@ public abstract class Agent {
      */
     public boolean seekRelationship(String relationshipClassName)
     {
-        if (inMonogomous && RAND.nextDouble() > infidelity) return false ;
-        else switch (relationshipClassName) {
+        if (inMonogomous && RAND.nextDouble() > infidelity) 
+        	return false ;
+        else switch (relationshipClassName) 
+        {
             // special case for monogomous, return false if agent already has a partner
-            case MONOGOMOUS: if (currentRelationships.size() > 0) return false ;
+            case MONOGOMOUS: if (currentRelationships.size() > 0) 
+            	return false ;
             
             // return seekRelationshipProbability for that relationship class
-            default: return (RAND.nextDouble() < seekRelationshipProbability(relationshipClassName)) ;
+            default: 
+            	return (RAND.nextDouble() < seekRelationshipProbability(relationshipClassName)) ;
         }
         // if (inMonogomous)
         //     if (RAND.nextDouble() > infidelity) 
@@ -1862,6 +1866,7 @@ public abstract class Agent {
         int relationshipIndex = currentRelationships.indexOf(relationship) ;
         currentRelationships.remove(relationshipIndex) ;
         Relationship.DIMINISH_NB_RELATIONSHIPS() ;
+        this.updateAvailable() ;
         nbRelationships-- ;
     }
 

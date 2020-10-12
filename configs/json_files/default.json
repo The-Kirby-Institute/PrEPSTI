@@ -1,22 +1,22 @@
 {   
     "paths": {
-        "REBOOT_PATH" : "output/prep/",
+        "REBOOT_PATH" : "output/test/",
         "REPORT_PATH" : "reports/",
         "DATA_PATH" : "data_files/"
     },
 
     "community" : {
-        "FILE_PATH" : "output/prep/",
-        "NAME_ROOT" : "rebootTest2test3",
-        "MAX_CYCLES" : "11",
+        "FILE_PATH" : "output/test/",
+        "NAME_ROOT" : "prepScreening2",
+        "MAX_CYCLES" : "14",
         "POPULATION" : "40000",
-        "REBOOT_SIMULATION" : "rebootTest2",
-        "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Debug midway reboot - midway reboot from end",
+        "COMMENT REBOOT_SIMULATION" : "rebootTest3",
+        "REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
+        "COMMENT" : "Incorporate changes in PrEP screening frequency",
         "DYNAMIC" : "true",
-        "REBOOT_FROM_CYCLE" : "5110",
-        "START_YEAR" : "2020",
-        "END_YEAR" : "2030",
+        "REBOOT_FROM_CYCLE" : "-1",
+        "START_YEAR" : "2007",
+        "END_YEAR" : "2019",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"
@@ -45,7 +45,8 @@
                 "prepHasTests" : "true"
             },
             "REINIT" : {
-                "reinitScreenCycle" : "true"
+                "reinitScreenCycle" : "true",
+                "reinitPrep" : "true"
             }
         }
     },
@@ -68,7 +69,7 @@
         "FIGURE_HEIGHT": "1280",
         "methods" : {
             "plotShadedHashMapStringCI" : {
-                "drawShadedRegion" : "false"
+                "drawShadedRegion" : "true"
             }
         }      
     },

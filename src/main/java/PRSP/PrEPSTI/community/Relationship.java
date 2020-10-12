@@ -53,7 +53,7 @@ public class Relationship {
     static public void SET_RAND(long seed)
     {
         RANDOM_SEED = seed ;
-        RAND = new Random(RANDOM_SEED) ;
+        RAND.setSeed(RANDOM_SEED) ;
     }
     
     /** 
@@ -192,6 +192,7 @@ public class Relationship {
         
         // Choose Relationship subclass 
     	double choice = RAND.nextDouble() * totalOdds ;
+    	LOGGER.info(String.valueOf(choice)) ;
         if (choice < monogomousOdds)
     		return Monogomous.class ;
     	if (choice < (monogomousOdds + regularOdds))

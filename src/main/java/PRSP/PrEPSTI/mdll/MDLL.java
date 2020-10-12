@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import jdk.jfr.internal.Logger;
+
+import java.util.Random ;
+import java.util.logging.Level;
+
+
 /**
  * ADT containing a HashMap pointing to a Doubly Linked List of a given type
  * keys cannot be negative
@@ -29,6 +35,8 @@ public class MDLL<T> implements Iterable<T> {
     // mapping from nodeId (int/str) --> MDLLNode
     // private ConcurrentHashMap<String, MDLLNode<T>> mapping = null;
     private HashMap<Integer, MDLLNode<T>> mapping = null;
+
+    static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger("mdll") ;
 
     /**
      * 
@@ -289,14 +297,29 @@ public class MDLL<T> implements Iterable<T> {
     /**
      * @return returns a shuffled MDLL in one passing
      */
-    public MDLL<T> returnShuffled() {
+    public MDLL<T> returnShuffled() 
+    {
+    	return returnShuffled(System.currentTimeMillis()) ;
+    }
+
+
+    /**
+     * @return returns a shuffled MDLL in one passing
+     */
+    public MDLL<T> returnShuffled(long randomSeed) 
+    {
+    	Random rand  = new Random(randomSeed) ;
         MDLL<T> shuffled = new MDLL<T>();
         ArrayList<Integer> idList = new ArrayList<Integer>(size() + 1);
         idList.add(LAST_ID);
         MDLLNode<T> current = head.getNext();
-        while (!current.getId().equals(LAST_ID)) {
+        int count = 0 ;
+        while (!current.getId().equals(LAST_ID) && count < 100) {
+        	count++ ;
             int currentId = current.getId();
-            int randomIndex = (int) (Math.random() * idList.size());
+            int randomIndex = rand.nextInt(idList.size());
+            //int randomIndex = (int) (Math.random() * idList.size());
+            //LOGGER.log(Level.INFO, "{2} seed:{0} index:{1}", new Object[] {count,randomSeed,randomIndex});
             int randomId = idList.get(randomIndex);
             shuffled.addBefore(currentId, current.getObject(), randomId);
             idList.add(currentId);
@@ -310,7 +333,8 @@ public class MDLL<T> implements Iterable<T> {
      * Generate a stream of T objects and remove nulls
      * @return
      */
-    public Stream<T> getStream() {
+    public Stream<T> getStream() 
+    {
         return mapping.keySet().parallelStream().map(nodeId ->
         {
             return mapping.get(nodeId).getObject();

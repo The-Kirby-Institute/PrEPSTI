@@ -36,7 +36,7 @@ abstract public class Site {
     static public void SET_RAND(long seed)
     {
         RANDOM_SEED = seed ;
-        RAND = new Random(RANDOM_SEED) ;
+        RAND.setSeed(RANDOM_SEED) ;
     }
     
     /**
@@ -123,10 +123,13 @@ abstract public class Site {
      */
     public boolean initialiseInfection()
     {
-        if (RAND.nextDouble() < getInfectedProbability() )
+    	double infectedProbability = RAND.nextDouble() ;
+    	LOGGER.log(Level.INFO,"infected Prob:{0}", new Object[] {infectedProbability}) ;
+        if (infectedProbability < getInfectedProbability() )
         {
             infectedStatus = 1 ;
             infectionTime = RAND.nextInt(getInfectionDuration()) ;
+        	LOGGER.log(Level.INFO,"infectionTime:{0}", new Object[] {infectionTime}) ;
             
             // Initiate infections as asymptomatic
             //chooseSymptomatic() ; // Do not want chooseIncubationTime() for initialisation

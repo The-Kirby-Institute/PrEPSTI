@@ -124,7 +124,7 @@ public class Presenter {
     private String lineGraphErrorType = ERROR_INTERVALS;
     private boolean drawPoints = false ;  // draw each individual point for a line graph true by default
     private boolean drawError = false ;
-    private boolean insetLegend = true ;  // determines whether the legend is inseted into 
+    private boolean insetLegend = true ;  // determines whether the legend is inset into 
 
     static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger("presenter") ;
     
@@ -508,15 +508,17 @@ public class Presenter {
         String folder = "output/long_sims/" ;
         //String folder = "data_files/" ;
         //String fileName = "incidence" ;
-        String property = "PrEP users with cumulative number of infections" ; // 0.31" ;
-        
+        //String property = "PrEP users with cumulative number of infections" ; // 0.31" ;
+        //String property = "" ;
+        String property = "Effect of extended PrEP roll-out (PrEP users)" ;
         //String property = "Overall - HIV negative (constant parameters)" ; // (PrEP use grows linearly)" ;
         String chartTitle = property ;
         // LOGGER.info(chartTitle) ;
         String[] legend ;
         // legend = args ;
         //legend = new String[] {"true","false"} ;
-         legend = new String[] {" 78 days"," 92 days (standard)","106 days","123 days","154 days"} ; //,"185 days"} ; //,"216 days"} ;    // 
+        legend = new String[] {"to 2019 - 0.31","to 2020 - 0.39","to 2022 - 0.53","to 2024 - 0.67"} ;
+        //legend = new String[] {" 78 days"," 92 days (standard)","106 days","123 days","154 days"} ; //,"185 days"} ; //,"216 days"} ;    // 
         //legend = new String[] {"screening no PrEP","PrEP no screening","no PrEP","constant"} ;
         //PREP_PROBABILITY_ARRAY = new double[] {0.39,0.46,0.53,0.60,0.67,0.74} ; // 2013 to 2019
         // gonoGoneWild header  
@@ -552,7 +554,7 @@ public class Presenter {
         }
         */
         
-        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, "Number of PrEP users", "Number of infections", legend) ;
+        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, "true incidence-rate (per 100 person-years)", "year", legend) ;
         
         //presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
         

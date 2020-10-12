@@ -114,6 +114,7 @@ public class MSM extends Agent {
         String methodName = "" ;
         
 
+        Boolean reinitPrep = ConfigLoader.getMethodVariableBoolean("msm", "REINIT", "reinitPrep") ;
         Boolean reinitScreenCycle = ConfigLoader.getMethodVariableBoolean("msm", "REINIT", "reinitScreenCycle") ;
         
         try
@@ -135,9 +136,13 @@ public class MSM extends Agent {
             sbReport.append(REINIT_RISK_REGULAR(agentList, year)) ;
             
             // Needs to be called after MSM.REINIT_RISK_CASUAL() due to its updating riskyStatusCasual
-            methodName = "PrEP" ;    // Contains prepStatus and prepScreen
-            sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
-            sbReport.append(REINIT_PREP(agentList, year)) ;
+            // Needs to be called after MSM.REINIT_PREP() due to its updating prepStatus.
+            if (reinitScreenCycle)
+            {
+                methodName = "PrEP" ;    // Contains prepStatus and prepScreen
+                sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
+                sbReport.append(REINIT_PREP(agentList, year)) ;
+            }
 
             methodName = "trustUndetectable" ;
             sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
@@ -378,6 +383,8 @@ public class MSM extends Agent {
     	
     	year = year - 5 ;
     	
+        Boolean prepHasTests = ConfigLoader.getMethodVariableBoolean("msm", "REINIT_PREP", "prepHasTests") ;
+        
     	double newProbability = GET_YEAR(PREP_PROBABILITY_ARRAY,year) ;
     	double oldProbability = GET_YEAR(PREP_PROBABILITY_ARRAY,year - 1) ;
     	
@@ -403,7 +410,10 @@ public class MSM extends Agent {
                     {
                     	msm.prepStatus = newStatus ;
                     	record.put("prepStatus",Reporter.ADD_REPORT_VALUE(newStatus)) ;
-                    	msm.prepScreen = RAND.nextDouble() > GET_YEAR(PREP_NONSCREENING_ARRAY,year) ;    // '>' is deliberate, choosing false
+                    	if (prepHasTests)
+                    	    msm.prepScreen = RAND.nextDouble() > GET_YEAR(PREP_NONSCREENING_ARRAY,year) ;    // '>' is deliberate, choosing false
+                    	else
+                    	    msm.prepScreen = false	;
                     	record.put("prepScreen",Reporter.ADD_REPORT_VALUE(msm.prepScreen)) ;
                     	sbReport.append(Reporter.ADD_REPORT_PROPERTY(String.valueOf(msm.getAgentId()), record.toString())) ;
                     	record.clear() ;
@@ -1707,7 +1717,7 @@ public class MSM extends Agent {
     static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
-    //static double URETHRA_TO_RECTUM = 0.65 ; //  0.85 ; 
+    //static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
     //static double URETHRA_TO_PHARYNX = 0.35 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
@@ -1719,7 +1729,7 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
     //static double PHARYNX_TO_RECTUM = 0.025 ; // 0.020 ; 0.020 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    //static double PHARYNX_TO_PHARYNX = 0.055 ; // 0.075 // 0.040 ;
+    //static double PHARYNX_TO_PHARYNX = 0.065 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     //static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
