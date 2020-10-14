@@ -1374,10 +1374,11 @@ public class Community {
         StringBuffer stringBufferRecord = new StringBuffer();
 
         // parallelised retrieval of elements
-        agentsMDLL.getStream().parallel().forEach( agent -> {
-
+        //agentsMDLL.getStream().parallel().forEach( agent -> {
+        for (Agent agent : agentsMDLL)	
+        {
             // Agent agent = agentsMDLL.getInternalMap().get(agentId).getObject();
-            if (agent == null) return;
+            //if (agent == null) return;
             for (Relationship relationship : agent.getCurrentRelationships())
             {
                 if (agent != relationship.getLowerIdAgent())
@@ -1390,8 +1391,8 @@ public class Community {
                     stringBufferRecord.append(newRecord);
                 }
             }
-        });
-        // }
+        //});
+        }
 
         float t1 = System.nanoTime();
         Community.RECORD_METHOD_TIME("Community.runEncounters", t1-t0);

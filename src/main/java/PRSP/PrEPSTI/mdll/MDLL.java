@@ -312,10 +312,9 @@ public class MDLL<T> implements Iterable<T> {
         MDLL<T> shuffled = new MDLL<T>();
         ArrayList<Integer> idList = new ArrayList<Integer>(size() + 1);
         idList.add(LAST_ID);
-        MDLLNode<T> current = head.getNext();
-        int count = 0 ;
-        while (!current.getId().equals(LAST_ID) && count < 100) {
-        	count++ ;
+        MDLLNode<T> current = head.getNext() ;
+        while (!current.getId().equals(LAST_ID)) 
+        {
             int currentId = current.getId();
             int randomIndex = rand.nextInt(idList.size());
             //int randomIndex = (int) (Math.random() * idList.size());
