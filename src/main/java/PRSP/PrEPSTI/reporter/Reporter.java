@@ -3941,7 +3941,9 @@ public class Reporter {
         if (args.length > 0)
         	simName = args[0] ;
         boolean mergeReports = false ;
-        boolean selectBest = false ;
+        boolean selectBest = true ;
+        int cutoff = 50 ;    // Take the best cutoff simulations
+        
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
         //String folderPath = "output/long_sims/" ;
         //String folderPath = "output/to2025/" ;
@@ -3994,7 +3996,7 @@ public class Reporter {
         if (mergeReports || simNameList.isEmpty())
         {
         	//for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-            for (String letter50 : new String[] {"Hje","Big","Iib","Bje","Gfi","Jhd","Jij","Icg","Dhe","Ejf","Bbg","Bee","Hgd","Bfi","Daj","Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei","Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd"})
+            for (String letter50 : new String[] {"Hje","Big","Iib","Bje","Gfi","Jhd","Jij","Icg","Dhe","Ejf","Bbg","Bee","Hgd","Bfi","Daj","Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei","Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd","Dji"})
                              simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
             simName = simNameList.get(0) ;
@@ -4049,17 +4051,17 @@ public class Reporter {
             //ArrayList<String> closestSimulations
             String[] scoreNames = new String[] {"all_false","all_true"} ;
             double[] weight = new double[] {1,1/12.25} ;
-            int cutoff = 52 ;
+            
             if (!selectBest)
             	cutoff = simNameList.size() ;
-            
-            simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_HIV",folderPath,"gonoGoneWild","data_files/") ;
+            else
+                simNameList = CLOSEST_SIMULATIONS(simNameList,"year",scoreNames,weight,"riskyIncidence_HIV",folderPath,"gonoGoneWild","data_files/") ;
             LOGGER.info(String.valueOf(simNameList.size()) + " simulations included.") ;
             //MULTI_WRITE_CSV(simNameList, "condomUse", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; //
             if (simNameList.size() < cutoff)
                 cutoff = simNameList.size() ;
             //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
-            MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_true", "riskyIncidence_HIV", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+            MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "Pharynx_true", "riskyIncidence_HIV", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
             LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
             // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
             //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;

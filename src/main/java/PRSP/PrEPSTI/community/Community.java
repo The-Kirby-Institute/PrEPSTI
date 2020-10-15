@@ -410,12 +410,11 @@ public class Community {
         float timeIntCom = 0;
         float timeGrimReaper = 0;
 
-        for (int cycle = 0; cycle < 200 ; cycle++ ) //  Community.MAX_CYCLES; cycle++)
+        for (int cycle = 0; cycle < Community.MAX_CYCLES; cycle++)
         {	
             //if ((cycle % 10) == 0) //((cycle/outputInterval) * outputInterval))
-               LOGGER.log(Level.INFO, "Cycle no. {0}", cycleString);
-               LOGGER.info(String.valueOf(RAND.nextDouble())) ;
-
+               //LOGGER.log(Level.INFO, "Cycle no. {0}", cycleString);
+               
         	StringBuilder sbRelationshipRecord = new StringBuilder();
 
             t1 = System.nanoTime();
@@ -601,7 +600,7 @@ public class Community {
             // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {siteName, prevalenceReport.get(prevalenceReport.size() - 1)}) ;
         }
         prevalenceReport = screeningReporter.preparePrevalenceReport() ;
-        Reporter.WRITE_CSV( prevalenceReport,"prevalence (all)",SIM_NAME,FILE_PATH) ;
+        Reporter.WRITE_CSV( prevalenceReport,"prevalence_all",SIM_NAME,FILE_PATH) ;
 
         //Community.ADD_TIME_STAMP("after prev reports");
         // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {"all", prevalenceReport.get(prevalenceReport.size() - 1)}) ;

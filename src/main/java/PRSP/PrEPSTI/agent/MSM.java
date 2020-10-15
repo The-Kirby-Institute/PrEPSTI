@@ -136,8 +136,7 @@ public class MSM extends Agent {
             sbReport.append(REINIT_RISK_REGULAR(agentList, year)) ;
             
             // Needs to be called after MSM.REINIT_RISK_CASUAL() due to its updating riskyStatusCasual
-            // Needs to be called after MSM.REINIT_PREP() due to its updating prepStatus.
-            if (reinitScreenCycle)
+            if (reinitPrep)
             {
                 methodName = "PrEP" ;    // Contains prepStatus and prepScreen
                 sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
