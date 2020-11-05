@@ -2812,6 +2812,7 @@ public class Presenter {
                 saveChart(areaChart) ;
             displayChart(areaChart) ;
         }   
+        
         /**
          * Opens an interactive window with the chart if HPC hasn't been detected
          * @param chart 
@@ -2863,6 +2864,8 @@ public class Presenter {
          */
         private void saveChart(JFreeChart chart)
         {
+        	if (!SAVE_PLOT)
+        		return ;
             try { Thread.sleep(1000); }
             catch (InterruptedException e) { e.printStackTrace(); }
 

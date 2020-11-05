@@ -362,7 +362,7 @@ public class MSM extends Agent {
      */ 
     /** Percentage of PrEP-users not following prescribed STI screening regime */
     //static double[] PREP_NONSCREENING_ARRAY = new double[] {0.0, 0.0, 15.25/65.11, 22.43/61.61, 11.17/60.76, 6.29/59.87, 6.57/61.84, 6.89/57.69} ;
-    static double[] PREP_NONSCREENING_ARRAY = new double[] {0.0, 0.0, 15.25/64.67, 22.43/61.07, 11.17/58.79, 6.29/52.47, 6.57/51.27, 6.89/46.52} ;
+    static double[] PREP_NONSCREENING_ARRAY = new double[] {1.0, 1.0, 15.25/64.67, 22.43/61.07, 11.17/58.79, 6.29/52.47, 6.57/51.27, 6.89/46.52} ;
     
     /**
      * Alters whether an MSM uses PrEP from year to year. 
@@ -424,7 +424,7 @@ public class MSM extends Agent {
     	else
     	{
     		changeProbability = newProbability/oldProbability ; // (oldProbability - newProbability)/oldProbability ;
-            for (Agent agent : agentList)
+    		for (Agent agent : agentList)
     		{
     			MSM msm = (MSM) agent ;
     			if (msm.prepStatus)    // giving up PrEP 
@@ -1599,6 +1599,19 @@ public class MSM extends Agent {
      */
     static double GET_HIV_RISKY_CORRELATION(boolean hivStatus)
     {
+    	double factor = 1/(PROPORTION_HIV * (HIV_RISKY_CORRELATION - 1) + 1) ;
+        if (hivStatus)
+            factor *= HIV_RISKY_CORRELATION ;
+        return factor ;
+    }
+    
+    /**
+     * REDUNDANT 03/11/2020
+     * @param hivStatus
+     * @return (double) Factor to adjust riskyProbability according to statusHIV.
+     */
+    static double GET_HIV_RISKY_CORRELATION_OLD(boolean hivStatus)
+    {
         if (hivStatus)
             return HIV_RISKY_CORRELATION ;
         return (1.0 - PROPORTION_HIV * HIV_RISKY_CORRELATION)/(1.0 - PROPORTION_HIV) ;
@@ -1699,17 +1712,17 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
     static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
-    static double URETHRA_TO_PHARYNX = 0.35 ; // 0.25 ; // 0.50 ; 
+    static double URETHRA_TO_PHARYNX = 0.30 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.010 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.015 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.035 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.004 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.003 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
-    static double PHARYNX_TO_RECTUM = 0.025 ; // 0.020 ; 0.020 ; // 0.020 ; 
+    static double PHARYNX_TO_RECTUM = 0.020 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.065 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.060 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */

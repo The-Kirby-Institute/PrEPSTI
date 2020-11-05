@@ -7,16 +7,16 @@
 
     "community" : {
         "FILE_PATH" : "output/test/",
-        "NAME_ROOT" : "prepScreening2",
-        "MAX_CYCLES" : "14",
+        "NAME_ROOT" : "NoInitialScreen43a",
+        "MAX_CYCLES" : "13",
         "POPULATION" : "40000",
-        "COMMENT REBOOT_SIMULATION" : "rebootTest3",
-        "REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Incorporate changes in PrEP screening frequency",
+        "REBOOT_SIMULATION" : "calibrate43aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
+        "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
+        "COMMENT" : "Calibrate with new Relationship parameters, Rectal duration 274. HIV_RISKY 3",
         "DYNAMIC" : "true",
         "REBOOT_FROM_CYCLE" : "-1",
         "START_YEAR" : "2007",
-        "END_YEAR" : "2019",
+        "END_YEAR" : "2018",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"
@@ -35,13 +35,13 @@
 
     "msm" : {
         "GROUP_SEX_EVENT_SIZE" : "7",
-        "HIV_RISKY_CORRELATION" : "2.0",
+        "HIV_RISKY_CORRELATION" : "3.0",
         "methods": {
             "reInitScreenCycle" : {
                 "checkPrepStatus" : "true",
                 "useStatus" : "true"
             },
-            "REINIT_RISK_CASUAL" : {
+            "REINIT_PREP" : {
                 "prepHasTests" : "true"
             },
             "REINIT" : {

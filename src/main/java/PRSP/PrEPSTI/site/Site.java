@@ -124,12 +124,10 @@ abstract public class Site {
     public boolean initialiseInfection()
     {
     	double infectedProbability = RAND.nextDouble() ;
-    	LOGGER.log(Level.INFO,"infected Prob:{0}", new Object[] {infectedProbability}) ;
-        if (infectedProbability < getInfectedProbability() )
+    	if (infectedProbability < getInfectedProbability() )
         {
             infectedStatus = 1 ;
             infectionTime = RAND.nextInt(getInfectionDuration()) ;
-        	LOGGER.log(Level.INFO,"infectionTime:{0}", new Object[] {infectionTime}) ;
             
             // Initiate infections as asymptomatic
             //chooseSymptomatic() ; // Do not want chooseIncubationTime() for initialisation

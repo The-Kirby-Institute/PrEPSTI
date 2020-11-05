@@ -43,7 +43,7 @@ public class ConfigLoader {
     private static String CONFIG_FILE;
 
     // loaded JSONObjects
-    private static JSONObject loadedJSON;
+    private static JSONObject loadedJSON ;
 
     // contains key = method name, value = variables loaded for that method
     private static HashMap<String, HashMap> classMethodVariablesHashMap;
@@ -95,7 +95,8 @@ public class ConfigLoader {
     private static void readProperties() {
         String splitOn = "=";
         HashMap<String, String> readProperties = new HashMap<String, String>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(ConfigLoader.PROPERTIES_FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ConfigLoader.PROPERTIES_FILE_PATH))) 
+        {
             String line = reader.readLine();
             while (line != null) {
                 // extract and split each line about '=' symbol
@@ -109,12 +110,15 @@ public class ConfigLoader {
                 // next line
                 line = reader.readLine();
             }
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             LOGGER.severe(e.toString());
         }
 
         // save information to CONFIG_PATH and CONFIG_FILE
-        for (Map.Entry<String,String> entry : readProperties.entrySet()) {
+        for (Map.Entry<String,String> entry : readProperties.entrySet()) 
+        {
             switch (entry.getKey()) {
                 case "filepath":
                     ConfigLoader.CONFIG_PATH = entry.getValue();

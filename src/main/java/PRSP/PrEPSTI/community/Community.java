@@ -350,7 +350,7 @@ public class Community {
             float timeGeneratingRel = 0;
             
             LOGGER.info("burning in Relationships") ;
-            for (int burnin = 0 ; burnin < 2500 ; burnin++ ) // 20000
+            for (int burnin = 0 ; burnin < 20000 ; burnin++ ) // 20000
             {   
                 t1 = System.nanoTime();
                 commenceString = community.generateRelationships() ;
