@@ -435,7 +435,7 @@ public abstract class Agent {
                     
                     if (scenarioScreenPrep)
                         if (newAgent.getPrepStatus())
-                            newAgent.rebootScreenCycle(2020, 1.1, 1.0) ;
+                            newAgent.rebootPrepScreenCycle(2020, 123.0) ;
                     
                     // Reload infections
                     infectionString = birth ;

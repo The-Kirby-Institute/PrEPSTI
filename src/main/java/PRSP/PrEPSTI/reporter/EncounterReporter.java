@@ -1700,9 +1700,9 @@ public class EncounterReporter extends Reporter {
      * 
      * @return (HashMap) Number of Agents responsible for given number of transmissions.
      */
-    public HashMap<Comparable,Number> prepareNumberAgentTransmissionReport()
+    public HashMap<Comparable<?>,Number> prepareNumberAgentTransmissionReport()
     {
-        HashMap<Comparable,Number> numberAgentTransmissionReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> numberAgentTransmissionReport = new HashMap<Comparable<?>,Number>() ;
 
         HashMap<Comparable<?>,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
         
@@ -1840,9 +1840,9 @@ public class EncounterReporter extends Reporter {
      * @return (HashMap) Number of Agents responsible for a given number 
      * or more transmissions.
      */
-    public HashMap<Comparable,Number> prepareCumulativeAgentTransmissionReport()
+    public HashMap<Comparable<?>,Number> prepareCumulativeAgentTransmissionReport()
     {
-        HashMap<Comparable,Number> cumulativeAgentTransmissionReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> cumulativeAgentTransmissionReport = new HashMap<Comparable<?>,Number>() ;
 
         HashMap<Comparable<?>,Integer> agentTransmissionCountReport = prepareAgentTransmissionCountReport() ;
         

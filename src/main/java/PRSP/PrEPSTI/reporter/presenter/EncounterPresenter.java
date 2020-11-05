@@ -178,7 +178,7 @@ public class EncounterPresenter extends Presenter {
      */
     public void plotNumberAgentTransmissionReport()
     {
-        HashMap<Comparable,Number> numberAgentTransmissionReport = reporter.prepareNumberAgentTransmissionReport() ;
+        HashMap<Comparable<?>,Number> numberAgentTransmissionReport = reporter.prepareNumberAgentTransmissionReport() ;
         
         plotSpline("Number of transmissions","No of agents",numberAgentTransmissionReport) ;
     }
@@ -213,7 +213,7 @@ public class EncounterPresenter extends Presenter {
      */
     public void plotCumulativeAgentTransmissionReport()
     {
-        HashMap<Comparable,Number> cumulativeAgentTransmissionReport = reporter.prepareCumulativeAgentTransmissionReport() ;
+        HashMap<Comparable<?>,Number> cumulativeAgentTransmissionReport = reporter.prepareCumulativeAgentTransmissionReport() ;
         
         plotSpline("Cumulative number of transmissions","No of agents",cumulativeAgentTransmissionReport) ;
     }

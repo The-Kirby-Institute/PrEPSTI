@@ -11,10 +11,10 @@ public class Regular extends Relationship {
     static int NB_REGULAR = 0 ;
     
     /** Probability of breakup() in a given cycle. */
-    static public double BREAKUP_PROBABILITY = 0.005 ;
+    static public double BREAKUP_PROBABILITY = 0.0005 ; // 0.005 ;
     
     /** Probability of sexual encounter in a given cycle. */
-    static double ENCOUNTER_PROBABILITY = 0.5 ; // 0.6 ; // 0.4 ; // 0.7 ;
+    static double ENCOUNTER_PROBABILITY = 0.5 ; // 0.5 ; // 0.6 ; // 0.4 ; // 0.7 ;
     
     public Regular()
     {

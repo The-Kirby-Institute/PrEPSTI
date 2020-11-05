@@ -502,24 +502,24 @@ public class Presenter {
     
     public static void main(String[] args)
     {
-        ConfigLoader.load();
+        ConfigLoader.load() ;
         //String simName = "NoPrepCalibration12Pop40000Cycles2000" ;
         //String simName = "RelationshipCalibrationPop40000Cycles200" ; // "testPlotCondomUsePop4000Cycles500" ; // args[0] ;
         String folder = "output/long_sims/" ;
         //String folder = "data_files/" ;
         //String fileName = "incidence" ;
         //String property = "PrEP users with cumulative number of infections" ; // 0.31" ;
-        //String property = "" ;
-        String property = "Effect of extended PrEP roll-out (PrEP users)" ;
-        //String property = "Overall - HIV negative (constant parameters)" ; // (PrEP use grows linearly)" ;
+        //String property = "Counter-factual scenarios" ;
+        String property = "Effect of extended PrEP roll-out (HIV-negative)" ;
+        //String property = "Effect of PrEP-users screening period" ; // (PrEP use grows linearly)" ;
         String chartTitle = property ;
         // LOGGER.info(chartTitle) ;
         String[] legend ;
         // legend = args ;
         //legend = new String[] {"true","false"} ;
         legend = new String[] {"to 2019 - 0.31","to 2020 - 0.39","to 2022 - 0.53","to 2024 - 0.67"} ;
-        //legend = new String[] {" 78 days"," 92 days (standard)","106 days","123 days","154 days"} ; //,"185 days"} ; //,"216 days"} ;    // 
-        //legend = new String[] {"screening no PrEP","PrEP no screening","no PrEP","constant"} ;
+        //legend = new String[] {" 92 days (standard)","123 days","154 days","184 days"} ; //,"216 days"} ;    // " 78 days",,"106 days"
+        //legend = new String[] {"Historical PrEP rollout","PrEP roll-out w/o change in condom use","PrEP roll-out w/o extra screening","No PrEP roll-out"} ;
         //PREP_PROBABILITY_ARRAY = new double[] {0.39,0.46,0.53,0.60,0.67,0.74} ; // 2013 to 2019
         // gonoGoneWild header  
         // year	all_false_wild	all_false_ASR	all_true_wild	all_true_ASR	Urethra_false_wild	Urethra_false_ASR	Urethra_true_wild	Urethra_true_ASR	
@@ -554,9 +554,9 @@ public class Presenter {
         }
         */
         
-        presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, "true incidence-rate (per 100 person-years)", "year", legend) ;
+        //presenter.plotMedianAndRangeFromCSVFileNames(args, chartTitle, "Incidence-rate (per 100 person-years)", "year", legend) ;
         
-        //presenter.plotShadedHashMapStringCI(propertyToYAndRange,ScreeningPresenter.INCIDENCE,"year", legend) ;
+        presenter.plotShadedHashMapStringCI(propertyToYAndRange,"incidence-rate (per 100 person-years)","year", legend) ;    // ScreeningPresenter.INCIDENCE
         
         /*
         ScreeningReporter screeningReporter = 
@@ -938,8 +938,10 @@ public class Presenter {
         
         // Find keys in order
         ArrayList<Object> categoryEntry = new ArrayList<Object>() ;
-        Integer[] openIndices = new Integer[] {0,1,2,10,20,50,100} ;
-        Integer[] closeIndices = new Integer[] {0,1,9,19,49,99,1000} ;
+        Integer[] openIndices = new Integer[] {0,1,2,11,51,100} ;
+        Integer[] closeIndices = new Integer[] {0,1,10,50,99,1000} ;
+        //Integer[] openIndices = new Integer[] {0,1,2,10,20,50,100} ;
+        //Integer[] closeIndices = new Integer[] {0,1,9,19,49,99,1000} ;
         ArrayList<Number> scoreValue ;
         Number[] scoreValueArray ;
         Number[] hashMapValue ;
@@ -1140,11 +1142,11 @@ public class Presenter {
     }
     
     
-    protected void plotSpline(String categoryName, String scoreName, HashMap<Comparable,Number> reportArray)
+    protected void plotSpline(String categoryName, String scoreName, HashMap<Comparable<?>,Number> reportArray)
     {
         HashMap<Comparable<?>,Number[]> newReportArray = new HashMap<Comparable<?>,Number[]>() ;
         
-        for ( Comparable key : reportArray.keySet())
+        for ( Comparable<?> key : reportArray.keySet())
             newReportArray.put(key, new Number[] {reportArray.get(key)}) ;
         
         plotSpline(categoryName, scoreName, newReportArray, new String[] {""}) ;
@@ -1327,6 +1329,8 @@ public class Presenter {
         
         for (Comparable key : hashMapReport.keySet())
             newHashMapReport.put(key, new Number[] {hashMapReport.get(key)}) ;
+        
+        LOGGER.info(newHashMapReport.toString()) ;
         
         plotHashMap(categoryName, new String[] {scoreName}, newHashMapReport) ;
     }
@@ -2025,6 +2029,8 @@ public class Presenter {
                 	continue ;
 
                 // TODO: these are hard-coded at the moment - extract based on col
+                LOGGER.log(Level.INFO,"{0} {1} {2}", (Object[]) extractedYAndRange);
+                LOGGER.log(Level.INFO,"{0} {1}", new Object[] {property,xValue});
                 double yMean = Double.valueOf(extractedYAndRange[0]);
                 double yLower95 = Double.valueOf(extractedYAndRange[1]);
                 double yUpper95 = Double.valueOf(extractedYAndRange[2]);
@@ -2608,7 +2614,7 @@ public class Presenter {
             if (this.isDomainInteger(dataset)) {
             	if (upperBound > ConfigLoader.DAYS_PER_YEAR * 10) 
                 {
-                    domainAxis.setTickUnit(new NumberTickUnit(3*ConfigLoader.DAYS_PER_YEAR)) ;
+                    domainAxis.setTickUnit(new NumberTickUnit(upperBound*3/10)) ; //(3*ConfigLoader.DAYS_PER_YEAR)) ;
                 }
                 else if (upperBound > ConfigLoader.DAYS_PER_YEAR * 2) 
                 {
@@ -2692,8 +2698,10 @@ public class Presenter {
                 
                 r.setSeriesShape(numSeries, shape);
                 r.setSeriesLinesVisible(numSeries, true);
-                if (drawPoints) r.setSeriesShapesVisible(numSeries, true);
-                else r.setSeriesShapesVisible(numSeries, false);
+                if (drawPoints) 
+                	r.setSeriesShapesVisible(numSeries, true);
+                else 
+                	r.setSeriesShapesVisible(numSeries, false);
                 
                 // set line colours - remove from start and add to the end just in case we run out of colours
                 ArrayList<Integer> rgb = colours.remove(0);
@@ -2812,6 +2820,7 @@ public class Presenter {
                 saveChart(areaChart) ;
             displayChart(areaChart) ;
         }   
+        
         /**
          * Opens an interactive window with the chart if HPC hasn't been detected
          * @param chart 

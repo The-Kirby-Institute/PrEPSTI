@@ -58,7 +58,7 @@ public class MSM extends Agent {
     //********   DEFAULT VALUES FOR NON-SCENARIO           *********
     //**************************************************************
     /** Whether to update the screenCycle of PrEP-users. */
-    static boolean SCENARIO_PREP_SCREEN_CYCLE = false ;
+    //static boolean SCENARIO_PREP_SCREEN_CYCLE = false ;
     static double PREP_SCREEN_SHAPE = 31.0 ;
     static double PREP_SCREEN_SCALE = 1.0 ;
     static int PREP_SCREEN_DISPLACEMENT = 61 ;
@@ -1697,19 +1697,19 @@ public class MSM extends Agent {
     //static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
-    static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
+    static double URETHRA_TO_RECTUM = 0.93 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
     static double URETHRA_TO_PHARYNX = 0.35 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.010 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.015 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
     static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.004 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.005 ; // 0.004 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
-    static double PHARYNX_TO_RECTUM = 0.025 ; // 0.020 ; 0.020 ; // 0.020 ; 
+    static double PHARYNX_TO_RECTUM = 0.020 ; // 0.025 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.065 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.045 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
@@ -2104,8 +2104,8 @@ public class MSM extends Agent {
             lowerBounds = new int[] {0,1,2,11,51,100} ;
             proportions = new double[] {0.1345, 0.2301, 0.4022, 0.1761, 0.0372, 0.02} ;
             cumulative = new double[] {0.1345, 0.1345, 0.1345, 0.1345, 0.1345, 0.1345} ;
-            double offset1 = 0.15 ;
-            cumulative[1] += offset1 ;
+            //double offset1 = 0.15 ;
+            //cumulative[1] += offset1 ;
             timeAverage = 183.0 ;
         }
         // Now loop over proportions at each cumulIndex to fill out cumulative Array.
@@ -2829,10 +2829,12 @@ public class MSM extends Agent {
      * @param rescale
      * @return
      */
-    public int rebootPrepScreenCycle(double reshape, double rescale)
+    public int rebootPrepScreenCycle(int year, double prepShape)
     {	
-    	SCENARIO_PREP_SCREEN_CYCLE = true ;
-    	setScreenCycle(sampleGamma(31.0, 1.0, reshape,rescale) + PREP_SCREEN_DISPLACEMENT) ;
+    	//SCENARIO_PREP_SCREEN_CYCLE = true ;
+    	PREP_SCREEN_SHAPE = prepShape - PREP_SCREEN_DISPLACEMENT ;
+    	if (prepStatus)
+    	    setPrepScreenCycle(1.0,1.0) ;
     	
     	return getScreenCycle() ;
     }
