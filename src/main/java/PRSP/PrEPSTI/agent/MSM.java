@@ -1712,17 +1712,17 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
     static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
-    static double URETHRA_TO_PHARYNX = 0.30 ; // 0.25 ; // 0.50 ; 
+    static double URETHRA_TO_PHARYNX = 0.40 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.015 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.014 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.035 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.003 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.005 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
-    static double PHARYNX_TO_RECTUM = 0.020 ; // 0.020 ; 
+    static double PHARYNX_TO_RECTUM = 0.015 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.060 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.040 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */

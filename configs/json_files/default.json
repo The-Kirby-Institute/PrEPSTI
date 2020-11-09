@@ -6,13 +6,13 @@
     },
 
     "community" : {
-        "FILE_PATH" : "output/test/",
-        "NAME_ROOT" : "NoInitialScreen43a",
+        "FILE_PATH" : "output/prep/",
+        "NAME_ROOT" : "Publish66c",
         "MAX_CYCLES" : "13",
         "POPULATION" : "40000",
-        "REBOOT_SIMULATION" : "calibrate43aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
+        "REBOOT_SIMULATION" : "calibrate66aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
         "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Calibrate with new Relationship parameters, Rectal duration 274. HIV_RISKY 3",
+        "COMMENT" : "Calibrate with new Regular breakup 0.001, Rectal duration 365. HIV_RISKY 2",
         "DYNAMIC" : "true",
         "REBOOT_FROM_CYCLE" : "-1",
         "START_YEAR" : "2007",
@@ -35,7 +35,7 @@
 
     "msm" : {
         "GROUP_SEX_EVENT_SIZE" : "7",
-        "HIV_RISKY_CORRELATION" : "3.0",
+        "HIV_RISKY_CORRELATION" : "2.0",
         "methods": {
             "reInitScreenCycle" : {
                 "checkPrepStatus" : "true",

@@ -2805,12 +2805,12 @@ public class Reporter {
         String[] firstLine = new String[] {} ;
         String[] firstOutput = new String[fileNames.size()] ;
         
-        try
+        for (int fileIndex = 0 ; fileIndex < fileNames.size() ; fileIndex++ )
         {
-        	for (int fileIndex = 0 ; fileIndex < fileNames.size() ; fileIndex++ )
+        	try
         	{
         		fileName = fileNames.get(fileIndex) ;
-        		firstOutput[fileIndex] = fileName ;
+        		//firstOutput[fileIndex] = fileName ;
         		
         		BufferedReader fileReader 
                 = new BufferedReader(new FileReader(folderPath + fileName + reportName + CSV)) ;
@@ -2862,13 +2862,14 @@ public class Reporter {
                 }
                 fileReader.close() ;
 
+        		firstOutput[fileIndex] = fileName ;
         	}
-        }
-        catch ( Exception e )
-        {
-        	LOGGER.severe(e.toString()) ;
-        	//return false ;
-        }
+            catch ( Exception e )
+            {
+            	LOGGER.severe(e.toString()) ;
+            	//return false ;
+            }
+    	}
         
         // Prepare to write merged file to disk
         fileName = fileNames.get(0) ;
@@ -3942,7 +3943,7 @@ public class Reporter {
         String simName = "" ;
         if (args.length > 0)
         	simName = args[0] ;
-        boolean mergeReports = true ;
+        boolean mergeReports = false ;
         boolean selectBest = false ;
         int cutoff = 50 ;    // Take the best cutoff simulations
         
@@ -3961,23 +3962,23 @@ public class Reporter {
         //String prefix = "to2019serosortA" ;
         //String prefix = "from2020to2035prep154screenpublish" ;
         //String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
-        //String prefix = "from2015to2035prepRollout20publish" ;
-        //String prefix = "from2015to2035noPreppublish" ;
+        //String prefix = "from2015to2035prepRollout24from2015to2035prepRollout22from2015to2035prepRollout20publish" ;
+        String prefix = "from2015to2035noPreppublish" ;
         //String prefix = "from2015to2035constantpublish" ;
         //String prefix = "from2015to2035prepNoTestpublish" ; // to2019noAdjustCondom" ;
-        String prefix = "from2015to2035screenNoPreppublish" ; // to2019noAdjustCondom" ;
+        //String prefix = "from2015to2035screenNoPreppublish" ; // to2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ; 
         //String suffix = "" ;
         //String suffix = "Pop40000Cycles5110" ;
-        //String suffix = "Pop40000Cycles1825" ;
+        //String suffix = "Pop40000Cycles6205" ;
         //String suffix = "Pop40000Cycles5840" ;
         String suffix = "Pop40000Cycles7665" ;
         //String suffix = "Pop40000Cycles14965" ;
         //String suffix = "Pop40000Cycles2190" ;
         
         //String reportName = "CumulativeInfectionsReport" ;
-        //String reportName = "riskyIncidence" ;
-        String reportName = "trueIncidenceReport" ;
+        String reportName = "incidence" ;
+        //String reportName = "trueIncidenceReport" ;
         String sortingProperty = "statusHIV" ;
         //String sortingProperty = "prepStatus" ;
         reportName += "_" + sortingProperty ;
@@ -3996,11 +3997,10 @@ public class Reporter {
         		        simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
 
 
-        //"Hje","Big",  ,"Iib","Bje","Gfi"  "Ejf","Bbg","Bee"
         if (mergeReports || simNameList.isEmpty())
         {
         	//for (String letter50 : new String[] {"Eje","Ajh","Fjh","Ibh","Eja","Jha","Hjc","Adg","Hhb","Ibd","Cah","Edj","Dhc","Feh","Dbc","Ddd","Jcg","Dif","Iae","Eci","Gfi","Fah","Djh","Dea","Bde","Cfa","Ghf","Adc","Jbg","Gbc","Jjh","Afb","Jbc","Faj","Dbd","Agj","Edb","Eia","Iii","Aic","Hhe","Fdf","Fde","Def","Eac","Gib","Bfa","Aac","Bag","Dfg"})
-            for (String letter50 : new String[] {"Hje","Iib","Jhd","Jij","Icg","Dhe","Ejf","Hgd","Bfi","Daj","Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei","Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd","Dji"})
+            for (String letter50 : new String[] {"Hje","Big","Iib","Bje","Gfi","Jhd","Jij","Icg","Dhe","Ejf","Bbg","Bee","Hgd","Bfi","Daj","Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei","Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd","Dji"})
                              simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
             simName = simNameList.get(0) ;
