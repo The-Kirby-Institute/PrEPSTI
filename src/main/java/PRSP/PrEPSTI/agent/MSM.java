@@ -1397,8 +1397,7 @@ public class MSM extends Agent {
             double safeProbability = safe/total ;
             
             double hivFactor = GET_HIV_RISKY_CORRELATION(statusHIV) ;
-            if (RAND.nextDouble() < riskyProbability * hivFactor) 
-                riskyStatusRegular = true ;
+            riskyStatusRegular = (RAND.nextDouble() < riskyProbability * hivFactor) ;
             
             //scaleProbabilityUseCondomRegular((safe * initTotal)/(initSafe * total)) ;
             
@@ -1414,8 +1413,7 @@ public class MSM extends Agent {
             safeProbability = safe/total ;
             
             hivFactor = GET_HIV_RISKY_CORRELATION(statusHIV) ;
-            if (RAND.nextDouble() < riskyProbability * hivFactor) 
-                riskyStatusCasual = true ;
+            riskyStatusCasual = (RAND.nextDouble() < riskyProbability * hivFactor) ;
             
             //scaleProbabilityUseCondomCasual((safe * initTotal)/(initSafe * total)) ;
             
@@ -1712,17 +1710,17 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
     static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
-    static double URETHRA_TO_PHARYNX = 0.40 ; // 0.25 ; // 0.50 ; 
+    static double URETHRA_TO_PHARYNX = 0.15 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.014 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.010 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.010 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.005 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.010 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
     static double PHARYNX_TO_RECTUM = 0.015 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.040 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.090 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
@@ -2118,7 +2116,7 @@ public class MSM extends Agent {
             proportions = new double[] {0.1345, 0.2301, 0.4022, 0.1761, 0.0372, 0.02} ;
             cumulative = new double[] {0.1345, 0.1345, 0.1345, 0.1345, 0.1345, 0.1345} ;
             double offset1 = 0.15 ;
-            cumulative[1] += offset1 ;
+            //cumulative[1] += offset1 ;
             timeAverage = 183.0 ;
         }
         // Now loop over proportions at each cumulIndex to fill out cumulative Array.

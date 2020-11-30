@@ -71,6 +71,24 @@ public class Monogomous extends Relationship {
     {
         return BREAKUP_PROBABILITY ;
     }
+    
+    /**
+     * Adds Agents to Relationship and establishes which has the lower AgentId
+     * Arrange that agent0 should always have the lower agentId. Override to adjust
+     * the value of inMonogomous.
+     * 
+     * @param agent0
+     * @param agent1
+     * @return (String) report
+     */
+    @Override
+    public String addAgents(Agent agent0, Agent agent1)
+    {
+    	agent0.setInMonogomous(true) ;
+    	agent1.setInMonogomous(true) ;
+    	
+    	return super.addAgents(agent0, agent1) ;
+    }
 
     /**
      * 
