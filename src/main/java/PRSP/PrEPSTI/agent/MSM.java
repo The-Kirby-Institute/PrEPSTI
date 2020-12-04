@@ -1708,19 +1708,19 @@ public class MSM extends Agent {
     //static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
-    static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
+    static double URETHRA_TO_RECTUM = 0.85 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
     static double URETHRA_TO_PHARYNX = 0.15 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.010 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.009 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.010 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.023 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.010 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.015 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
     static double PHARYNX_TO_RECTUM = 0.015 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.090 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.055 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
@@ -1961,7 +1961,7 @@ public class MSM extends Agent {
     public MSM(int startAge) 
     {
         super(startAge) ;
-        initStatus() ;
+        initStatus(3) ;    // Starting from 2010
         // Cannot be called in super() because sites is not initiated yet.
         initInfectedStatus(startAge) ;
         initConsentCasualProbability() ;
@@ -2002,7 +2002,7 @@ public class MSM extends Agent {
         //initPrepStatus() ;
         
         
-        initRiskiness() ;
+        initRiskiness(year) ;
         
         trustUndetectable = false ;
         trustPrep = false ;
@@ -2024,7 +2024,7 @@ public class MSM extends Agent {
      * Risky or Safe behaviour correlated with HIV status
      * Keep overall risky behaviour the same
      */
-    final void initRiskiness()
+    final void initRiskiness(int year)
     {
         int totalOdds = SAFE_ODDS + RISKY_ODDS ;
         double riskyProbability = ((double) RISKY_ODDS)/totalOdds ;
@@ -2032,16 +2032,16 @@ public class MSM extends Agent {
         
         probabilityUseCondom = RAND.nextDouble() ; // sampleGamma(4, 0.1, 1) ; // Gamma2 * (1 - riskyProbability) * RAND.nextDouble() ;
 
-        SAFE_ODDS_CASUAL = NEW_SAFE_CASUAL[0] ;
-        RISKY_ODDS_CASUAL = NEW_RISKY_CASUAL[0] ;
+        SAFE_ODDS_CASUAL = NEW_SAFE_CASUAL[year] ;
+        RISKY_ODDS_CASUAL = NEW_RISKY_CASUAL[year] ;
         TOTAL_ODDS_CASUAL = SAFE_ODDS_CASUAL + RISKY_ODDS_CASUAL ;
         double riskyProbabilityCasual = RISKY_ODDS_CASUAL/TOTAL_ODDS_CASUAL ;
         riskyProbabilityCasual *= GET_HIV_RISKY_CORRELATION(statusHIV) ;
         
         probabilityUseCondomCasual = RAND.nextDouble() ; // sampleGamma(4, 0.1, 1) ; // Gamma2 * (1 - riskyProbability) * RAND.nextDouble() ;
         
-        SAFE_ODDS_REGULAR = NEW_SAFE_REGULAR[0] ;
-        RISKY_ODDS_REGULAR = NEW_RISKY_REGULAR[0] ;
+        SAFE_ODDS_REGULAR = NEW_SAFE_REGULAR[year] ;
+        RISKY_ODDS_REGULAR = NEW_RISKY_REGULAR[year] ;
         TOTAL_ODDS_REGULAR = SAFE_ODDS_REGULAR + RISKY_ODDS_REGULAR ;
         double riskyProbabilityRegular = RISKY_ODDS_REGULAR/TOTAL_ODDS_REGULAR ;
         riskyProbabilityRegular *= GET_HIV_RISKY_CORRELATION(statusHIV) ;
@@ -2053,7 +2053,7 @@ public class MSM extends Agent {
         riskyStatusRegular = (RAND.nextDouble() < riskyProbabilityRegular) ;
         
         // Initialise PrEP status depending on adjusted riskyProbability.
-        initPrepStatus(riskyProbability) ;
+        initPrepStatus(riskyProbability,year) ;
     } 
     
     /**
@@ -2717,7 +2717,7 @@ public class MSM extends Agent {
      * Initialise prepStatus and set up screenCycle and screenTime accordingly.
      * @param prep 
      */
-    private void initPrepStatus(double riskyProbability)
+    private void initPrepStatus(double riskyProbability, int year)
     {
         boolean prep = false ;
         //if (riskyStatus && (!statusHIV))
@@ -2727,7 +2727,7 @@ public class MSM extends Agent {
         }
         setPrepStatus(prep) ;
         setPrepScreen(true) ;
-        initScreenCycle(0) ; // (382.0/333.0) ;    // Rescale for 2010
+        initScreenCycle(year) ; // (382.0/333.0) ;    // Rescale for 2010
     }
     
     /**

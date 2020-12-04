@@ -26,7 +26,7 @@ public class RelationshipPresenter extends Presenter{
     
     //static String simName = "u60symp41bPop40000Cycles730" ;
     //static String simName = "relationshipLT2aPop40000Cycles730" ;
-    static String simName = "casual1p00Pop40000Cycles730" ;
+    static String simName = "noOffset34a" ;
     //static String simName = "noGSNpostHolt3aPop40000Cycles5475" ; // "testPlotCondomUsePop4000Cycles500" ; // args[0] ;
         
     public static void main(String[] args)
@@ -49,14 +49,14 @@ public class RelationshipPresenter extends Presenter{
         //relationshipPresenter.plotCumulativeRelationshipGaps() ;
         //relationshipPresenter.plotCumulativeRelationships("Casual",0, 6, 0) ;
         //relationshipPresenter.plotCumulativeRelationships(new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
-        relationshipPresenter.plotCumulativeRelationships(1, new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
+        //relationshipPresenter.plotCumulativeRelationships(1, new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotCumulativeRelationshipLengths() ;
         //relationshipPresenter.plotRelationshipCumulativeTransmissions() ;
         //relationshipPresenter.plotMeanNumberRelationshipsReport(relationshipClazzNames);
         //relationshipPresenter.plotAgentRelationshipsMeanYears(relationshipClazzNames, 3, 6, 0, 2017) ;
         //relationshipPresenter.plotAgentRelationshipsMean(new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotRelationshipLength() ;
-        //relationshipPresenter.plotRecentRelationshipsReport(relationshipClazzNames,0,6,0) ;
+        relationshipPresenter.plotRecentRelationshipsReport(relationshipClazzNames,0,6,0) ;
         //relationshipPresenter.plotNumberRelationships(new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotNumberAgentsEnteredRelationship(new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotNumberAgentsEnteredRelationshipYears(new String[] {"Casual"}, 10, 6, 0, 2017) ;
