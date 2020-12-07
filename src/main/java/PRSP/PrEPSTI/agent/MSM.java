@@ -1714,11 +1714,11 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
     static double RECTUM_TO_URETHRA = 0.009 ; // 0.009 ; // 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.023 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.015 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.010 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
-    static double PHARYNX_TO_RECTUM = 0.015 ; // 0.020 ; 
+    static double PHARYNX_TO_RECTUM = 0.023 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
     static double PHARYNX_TO_PHARYNX = 0.055 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
@@ -1752,7 +1752,11 @@ public class MSM extends Agent {
     /** The number of orgies in the community during a given cycle. */
     //int ORGY_NUMBER = 4 ;
     
-    /** Probability of joining a group-sex event if invited. */
+    /** 
+     * Probability of joining a group-sex event if invited.
+     * REDUNDANT 7/12/20
+     * true figure given in getJoinGroupSexEventProbability()
+     */
     static double JOIN_GSE_PROBABILITY = 6.35 * Math.pow(10,-4) ;
 
 
