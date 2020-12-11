@@ -557,7 +557,7 @@ public class Community {
 
 
         // David, please do not comment this out! It is useful to me.
-        LOGGER.info(MSM.TRANSMISSION_PROBABILITY_REPORT());
+        LOGGER.info(MSM.TRANSMISSION_PROBABILITY_REPORT()) ;
 
         if (PLOT_FILE)
         {
