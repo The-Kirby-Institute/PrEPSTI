@@ -1021,8 +1021,8 @@ public class Community {
         startCycle = Community.generateTrueCycles(startCycle);
         int startYear = START_YEAR - 2007 ;
 
-        // No more burn-in if starting at a later date than 2007
-        if (startYear > 0)
+        // No more burn-in if starting at a later date than 2010 // used to be 2007
+        if (startYear > 3)
             startCycle = 0 ;
         
         if ((cycle < startCycle))

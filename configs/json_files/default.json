@@ -6,20 +6,20 @@
     },
 
     "community" : {
-        "FILE_PATH" : "output/prep/",
-        "NAME_ROOT" : "to2018cali2010brate136aPREPa",
+        "FILE_PATH" : "output/test/",
+        "NAME_ROOT" : "cali2010brate161aFOLLOWaFOLLOWaFOLLOWa",
         "MAX_CYCLES" : "10",
         "POPULATION" : "40000",
-        "REBOOT_SIMULATION" : "cali2010brate136aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
+        "REBOOT_SIMULATION" : "cali2010brate161aFOLLOWaFOLLOWa", 
+        "COMMENT3 REBOOT_SIMULATION" : "cali2010brate136aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
         "COMMENT4 REBOOT_SIMULATION" : "cali2010brate132bFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa", 
-        "COMMENT3 REBOOT_SIMULATION" : "noOffset34aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa", 
         "COMMENT2 REBOOT_SIMULATION" : "calibrate66aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
         "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Calibrate with new Regular breakup 0.005, Monogomous 0.0001, Rectal duration 365. HIV_RISKY 2.0 . Probability encounter 0.4",
-        "DYNAMIC" : "true",
+        "COMMENT" : "Calibrate with new Regular breakup 0.005, Monogomous 0.0001, Rectal duration 365. HIV_RISKY 3.0 . Probability encounter 0.4",
+        "DYNAMIC" : "false",
         "REBOOT_FROM_CYCLE" : "-1",
         "START_YEAR" : "2010",
-        "END_YEAR" : "2018",
+        "END_YEAR" : "2019",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"
@@ -38,7 +38,7 @@
 
     "msm" : {
         "GROUP_SEX_EVENT_SIZE" : "7",
-        "HIV_RISKY_CORRELATION" : "2.0",
+        "HIV_RISKY_CORRELATION" : "3.0",
         "methods": {
             "reInitScreenCycle" : {
                 "checkPrepStatus" : "true",
