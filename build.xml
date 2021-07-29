@@ -15,13 +15,18 @@
 
     <!-- Modifications to the build should be done here, simply modify the value -->
     <property name="main-class" value="${mainClass}"/>
-    <property name="build-name" value="PrEPSTI"/>
+    <!-- property name="build-name" value="PrEPSTI"/ -->
+    <!-- property name="build-name" value="prepRollout"/ -->
+    <property name="build-name" value="prepNoTest"/>
+    <!-- property name="build-name" value="noPrep"/ -->
+    <!-- property name="build-name" value="screenNoPrep"/ -->
     <property name="compiled-folder" value="./bin"/>
     <property name="build-folder" value="./build"/>
 
     
     <!-- this value gets appended after the file name -->
-    <property name="version" value="0.0.1"/>
+    <property name="version" value="0.0.2"/> 
+    <!-- property name="version" value="2024"/ -->
 
     <!-- declare locations of dependencies  -->
     <property name="junit-jar" value="lib/junit/junit/4.11/junit-4.11.jar"/>

@@ -1,25 +1,25 @@
 {   
     "paths": {
-        "REBOOT_PATH" : "output/test/",
+        "REBOOT_PATH" : "output/top50/",
         "REPORT_PATH" : "reports/",
         "DATA_PATH" : "data_files/"
     },
 
     "community" : {
-        "FILE_PATH" : "output/prep/",
+        "FILE_PATH" : "/scratch/zs13/mw7704/output/long_sims/",
         "NAME_ROOT" : "to2018cali2010brate136aPREPa",
-        "MAX_CYCLES" : "10",
+        "MAX_CYCLES" : "5840",
         "POPULATION" : "40000",
         "REBOOT_SIMULATION" : "cali2010brate136aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
         "COMMENT4 REBOOT_SIMULATION" : "cali2010brate132bFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa", 
         "COMMENT3 REBOOT_SIMULATION" : "noOffset34aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa", 
         "COMMENT2 REBOOT_SIMULATION" : "calibrate66aFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWaFOLLOWa",
         "COMMENT REBOOT_SIMULATION" : "oldParams31cPop40000Cycles2920",
-        "COMMENT" : "Calibrate with new Regular breakup 0.005, Monogomous 0.0001, Rectal duration 365. HIV_RISKY 2.0 . Probability encounter 0.4",
+        "COMMENT" : "Regular breakup 0.005, Monogomous 0.0001, Rectal duration 274. HIV_RISKY 3.0 . Probability encounter 0.5",
         "DYNAMIC" : "true",
         "REBOOT_FROM_CYCLE" : "-1",
-        "START_YEAR" : "2010",
-        "END_YEAR" : "2018",
+        "START_YEAR" : "2015",
+        "END_YEAR" : "2030",
         "methods" : {
             "interveneCommunity" : {
                 "startCycle" : "1"
@@ -38,7 +38,7 @@
 
     "msm" : {
         "GROUP_SEX_EVENT_SIZE" : "7",
-        "HIV_RISKY_CORRELATION" : "2.0",
+        "HIV_RISKY_CORRELATION" : "3.0",
         "methods": {
             "reInitScreenCycle" : {
                 "checkPrepStatus" : "true",
@@ -59,7 +59,7 @@
     },
 
     "presenter" : {
-        "PLOT_FILE" : "true",
+        "PLOT_FILE" : "false",
         "SAVE_PLOT" : "false",
         "FILE_NAME" : "gonoGoneWild",
         "DATA_SCORE" : [

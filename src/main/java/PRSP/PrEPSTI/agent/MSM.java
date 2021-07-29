@@ -143,9 +143,9 @@ public class MSM extends Agent {
                 sbReport.append(REINIT_PREP(agentList, year)) ;
             }
 
-            methodName = "trustUndetectable" ;
-            sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
-            sbReport.append(REINIT_TRUST_UNDETECTABLE(agentList, year)) ;
+            //methodName = "trustUndetectable" ;
+            //sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
+            //sbReport.append(REINIT_TRUST_UNDETECTABLE(agentList, year)) ;
             
             methodName = "trustPrep" ;
             sbReport.append(Reporter.ADD_REPORT_PROPERTY(change, methodName)) ;
@@ -235,10 +235,10 @@ public class MSM extends Agent {
      **************************************************************************************/
     
     /** Shape parameter for gamma distribution of HIV-positive MSM screening periods */
-    static double[] SHAPE_POSITIVE = new double[] {6, 5.81, 5.4, 5.3, 5.03, 5.14, 4.9, 4.9, 4.5, 4.62, 4.58, 4.62, 4.5} ;
+    static double[] SHAPE_POSITIVE = new double[] {6, 5.81, 5.4, 5.3, 5.03, 5.14, 4.9, 4.9, 4.5, 4.62, 4.58, 4.62 } ; //, 4.5} ;
     
     /** Shape parameter for gamma distribution of HIV-negative MSM screening periods */
-    static double[] SHAPE_NEGATIVE = new double[] {6, 5.91, 5.6, 5.54, 5.42, 5.36, 5.3, 5.42, 5.25, 5.19, 5.14, 5.25, 5.03} ;
+    static double[] SHAPE_NEGATIVE = new double[] {6, 5.91, 5.6, 5.54, 5.42, 5.36, 5.3, 5.42, 5.25, 5.19, 5.14, 5.25} ; // , 5.03} ;
     
     /** Scale parameter for gamma distribution of HIV-positive MSM screening periods */
     static double SCALE_POSITIVE = 71 ;
@@ -347,8 +347,8 @@ public class MSM extends Agent {
     }
     
     
-    static double[] PREP_PROBABILITY_ARRAY = new double[] {0.0,0.011,0.014,0.017,0.049,0.167,0.239,0.310  // 2012 to 2019
-    //    ,0.39,0.46,0.53,0.60,0.67,0.74    // 2020 to 2025
+    static double[] PREP_PROBABILITY_ARRAY = new double[] {0.0,0.011,0.014,0.017,0.049,0.167,0.239    // 2012 to 2018
+        //,0.310,0.39,0.46,0.53,0.60,0.67//,0.74    // 2019 to 2025
     } ;
     
     /*
@@ -747,12 +747,12 @@ public class MSM extends Agent {
     
  // Start from year 2012
     static double[] POSITIVE_TRUST_UNDETECTABLE= new double[] {0.0,0.483,0.772,    // 2012 to 2014
-        0.695, 0.720, 0.757, 0.830, 0.727                                   // 2015 to 2019
-    //,0.830, 0.865, 0.900, 0.935, 0.970, 1.0                               // 2020 to 2025
+        0.695, 0.720, 0.757, 0.830   // 2015 to 2018
+    //,0.727,0.830, 0.865, 0.900, 0.935, 0.970, 1.0                               // 2020 to 2025
     } ;
     static double[] NEGATIVE_TRUST_UNDETECTABLE = new double[] {0.0,0.106,0.094,   // 2012 to 2014
-        0.129, 0.154, 0.203, 0.231, 0.194                                   // 2015 to 2019
-        //,0.231, 0.265, 0.300, 0.335, 0.370, 0.405, 0.440                  // 2020 to 2025
+        0.129, 0.154, 0.203, 0.231   // 2015 to 2018
+        //,0.194,0.231, 0.265, 0.300, 0.335, 0.370, 0.405, 0.440                  // 2019 to 2026
         } ;
     
     
@@ -845,11 +845,11 @@ public class MSM extends Agent {
     }
     
     /** Proportion of HIV-positives willing to trust that PrEP will protect their HIV-negative partner */
-    static double[] POSITIVE_TRUST_PREP = new double[] {0.0, 0.336, 0.467, 0.360} ;    // 2016 to 2019
+    static double[] POSITIVE_TRUST_PREP = new double[] {0.0, 0.336, 0.467} ; // , 0.360} ;    // 2016 to 2019
     
     // Currently redundant as currently not modelling HIV status unknown or distrust
     /** Proportion of HIV-negatives willing to trust that PrEP ensures that their partner is HIV-negative */
-    static double[] NEGATIVE_TRUST_PREP = new double[] {0.0, 0.346, 0.491, 0.532} ;    // 2016 to 2019
+    static double[] NEGATIVE_TRUST_PREP = new double[] {0.0, 0.346, 0.491} ; // , 0.532} ;    // 2016 to 2019
     
     /**
      * Alters the willingness to trust partner's PrEP to protect them from HIV on a year-by-year
@@ -1512,8 +1512,9 @@ public class MSM extends Agent {
                 {
                     MSM msm1 = (MSM) innerRelationshipBackwardIterator.next() ;
 
-                    if (msm1.statusHIV != msm0.statusHIV) // First two ArrayList are serosorters
-                        continue ;
+		    // Remove line generating sero-sorting
+                    //if (msm1.statusHIV != msm0.statusHIV) // First two ArrayList are serosorters
+                        //continue ;
 
                     // Have only one Relationship between two given MSM 
                     if (msm1.getCurrentPartnerIds().contains(msm0.getAgentId()))
@@ -1708,21 +1709,21 @@ public class MSM extends Agent {
     //static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
-    static double URETHRA_TO_RECTUM = 0.85 ; //  0.85 ; 
+    static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
-    static double URETHRA_TO_PHARYNX = 0.20 ; // 0.25 ; // 0.50 ; 
+    static double URETHRA_TO_PHARYNX = 0.15 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
-    static double RECTUM_TO_URETHRA = 0.009 ; // 0.009 ; // 0.015 ; // 0.010 ;
+    static double RECTUM_TO_URETHRA = 0.015 ; // 0.010 ;
     /** Transmission probabilities per sexual contact from Rectum to Pharynx intercourse. */
-    static double RECTUM_TO_PHARYNX = 0.020 ; // 0.023 ; 
+    static double RECTUM_TO_PHARYNX = 0.025 ; // 0.023 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Urethra intercourse. */
-    static double PHARYNX_TO_URETHRA = 0.015 ; // 0.005 ; // .005 ; // 0.010 ; 
+    static double PHARYNX_TO_URETHRA = 0.009 ; // 0.005 ; // .005 ; // 0.010 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
-    static double PHARYNX_TO_RECTUM = 0.025 ; // 0.020 ; 
+    static double PHARYNX_TO_RECTUM = 0.014 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.080 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.065 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
-    static double URETHRA_TO_URETHRA = 0.001 ; // 0.001 ; // 0.001 ; // 0.020 ; 
+    static double URETHRA_TO_URETHRA = 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
     static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
@@ -2818,7 +2819,7 @@ public class MSM extends Agent {
     public int rebootScreenCycle(int year, double reshape, double rescale)
     {
     	if (year > 500)    // Assume calendar year starting 2007
-    		year -= 2007 ;
+    		year -= 2010 ;
     	
         double shape ;
         double scale ;
@@ -2844,10 +2845,15 @@ public class MSM extends Agent {
      * @param rescale
      * @return
      */
-    public int rebootPrepScreenCycle(double reshape, double rescale)
+    public int rebootPrepScreenCycle(int year, double prepShape)
     {	
     	SCENARIO_PREP_SCREEN_CYCLE = true ;
-    	setScreenCycle(sampleGamma(31.0, 1.0, reshape,rescale) + PREP_SCREEN_DISPLACEMENT) ;
+    	//setScreenCycle(sampleGamma(31.0, 1.0, reshape,rescale) + PREP_SCREEN_DISPLACEMENT) ;
+	
+	PREP_SCREEN_SHAPE = prepShape - PREP_SCREEN_DISPLACEMENT ;
+    	if (prepStatus)
+    	    setPrepScreenCycle(1.0,1.0) ;
+
     	
     	return getScreenCycle() ;
     }
@@ -2918,8 +2924,8 @@ public class MSM extends Agent {
         // Values up to 2018
         //double[] prepProbabilityArray = new double[] {0.011,0.014,0.014,0.039,0.139,0.204,0.204} ;
         // Most recent
-        double[] prepProbabilityArray = new double[] {0.011,0.014,0.017,0.049,0.167,0.239,0.310} ;  // 2013 to 2019
-            //    ,0.39,0.46,0.53,0.60,0.67,0.74    // 2020 to 2025
+        double[] prepProbabilityArray = new double[] {0.011,0.014,0.017,0.049,0.167,0.239} ;  // 2013 to 2018
+            //    ,0.310,0.39,0.46,0.53,0.60,0.67,0.74    // 2019 to 2025
         //} ;
         if (year >= prepProbabilityArray.length)
             year = prepProbabilityArray.length - 1 ;
@@ -3157,8 +3163,8 @@ public class MSM extends Agent {
             //Boolean partnerSeroPosition = partner.getSeroPosition() ;
 
             // Not if on PrEP or using U=U
-            if (prepStatus)
-                return false ;
+            //if (prepStatus)
+              //  return false ;
             
             if (undetectableStatus && trustUndetectable)
                 return false ;
@@ -3168,8 +3174,8 @@ public class MSM extends Agent {
                 if (statusHIV == partner.statusHIV)
                     return false ;
                 
-                if (partner.prepStatus)
-                    return false ;
+                //if (partner.prepStatus)
+                  //  return false ;
                 
                 if (partner.statusHIV)
                     if (partner.undetectableStatus && trustUndetectable)
@@ -3184,8 +3190,8 @@ public class MSM extends Agent {
         {
             //if (2 > 0)
               //  return true ;
-            if (prepStatus)
-                return (RAND.nextDouble() < localProbabilityUseCondom ) ;
+            //if (prepStatus)
+              //  return (RAND.nextDouble() < localProbabilityUseCondom ) ;
             
             if (undetectableStatus && trustUndetectable)
                 return (RAND.nextDouble() < localProbabilityUseCondom ) ;  
@@ -3199,8 +3205,8 @@ public class MSM extends Agent {
                     if ((partner.undetectableStatus) && (trustUndetectable))
                         return (RAND.nextDouble() < localProbabilityUseCondom ) ;
                 }
-                else if (partner.prepStatus)    // partner HIV negative
-                    return (RAND.nextDouble() < localProbabilityUseCondom ) ;
+                //else if (partner.prepStatus)    // partner HIV negative
+                  //  return (RAND.nextDouble() < localProbabilityUseCondom ) ;
 
                 //if (seroPosition && partner.seroPosition)
                   //  return (RAND.nextDouble() < probabilityUseCondom ) ;

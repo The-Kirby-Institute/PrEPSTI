@@ -431,11 +431,11 @@ public abstract class Agent {
                     // Reboot screencycle here when testing it
                     if (scenarioScreenPositive)
                         if (newAgent.getStatusHIV())
-                            newAgent.rebootScreenCycle(2020, 1.1, 1.0) ;
+                            newAgent.rebootScreenCycle(2019, 1.1, 1.0) ;
                     
                     if (scenarioScreenPrep)
                         if (newAgent.getPrepStatus())
-                            newAgent.rebootScreenCycle(2020, 1.1, 1.0) ;
+                            newAgent.rebootPrepScreenCycle(2019, 123.0) ;
                     
                     // Reload infections
                     infectionString = birth ;
