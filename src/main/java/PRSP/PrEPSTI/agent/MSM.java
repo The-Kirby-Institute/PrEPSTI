@@ -3163,8 +3163,8 @@ public class MSM extends Agent {
             //Boolean partnerSeroPosition = partner.getSeroPosition() ;
 
             // Not if on PrEP or using U=U
-            //if (prepStatus)
-              //  return false ;
+            if (prepStatus)
+              return false ;
             
             if (undetectableStatus && trustUndetectable)
                 return false ;
@@ -3174,8 +3174,8 @@ public class MSM extends Agent {
                 if (statusHIV == partner.statusHIV)
                     return false ;
                 
-                //if (partner.prepStatus)
-                  //  return false ;
+                if (partner.prepStatus)
+                    return false ;
                 
                 if (partner.statusHIV)
                     if (partner.undetectableStatus && trustUndetectable)
@@ -3190,8 +3190,8 @@ public class MSM extends Agent {
         {
             //if (2 > 0)
               //  return true ;
-            //if (prepStatus)
-              //  return (RAND.nextDouble() < localProbabilityUseCondom ) ;
+            if (prepStatus)
+                return (RAND.nextDouble() < localProbabilityUseCondom ) ;
             
             if (undetectableStatus && trustUndetectable)
                 return (RAND.nextDouble() < localProbabilityUseCondom ) ;  
@@ -3205,8 +3205,8 @@ public class MSM extends Agent {
                     if ((partner.undetectableStatus) && (trustUndetectable))
                         return (RAND.nextDouble() < localProbabilityUseCondom ) ;
                 }
-                //else if (partner.prepStatus)    // partner HIV negative
-                  //  return (RAND.nextDouble() < localProbabilityUseCondom ) ;
+                else if (partner.prepStatus)    // partner HIV negative
+                    return (RAND.nextDouble() < localProbabilityUseCondom ) ;
 
                 //if (seroPosition && partner.seroPosition)
                   //  return (RAND.nextDouble() < probabilityUseCondom ) ;
