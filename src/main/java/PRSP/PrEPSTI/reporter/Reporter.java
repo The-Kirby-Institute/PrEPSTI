@@ -2226,7 +2226,8 @@ public class Reporter {
         int lowerIndex = 1;
         int upperIndex = 2;
         
-        for (Comparable categoryValue : outputReport.keySet() ) {
+        for (Comparable categoryValue : outputReport.keySet() ) 
+        {
             String valuesCommaSeparatedString = outputReport.get(categoryValue);
 
             // extract information into an arraylist, remove leading and trailing whitespace before and after a comma
@@ -2304,7 +2305,7 @@ public class Reporter {
         ArrayList<Double> sortedValuesInterdecile = new ArrayList<Double>();
         for (Double value : sortedValues) 
         	sortedValuesInterdecile.add(value);
-        Reporter.removeOutliersFromSortedArrayListPercentileMethod(sortedValuesInterdecile, 0.05);        
+        Reporter.removeOutliersFromSortedArrayListPercentileMethod(sortedValuesInterdecile, 0.25);        
         Double numValues = (double) sortedValuesInterdecile.size();
         Double meanValue = 0.0;
         for (int i = 0; i < sortedValuesInterdecile.size(); ++i) meanValue += sortedValuesInterdecile.get(i);
@@ -2335,13 +2336,16 @@ public class Reporter {
      * @author dstass
      */
     private static Double extractMedianFromSortedArrayList(ArrayList<Double> values) {
-        int valuesSize = values.size();
-        if (valuesSize == 0) return 0.0;
-        if (valuesSize % 2 == 1) return values.get(valuesSize/2);
-        else {
-            int midLeft = valuesSize/2 - 1;
-            int midRight = valuesSize/2;
-            return (values.get(midLeft) + values.get(midRight))/2;
+        int valuesSize = values.size() ;
+        if (valuesSize == 0) 
+        	return 0.0 ;
+        if (valuesSize % 2 == 1) 
+        	return values.get(valuesSize/2) ;
+        else 
+        {
+            int midLeft = valuesSize/2 - 1 ;
+            int midRight = valuesSize/2 ;
+            return (values.get(midLeft) + values.get(midRight))/2 ;
         }
     }
     /**
@@ -2419,7 +2423,7 @@ public class Reporter {
         for (String s : strArrayList) 
         {
         	if ("null".equals(s)) 
-        		s = "0";
+        		s = "0" ;
         	toReturn.add(Double.valueOf(s));
         }
         Collections.sort(toReturn);
@@ -2477,7 +2481,8 @@ public class Reporter {
      * @param csvHashMap
      * @return
      */
-    public static HashMap<String, String[]> extractYValueAndRange(HashMap<Comparable, String[]> csvHashMap) {
+    public static HashMap<String, String[]> extractYValueAndRange(HashMap<Comparable, String[]> csvHashMap) 
+    {
         int FIRST_N_ITEMS_TO_EXTRACT = 3; // mean, upper and lower
 
         int Y_INDEX = 0;
@@ -2847,7 +2852,7 @@ public class Reporter {
             	    Number[] valueArray = report.get(key).clone() ;
                 //if (recordArray.length > 1)
                 {   
-                    valueArray[fileIndex] = Double.valueOf(recordArray[scoreIndex]) ;
+                	valueArray[fileIndex] = Double.valueOf(recordArray[scoreIndex]) ;
                     report.put(key, valueArray) ;
                 }
                 //else
@@ -2871,14 +2876,89 @@ public class Reporter {
             }
     	}
         
-        // Prepare to write merged file to disk
+         // Prepare to write merged file to disk
         fileName = fileNames.get(0) ;
         //fileName = fileName.substring(0, fileName.indexOf(CSV)) ;
         reportName += "_" + scoreName ;
         
-        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, DATA_FOLDER) ;
-    }
+        
+        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, REPORT_FOLDER) ;
+        
+        }
+        		
+        
+     /**
+      * Remove and adjusts David's code to handle all such situations.
+     * @param inputReport
+     * @return
+     */
+    public static HashMap<Comparable<?>,Number[]> PREPEND_YANDRANGE(HashMap<Comparable<?>,String[]> inputReport)
+    {
+    	HashMap<Comparable<?>,Number[]> outputReport = new HashMap<Comparable<?>,Number[]>() ;
+    	
+    	int VALUES_TO_ADD = 3; // y-value, lower, upper
+        Number[] medianAndRange = new Number[VALUES_TO_ADD];
 
+    	for (Comparable<?> categoryValue : inputReport.keySet() ) 
+        {
+    		LOGGER.info(categoryValue.toString()) ;
+            //String valuesCommaSeparatedString = inputReport.get(categoryValue) ;
+
+            // extract information into an arraylist, remove leading and trailing whitespace before and after a comma
+            String[] valuesArray = inputReport.get(categoryValue) ;    // valuesCommaSeparatedString.split("\\s*,\\s*"); // split on comma and leading/trailing spaces
+            ArrayList<String> valuesArrayList = new ArrayList<String>(Arrays.asList(valuesArray));
+            LOGGER.info(valuesArrayList.toString()) ;
+            ArrayList<Number> numberArrayList = new ArrayList<Number>() ;
+            //for (String valueString : valuesArrayList )
+            //	numberArrayList.add(Double.valueOf(valueString)) ;
+            LOGGER.info(numberArrayList.toString()) ;
+            
+            //String year = valuesArrayList.remove(0); // remove the year and store it in a variable
+            ArrayList<Double> sortedValues = Reporter.convertArrayListStringToSortedArrayListDouble(valuesArrayList);
+            
+            // calculate standard deviation of the interdecile range of values
+            // this will hopefully remove some outliers so this standard deviation represents 
+            // most of the data (outliers do not factor in the calculations of this number)
+            ArrayList<Double> sortedValuesInterdecile = new ArrayList<Double>();
+            for (Double value : sortedValues) 
+            	sortedValuesInterdecile.add(value);
+            Reporter.removeOutliersFromSortedArrayListPercentileMethod(sortedValuesInterdecile, 0.25);        
+            Double numValues = (double) sortedValuesInterdecile.size();
+            Double meanValue = 0.0;
+            for (int i = 0; i < sortedValuesInterdecile.size(); ++i) 
+            	meanValue += sortedValuesInterdecile.get(i) ;
+            meanValue /= numValues ;
+            Double standardDeviation = Reporter.getStandardDeviationDoubleValueFromArrayListOfDoubles(sortedValuesInterdecile, meanValue) ;
+            
+            // transform sorted data by removing outliers
+            // Reporter.removeOutliersFromSortedArrayListPercentileMethod(sortedValues, 0.10);
+            Reporter.removeOutliersFromSortedArrayListDeviationMethod(sortedValues, meanValue, standardDeviation);
+
+            LOGGER.info(sortedValues.toString()) ;
+            // get the median from a sorted array list
+            Double medianValue = Reporter.extractMedianFromSortedArrayList(sortedValues);
+
+            numberArrayList.add(medianValue) ;
+            numberArrayList.add(sortedValuesInterdecile.get(sortedValuesInterdecile.size() - 1)) ;
+            numberArrayList.add(sortedValuesInterdecile.get(0)) ;
+                        // // calculate confidence intervals
+            // Double[] confidenceInterval = Reporter.get95ConfidenceIntervalDoubleArray(  meanValue,
+            //                                                                             standardDeviation,
+            //                                                                             (double) nbSimulations);
+
+            // insert year -> mean -> lower -> upper into array list
+            // this then gets converted back into a comma separated string
+            //valuesArrayList.add(0, year);  // add year to start of values
+            
+            outputReport.put(categoryValue, (Number[]) numberArrayList.toArray(new Number[] {})) ;
+            
+        }
+            
+    return outputReport ;
+        
+        
+    }
+    
     /**
      * Read .csv file and return its contents as a HashMap where String maps to 
      * String[]. We will also skip the first rowsToSkip lines.
@@ -3943,6 +4023,7 @@ public class Reporter {
         String simName = "" ;
         if (args.length > 0)
         	simName = args[0] ;
+        boolean findReport = false ;    // Generate .csv reports from dump files
         boolean mergeReports = false ;
         boolean whole1000 = true ;
         boolean selectBest = false ;
@@ -3950,7 +4031,8 @@ public class Reporter {
         int cutoff = 55 ;    // Take the best cutoff simulations
         
         //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
-        //String folderPath = "output/long_sims/" ;
+        //String folderPath = "output/check/" ;
+        String folderPath = "output/long_sims/" ;
         //String folderPath = "output/to2025/" ;
         //String folderPath = "data_files/" ;
         //String folderPath = "output/" ;
@@ -3966,10 +4048,11 @@ public class Reporter {
         //String prefix = "to2030linearPrep154to2019noAdjustCondom" ;
         //String prefix = "from2015to2035prepRollout24from2015to2035prepRollout22from2015to2035prepRollout20publish" ;
         //String prefix = "from2015to2035noPreppublish" ;
-        //String prefix = "from2015to2035constantpublish" ;
+        String prefix = "from2020to2035constantpublish" ;
         //String prefix = "from2015to2035prepNoTestpublish" ; // to2019noAdjustCondom" ;
         //String prefix = "from2015to2035screenNoPreppublish" ; // to2019noAdjustCondom" ;
         //String prefix = "from2015to2025constantto2019noAdjustCondom" ; 
+        
         //String suffix = "" ;
         //String suffix = "Pop40000Cycles5110" ;
         //String suffix = "Pop40000Cycles6205" ;
@@ -3979,23 +4062,25 @@ public class Reporter {
         //String suffix = "Pop40000Cycles2190" ;
         
         //String reportName = "CumulativeInfectionsReport" ;
-        String reportName = "riskyIncidence" ;
-        //String reportName = "trueIncidenceReport" ;
+        //String reportName = "riskyIncidence" ;
+        String reportName = "trueIncidenceCheck" ;
         String sortingProperty = "statusHIV" ;
         //String sortingProperty = "prepStatus" ;
         reportName += "_" + sortingProperty ;
+        String scoreName = "all_true" ;
         
         ArrayList<String> simNameList = new ArrayList<String>() ;
-        int END_YEAR = 2018 ;
-        int START_YEAR = 2007 ;
+        int END_YEAR = 2035 ;
+        int START_YEAR = 2020 ;
         int backYears = END_YEAR + 1 - START_YEAR ;
         
         //String letter2 = "C" ;
-        if (whole1000)
-            for (String letter2 : new String[] {"A","B","C","D","E","F","G","H","I","J"})
-    	        for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-            	    for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
-        		        simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
+        /*
+        for (String letter2 : new String[] {"A","B","C","D","E","F","G","H","I","J"})
+    	    for (String letter0 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+            	for (String letter1 : new String[] {"a","b","c","d","e","f","g","h","i","j"})
+        		    simNameList.add(prefix + letter2 + letter0 + letter1 + suffix) ;
+        		    */
 
 
         if (mergeReports || simNameList.isEmpty())
@@ -4005,6 +4090,11 @@ public class Reporter {
         	for (String letter50 : new String[] {"Fdh","Fch","Iig","Jaf","Beg","Bdb","Hdi","Hcj","Gdi","Cgb","Ceb","Fjh","Jjc","Ajc","Dcj","Dad","Hfj","Dfd","Dgj","Cag","Gia","Cbe","Cbg","Cai","Iii","Jge","Hjd","Cei","Hdg","Hdd","Cbb","Icc","Cie","Ifj","Cce","Iac","Bge","Ejc","Hhc","Ahe","Fdi","Ahb","Dca","Daj","Daf","Abj","Afb","Dje","Abg","Cdf"})                 
         		simNameList.add(prefix + letter50 + suffix) ;
                              
+=======
+            for (String letter50 : new String[] {"Hje","Big","Iib","Bje","Gfi","Jhd","Jij","Icg","Dhe","Ejf","Bbg","Bee","Hgd","Bfi","Daj",
+            		"Ccd","Hib","Ada","Hjg","Acb","Bid","Ihb","Gfa","Fdg","Ide","Dgi","Chi","Ghf","Hfb","Aib","Fjh","Ied","Hbe","Ege","Aei",
+            		"Cha","Egj","Bib","Cbh","Fjd","Bhc","Aah","Agg","Jhh","Cef","Chj","Ccc","Hid","Abd","Dji"})
+                             simNameList.add(prefix + letter50 + suffix) ;
                     //simNameList.add(prefix + letter0 + letter1 + suffix) ;
             simName = simNameList.get(0) ;
         }	
@@ -4015,7 +4105,7 @@ public class Reporter {
         String[] simNames = simNameList.toArray(new String[] {}) ;
         
         LOGGER.info(simNameList.toString()) ;
-        boolean findReport = false ;
+        
         if (!mergeReports && simNameList.size() < 101 && findReport)
         {
         	String[] siteNames = MSM.SITE_NAMES ;
@@ -4070,6 +4160,7 @@ public class Reporter {
                 cutoff = simNameList.size() ;
             //MULTI_WRITE_CSV(simNameList, "year", "been_tested", "beenTestedReport", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
             MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", scoreName, "riskyIncidence_HIV", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
+            //MULTI_WRITE_CSV(simNameList.subList(0, cutoff), "year", "all_true", "incidence_HIV", folderPath) ; // "C:\\Users\\MichaelWalker\\OneDrive - UNSW\\gonorrhoeaPrEP\\simulator\\PrEPSTI\\output\\prep\\") ; // 
             LOGGER.info(simNameList.subList(0, cutoff).toString()) ;
             // LOGGER.info(String.valueOf(cutoff) + " simulations included.") ;
             //PREPARE_GRAY_REPORT(simNames,folderPath,2007,2017) ;

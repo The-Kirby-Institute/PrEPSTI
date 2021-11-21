@@ -544,6 +544,10 @@ public class Community {
         
         //screeningReporter = new ScreeningReporter(SIM_NAME,FILE_PATH) ;
                 //new ScreeningReporter("prevalence",community.screeningReport) ;
+        
+        //relationshipReporter = new RelationshipReporter(SIM_NAME,FILE_PATH) ;
+        //relationshipPresenter = new RelationshipPresenter(SIM_NAME,"relationships",relationshipReporter) ;
+        //relationshipPresenter.plotNewRelationshipsPerCycle(new String[] {"Regular","Monogomous"}) ;
                 
         //ArrayList<Object> pharynxPrevalenceReport = screeningReporter.preparePrevalenceReport("Pharynx") ;
         //Reporter.WRITE_CSV(pharynxPrevalenceReport, "Pharynx", SIM_NAME, FILE_PATH);
@@ -554,6 +558,7 @@ public class Community {
           //      = new ScreeningPresenter("prevalence",Community.SIM_NAME,screeningReporter) ;
         //screeningPresenter2.plotPrevalence();
         //screeningPresenter2.plotNotificationsPerCycle();
+        
 
 
         // David, please do not comment this out! It is useful to me.

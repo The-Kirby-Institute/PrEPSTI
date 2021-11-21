@@ -5,6 +5,7 @@
  */
 package PRSP.PrEPSTI.reporter.presenter;
 
+import PRSP.PrEPSTI.configloader.ConfigLoader;
 //import java.lang.reflect.Method;
 import PRSP.PrEPSTI.reporter.* ;
 //import community.Community ;
@@ -26,17 +27,20 @@ public class RelationshipPresenter extends Presenter{
     
     //static String simName = "u60symp41bPop40000Cycles730" ;
     //static String simName = "relationshipLT2aPop40000Cycles730" ;
-    static String simName = "noOffset34a" ;
+    static String simName = "noOffset6a" ;
     //static String simName = "noGSNpostHolt3aPop40000Cycles5475" ; // "testPlotCondomUsePop4000Cycles500" ; // args[0] ;
         
     public static void main(String[] args)
     {
+        ConfigLoader.load() ;
+        
         //String chartTitle = "Nb_Agents_had_given_relationships" ; // args[1] ;
-        String chartTitle = "cumulative_relationships" ; // args[1] ;
+        //String chartTitle = "cumulative_relationships" ; // args[1] ;
         //String chartTitle = "mean_nb_relationships" ;
         //String chartTitle = "breakups" ;
         //String chartTitle = "agents_in_relationships" ;
         //String chartTitle = "agents_entered_relationships" ;
+        String chartTitle = "relationships_per_cycle" ;
         
         String reportFileName = "output/test/" ; // args[2] ;
         //String reportFileName = "output/year2007/" ; // args[2] ;
@@ -52,7 +56,7 @@ public class RelationshipPresenter extends Presenter{
         //relationshipPresenter.plotCumulativeRelationships(1, new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotCumulativeRelationshipLengths() ;
         //relationshipPresenter.plotRelationshipCumulativeTransmissions() ;
-        //relationshipPresenter.plotMeanNumberRelationshipsReport(relationshipClazzNames);
+        //relationshipPresenter.plotMeanNumberRelationshipsReport(relationshipClazzNames) ;
         //relationshipPresenter.plotAgentRelationshipsMeanYears(relationshipClazzNames, 3, 6, 0, 2017) ;
         //relationshipPresenter.plotAgentRelationshipsMean(new String[] {"Casual","Regular","Monogomous"}, 0, 6, 0) ;
         //relationshipPresenter.plotRelationshipLength() ;
@@ -289,7 +293,7 @@ public class RelationshipPresenter extends Presenter{
 
     public void plotCumulativeRelationshipLengths()
     {
-        HashMap<Comparable,Number> cumulativeRelationshipLengthReport = reporter.prepareCumulativeLengthReport() ;
+        HashMap<Comparable<?>,Number> cumulativeRelationshipLengthReport = reporter.prepareCumulativeLengthReport() ;
         
         plotSpline("Cumulative length distribution","Number of relationships",cumulativeRelationshipLengthReport) ;
     }
@@ -315,7 +319,7 @@ public class RelationshipPresenter extends Presenter{
             output.put(className, outputEntry) ;
         }
         
-      // logger.log(level.info, "{0}", output) ;
+       LOGGER.log(Level.INFO, "{0}", output) ;
         
         plotHashMap("Class of Relationships","Number of Agents",output) ;
     }
@@ -454,7 +458,7 @@ public class RelationshipPresenter extends Presenter{
     {
         EncounterReporter encounterReporter 
                 = new EncounterReporter(reporter.getSimName(), reporter.getFolderPath()) ;
-        HashMap<Comparable,Number> relationshipCumulativeTransmissionReport
+        HashMap<Comparable<?>,Number> relationshipCumulativeTransmissionReport
         = reporter.prepareRelationshipCumulativeTransmissionReport(encounterReporter) ;
         
       // logger.log(level.info, "{0}", relationshipCumulativeTransmissionReport) ;

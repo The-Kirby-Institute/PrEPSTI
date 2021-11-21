@@ -92,7 +92,7 @@ public class RelationshipReporter extends Reporter {
     {
         ArrayList<ArrayList<Comparable<?>>> relationshipCommenceReport = new ArrayList<ArrayList<Comparable<?>>>();
 
-        ArrayList<String> commenceReport = (ArrayList<String>) getReport("commence", this); // prepareCommenceReport() ;
+        ArrayList<String> commenceReport = prepareCommenceReport() ;    // (ArrayList<String>) getReport("commence", this); // 
         String filteredRecord;
 
         for (int reportNb = 0; reportNb < commenceReport.size(); reportNb++) {
@@ -359,9 +359,9 @@ public class RelationshipReporter extends Reporter {
      * @return (HashMap) Number of Relationships responsible for a given number 
      * or more transmissions.
      */
-    public HashMap<Comparable,Number> prepareRelationshipCumulativeTransmissionReport(EncounterReporter encounterReporter)
+    public HashMap<Comparable<?>,Number> prepareRelationshipCumulativeTransmissionReport(EncounterReporter encounterReporter)
     {
-        HashMap<Comparable,Number> cumulativeRelationshipTransmissionReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> cumulativeRelationshipTransmissionReport = new HashMap<Comparable<?>,Number>() ;
 
         HashMap<Comparable<?>,Number> relationshipTransmissionReport = prepareRelationshipTransmissionReport(encounterReporter) ;
       // logger.log(level.info, "{0}", relationshipTransmissionReport);
@@ -739,11 +739,11 @@ public class RelationshipReporter extends Reporter {
     
     /**
      * TODO: Include length one and then plot on a log-scale.
-     * @return A snapshot of how many agentIds have more had how many or more Relationships
+     * @return (HashMap) Number of cycles maps to the number of Relationships of that length or less.
      */
-    public HashMap<Comparable,Number> prepareCumulativeLengthReport()
+    public HashMap<Comparable<?>,Number> prepareCumulativeLengthReport()
     {
-        HashMap<Comparable,Number> cumulativeRelationshipLengthReport = new HashMap<Comparable,Number>() ;
+        HashMap<Comparable<?>,Number> cumulativeRelationshipLengthReport = new HashMap<Comparable<?>,Number>() ;
         
         //TODO: Separate out action on individual RECORD
         //ArrayList<HashMap<Object,Integer>> agentsCumulativeRelationshipReport 
@@ -1683,7 +1683,7 @@ public class RelationshipReporter extends Reporter {
         
         // How many cycles far back do we count back from endCycle?
         int backCycles = GET_BACK_CYCLES(backYears, backMonths, backDays, endCycle) ;
-        ArrayList<String> commenceReport = (ArrayList<String>) getReport("commence",this) ; //  prepareCommenceReport() ;
+        ArrayList<String> commenceReport = prepareCommenceReport() ;    //   (ArrayList<String>) getReport("commence",this) ; //  
         HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>> commenceRelationshipRecord 
                 = new HashMap<Object,HashMap<Comparable<?>,ArrayList<Comparable<?>>>>();
         for (String relationshipClassName : relationshipClassNames)

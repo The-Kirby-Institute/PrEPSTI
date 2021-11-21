@@ -58,7 +58,7 @@ public class MSM extends Agent {
     //********   DEFAULT VALUES FOR NON-SCENARIO           *********
     //**************************************************************
     /** Whether to update the screenCycle of PrEP-users. */
-    static boolean SCENARIO_PREP_SCREEN_CYCLE = false ;
+    //static boolean SCENARIO_PREP_SCREEN_CYCLE = false ;
     static double PREP_SCREEN_SHAPE = 31.0 ;
     static double PREP_SCREEN_SCALE = 1.0 ;
     static int PREP_SCREEN_DISPLACEMENT = 61 ;
@@ -1709,7 +1709,7 @@ public class MSM extends Agent {
     //static double RECTUM_TO_RECTUM = 0.001 ; // 0.001 ; // 0.003 ; // 0.020 ;
 
     /** Transmission probabilities per sexual contact from Urethra to Rectum intercourse. */
-    static double URETHRA_TO_RECTUM = 0.95 ; //  0.85 ; 
+    static double URETHRA_TO_RECTUM = 0.93 ; //  0.85 ; 
     /** Transmission probabilities per sexual contact from Urethra to Pharynx intercourse. */
     static double URETHRA_TO_PHARYNX = 0.15 ; // 0.25 ; // 0.50 ; 
     /** Transmission probabilities per sexual contact from Rectum to Urethra intercourse. */
@@ -1721,7 +1721,7 @@ public class MSM extends Agent {
     /** Transmission probabilities per sexual contact in Pharynx to Rectum intercourse. */
     static double PHARYNX_TO_RECTUM = 0.014 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Pharynx to Pharynx intercourse (kissing). */
-    static double PHARYNX_TO_PHARYNX = 0.065 ; // 0.075 // 0.040 ;
+    static double PHARYNX_TO_PHARYNX = 0.045 ; // 0.075 // 0.040 ;
     /** Transmission probabilities per sexual contact in Urethra to Urethra intercourse (docking). */
     static double URETHRA_TO_URETHRA = 0.001 ; // 0.020 ; 
     /** Transmission probabilities per sexual contact in Rectum to Rectum intercourse. */
@@ -2850,11 +2850,10 @@ public class MSM extends Agent {
     	SCENARIO_PREP_SCREEN_CYCLE = true ;
     	//setScreenCycle(sampleGamma(31.0, 1.0, reshape,rescale) + PREP_SCREEN_DISPLACEMENT) ;
 	
-	PREP_SCREEN_SHAPE = prepShape - PREP_SCREEN_DISPLACEMENT ;
+	    PREP_SCREEN_SHAPE = prepShape - PREP_SCREEN_DISPLACEMENT ;
     	if (prepStatus)
     	    setPrepScreenCycle(1.0,1.0) ;
 
-    	
     	return getScreenCycle() ;
     }
 
