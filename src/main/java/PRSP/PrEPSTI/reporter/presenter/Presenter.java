@@ -2872,6 +2872,8 @@ public class Presenter {
          */
         private void saveChart(JFreeChart chart)
         {
+        	if (!SAVE_PLOT)
+        		return ;
             try { Thread.sleep(1000); }
             catch (InterruptedException e) { e.printStackTrace(); }
 

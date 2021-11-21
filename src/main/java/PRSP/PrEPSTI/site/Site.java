@@ -124,7 +124,7 @@ abstract public class Site {
     public boolean initialiseInfection()
     {
     	double infectedProbability = RAND.nextDouble() ;
-        if (infectedProbability < getInfectedProbability() )
+    	if (infectedProbability < getInfectedProbability() )
         {
             infectedStatus = 1 ;
             infectionTime = RAND.nextInt(getInfectionDuration()) ;

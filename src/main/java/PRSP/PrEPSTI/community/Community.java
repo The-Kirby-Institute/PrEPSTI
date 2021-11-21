@@ -350,7 +350,7 @@ public class Community {
             float timeGeneratingRel = 0;
             
             LOGGER.info("burning in Relationships") ;
-            for (int burnin = 0 ; burnin < 10000 ; burnin++ ) // 20000
+            for (int burnin = 0 ; burnin < 20000 ; burnin++ ) // 20000
             {   
                 t1 = System.nanoTime();
                 commenceString = community.generateRelationships() ;
@@ -562,7 +562,7 @@ public class Community {
 
 
         // David, please do not comment this out! It is useful to me.
-        LOGGER.info(MSM.TRANSMISSION_PROBABILITY_REPORT());
+        LOGGER.info(MSM.TRANSMISSION_PROBABILITY_REPORT()) ;
 
         if (PLOT_FILE)
         {
@@ -594,10 +594,12 @@ public class Community {
         
         //LOGGER.log(Level.INFO, "Notification rate {0}", new Object[] {finalNotificationsRecord});
         String[] siteNames = new String[] {"Pharynx","Rectum","Urethra"} ;
-        //screeningReporter = new ScreeningReporter(SIM_NAME,FILE_PATH) ;
+        screeningReporter = new ScreeningReporter(SIM_NAME,FILE_PATH) ;
         //String prevalenceReports = "" ;
         ArrayList<String> prevalenceReport ;
         
+	if (PLOT_FILE)
+	{
         for (String siteName : siteNames)
         {
             prevalenceReport = screeningReporter.preparePrevalenceReport(siteName) ;
@@ -606,18 +608,23 @@ public class Community {
         }
         prevalenceReport = screeningReporter.preparePrevalenceReport() ;
         Reporter.WRITE_CSV( prevalenceReport,"prevalence_all",SIM_NAME,FILE_PATH) ;
-
+        }
         //Community.ADD_TIME_STAMP("after prev reports");
         // LOGGER.log(Level.INFO,"{0} {1}", new Object[] {"all", prevalenceReport.get(prevalenceReport.size() - 1)}) ;
 
-        int backYears = END_YEAR + 1 - START_YEAR ;
-        boolean atRisk = true ;
-        
+        int backYears = END_YEAR - START_YEAR + 1 ;
+        boolean atRisk = false ;
+	boolean SAVE_PLOT = true ;
+	//if (SAVE_PLOT)
+	//{
         HashMap<Comparable<?>,String> incidenceReport = new HashMap<Comparable<?>,String>() ;
         HashMap<Comparable<?>,String> incidenceReportPrep = new HashMap<Comparable<?>,String>() ;
         HashMap<Comparable<?>,String> trueIncidenceReport = new HashMap<Comparable<?>,String>() ;
         HashMap<Comparable<?>,String> trueIncidenceReportPrep = new HashMap<Comparable<?>,String>() ;
+	//}
 
+        if (SAVE_PLOT)
+	{
         if (DYNAMIC)
         {
         	if (atRisk)
@@ -628,13 +635,14 @@ public class Community {
         	else
         	{
             	trueIncidenceReport = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "statusHIV") ;
-            	trueIncidenceReportPrep = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
+            	//trueIncidenceReportPrep = encounterReporter.prepareYearsIncidenceReport(siteNames, backYears, END_YEAR, "prepStatus") ;
         	}
         }
         else if (atRisk)
         {
         	incidenceReport.put("2007", screeningReporter.prepareFinalAtRiskIncidentsRecord(siteNames, 0, "statusHIV")) ;
         }
+	}
         
         //ArrayList<HashMap<Comparable,Number>> beenTestedReports = new ArrayList<HashMap<Comparable,Number>>() ;
         //ArrayList<ArrayList<String>> condomUseReports = new ArrayList<ArrayList<String>>() ;
@@ -685,6 +693,9 @@ public class Community {
         //populationPresenter.plotAgeAtDeath();
         //PopulationPresenter populationPresenter = new PopulationPresenter("deaths per cycle","deaths per cycle",populationReporter) ;
         //populationPresenter.plotDeathsPerCycle();
+
+	if (SAVE_PLOT)
+	{
         if (atRisk)
         {
             if (!incidenceReport.isEmpty())
@@ -701,10 +712,11 @@ public class Community {
             {
                 Reporter.DUMP_OUTPUT("incidence_HIV",SIM_NAME,FILE_PATH,trueIncidenceReport);
                 LOGGER.info(trueIncidenceReport.toString()) ;
-                Reporter.DUMP_OUTPUT("incidence_Prep",SIM_NAME,FILE_PATH,trueIncidenceReportPrep);
+                //Reporter.DUMP_OUTPUT("incidence_Prep",SIM_NAME,FILE_PATH,trueIncidenceReportPrep);
             }
         }
-        
+        }
+
         /*Community.ADD_TIME_STAMP("FINAL TIMESTAMP");
         
         LOGGER.info("Time Stamps:");
@@ -1027,7 +1039,7 @@ public class Community {
         int startYear = START_YEAR - 2007 ;
 
         // No more burn-in if starting at a later date than 2007
-        if (startYear > 0)
+        if (startYear > 3)
             startCycle = 0 ;
         
         if ((cycle < startCycle))
@@ -1039,14 +1051,16 @@ public class Community {
           //  return "" ;
         
         String report = "" ;
-        if ((year - startYear) * 365 == (cycle - startCycle + 183))    // Things to do at the start of each year
+        if (((year - startYear) * 365 == (cycle - startCycle + 183)) || (cycle == 0))    // Things to do at the start of each year
         {
             // unchangedAgents = (ArrayList<Agent>) agents.clone() ;
             unchangedAgents = agentsMDLL.toArrayList();
             unchangedIndex1 = unchangedAgents.size() ;
         }
+	else if (cycle < 183)
+	    unchangedIndex1 -= AGENTS_PER_DAY * 2 ; 
         else
-        	unchangedIndex1 -= AGENTS_PER_DAY ;
+            unchangedIndex1 -= AGENTS_PER_DAY ;
           //  unchangedAgents.retainAll(agents) ;    // Remove dead Agents
           
         // Choose Agents to change that day
@@ -1056,8 +1070,12 @@ public class Community {
         
         // How many Agents?
         int nbChangeAgents = AGENTS_PER_DAY ;
+	if (cycle < 183)
+	    nbChangeAgents += AGENTS_PER_DAY ;
         
         if (unchangedIndex1 < AGENTS_PER_DAY)    // Clean the leftovers  
+            nbChangeAgents = unchangedIndex1 ;
+	else if ((cycle < 183) && (unchangedIndex1 < AGENTS_PER_DAY * 2))    // Clean the leftovers  
             nbChangeAgents = unchangedIndex1 ;
         unchangedIndex0 = unchangedIndex1 - nbChangeAgents ;
 

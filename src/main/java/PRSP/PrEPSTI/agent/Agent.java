@@ -431,11 +431,11 @@ public abstract class Agent {
                     // Reboot screencycle here when testing it
                     if (scenarioScreenPositive)
                         if (newAgent.getStatusHIV())
-                            newAgent.rebootScreenCycle(2020, 1.1, 1.0) ;
+                            newAgent.rebootScreenCycle(2019, 1.1, 1.0) ;
                     
                     if (scenarioScreenPrep)
                         if (newAgent.getPrepStatus())
-                            newAgent.rebootPrepScreenCycle(2020, 123.0) ;
+                            newAgent.rebootPrepScreenCycle(2019, 123.0) ;
                     
                     // Reload infections
                     infectionString = birth ;
@@ -977,6 +977,24 @@ public abstract class Agent {
     }
 
     /**
+     * Setter for infidelity, whether Agent is currently in a Monogomous Relationship.
+     * @param newInfidelity (boolean) New value for inMonogomous.
+     */
+    public void setInMonogomous(boolean newInMonogomous)
+    {
+    	inMonogomous= newInMonogomous;
+    }
+
+    /**
+     * inMonogomous getter()
+     * @return (boolean) inMonogomous
+     */
+    public boolean getInMonogomous()
+    {
+            return inMonogomous ;
+    }
+
+    /**
      * 
      * @return (String) giving values of the agent's important properties.
      */
@@ -989,6 +1007,7 @@ public abstract class Agent {
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("age",getAge())) ;  // Reporter.ADD_REPORT_PROPERTY("startAge", getAge()) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("concurrency",concurrency)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("infidelity",infidelity)) ;
+        sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("inMonogomous",inMonogomous)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondom",probabilityUseCondom)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomCasual",probabilityUseCondomCasual)) ;
         sbCensusReport.append(Reporter.ADD_REPORT_PROPERTY("probabilityUseCondomRegular",probabilityUseCondomRegular)) ;
@@ -1534,7 +1553,7 @@ public abstract class Agent {
     
     /**
      * Progress infection, invoking each site.progressSitesInfection and 
- keeping track of whether the Agent is still infected.
+     * keeping track of whether the Agent is still infected.
      * @return (boolean) whether the infection was cleared
      */
     public String progressSitesInfection()

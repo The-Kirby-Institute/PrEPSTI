@@ -228,6 +228,7 @@ public class EncounterReporter extends Reporter {
                
                 //endCycle = maxCycles - year * DAYS_PER_YEAR ;
                 incidenceRecord = prepareSortedFinalIncidenceRecord(siteNames, year, 0, DAYS_PER_YEAR, maxCycles, sortingProperty);
+		LOGGER.info(incidenceRecord.toString()) ;
                 
                 //for (int siteIndex = 0 ; siteIndex < siteNames.length ; siteIndex++ )
                   //  yearlyIncidenceRecord[siteIndex] = incidenceRecord.get(siteNames[siteIndex]) ;
@@ -349,7 +350,7 @@ public class EncounterReporter extends Reporter {
                 //(HashMap<Object,String[]>) getReport("relationshipAgent",relationshipReporter) ; //  
         
         PopulationReporter populationReporter = new PopulationReporter(simName,getFolderPath()) ;
-        HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty) ;
+        HashMap<Comparable<?>,ArrayList<String>> sortedAgentReport = populationReporter.agentIdSorted(sortingProperty,endCycle) ;
         HashMap<Object,Object> sortedAgentIds = populationReporter.sortedAgentIds(sortingProperty) ;
         ArrayList<String> agentsAliveReport = populationReporter.prepareAgentsAliveRecord(endCycle - DAYS_PER_YEAR) ;
 
@@ -465,7 +466,7 @@ public class EncounterReporter extends Reporter {
         for (Object sortingKey : sortedFinalIncidence.keySet())
         {
             ArrayList<String> sortedAgents = sortedAgentReport.get(sortingKey) ;
-            sortedAgents.retainAll(agentsAliveReport) ;
+            //sortedAgents.retainAll(agentsAliveReport) ;
             int population = sortedAgents.size() ;
             double denominator = population * getBackCycles(0,backMonths,backDays)/(100.0 * DAYS_PER_YEAR) ;
             for (int siteIndex = 0 ; siteIndex < siteNameList.size() ; siteIndex++ )

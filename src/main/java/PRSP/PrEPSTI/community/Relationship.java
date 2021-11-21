@@ -434,7 +434,7 @@ public class Relationship {
      * @param agent1
      * @return (String) report
      */
-    final public String addAgents(Agent agent0, Agent agent1)
+    public String addAgents(Agent agent0, Agent agent1)
     {
         //String report = "" ;
         this.agent0 = agent0 ;
