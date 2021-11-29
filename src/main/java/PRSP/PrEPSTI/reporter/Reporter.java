@@ -72,7 +72,8 @@ public class Reporter {
     
     // loaded paths
     public static String REPORT_FOLDER;
-    public static String DATA_FOLDER;
+    public static String 
+	    ;
 
     /** Names of properties for filtering records. */
     private ArrayList<String> filterPropertyNames = new ArrayList<String>() ;
@@ -2258,7 +2259,7 @@ public class Reporter {
         Collections.sort(categoryValues,String.CASE_INSENSITIVE_ORDER) ;
 
         // write to csv
-        String filePath = REPORT_FOLDER + reportName + "_" + scoreName + "_" + simNames.get(0) + ".csv" ;    // DATA_FOLDER 
+        String filePath = DATA_FOLDER + reportName + "_" + scoreName + "_" + simNames.get(0) + ".csv" ;    // REPORT_FOLDER 
         try
         {
             BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath,false));
@@ -2882,7 +2883,7 @@ public class Reporter {
         reportName += "_" + scoreName ;
         
         
-        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, REPORT_FOLDER) ;
+        return WRITE_CSV(report, firstLine[0], firstOutput, "Merged" + reportName , fileName, DATA_FOLDER) ;
         
         }
         		
@@ -4023,22 +4024,17 @@ public class Reporter {
         String simName = "" ;
         if (args.length > 0)
         	simName = args[0] ;
-        boolean findReport = false ;    // Generate .csv reports from dump files
-        boolean mergeReports = false ;
-        boolean whole1000 = true ;
-        boolean selectBest = false ;
+        boolean allReports = false ;
+        boolean mergeReports = true ;
+        boolean findReports = !mergeReports ;
+        boolean findBest = false ;
+        int cutoff = 50 ;
+        String folderPath = "/srv/scratch/z3524276/prepsti/output/prep/" ;
+        //String folderPath = "/srv/scratch/z3524276/prepsti/output/top50/" ;
+        //String folderPath = "/srv/scratch/z3524276/prepsti/output/long_sims/" ;
+	#boolean whole1000 = true ;
+        #boolean selectBest = false ;
         String scoreName = "Pharynx_true" ;
-        int cutoff = 55 ;    // Take the best cutoff simulations
-        
-        //String folderPath = "/scratch/is14/mw7704/prepsti/output/to2025/" ;
-        //String folderPath = "output/check/" ;
-        String folderPath = "output/long_sims/" ;
-        //String folderPath = "output/to2025/" ;
-        //String folderPath = "data_files/" ;
-        //String folderPath = "output/" ;
-        String folderPath = "output/prep/" ;
-        //String folderPath = "output/publish/" ;
-        //String folderPath = "output/prePrEP/" ;
         
 
         //String prefix = "to2019noAdjustCondom" ;
